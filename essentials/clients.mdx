@@ -1,0 +1,122 @@
+---
+title: "Connecting MCP Clients"
+description: "How to generate access tokens and configure clients like Claude Desktop and Gemini to use your HasMCP servers."
+---
+
+# Connecting MCP Clients
+
+Once you have built your [MCP Server](/essentials/servers), it acts as a standalone web service waiting for connections. To allow an LLM client (like the Claude Desktop app or the Gemini CLI) to talk to it, you need two things:
+
+1. **A secure access token**.
+2. **A configuration snippet** tailored to that client.
+
+## Generating Access Tokens
+
+HasMCP uses time-limited, scoped access tokens to secure your servers. This ensures that even if a configuration file is leaked, the exposure is temporary.
+
+1. Navigate to the **MCP Servers** tab and click on your target server (e.g., `stripe-billing-agent`).
+2. Locate the **Generate Token** button in the header.
+3. **Set Expiration**: Choose a validity period.
+   - **Short-term (1h - 24h)**: Recommended for testing or temporary sessions.
+   - **Long-term (30d - 1y)**: Recommended for stable, local deployments on your personal machine.
+4. Click **Create Token**.
+
+> **⚠️ Copy Once Policy**: The full token value is displayed **only once** immediately after creation. For security reasons, HasMCP does not store the token at all and check the validity of JWT. Always use short-lived time spans for your own security! If you lose it, you must generate a new one.
+
+## Client Configuration
+
+HasMCP automatically generates the correct JSON configuration for the most common MCP clients. You can find these snippets at the bottom of the **MCP Server Details** page.
+
+### 1. Cursor
+
+The Cursor app supports MCP natively via a configuration file.
+
+**Setup:**
+
+1. Copy the **"common format"** snippet from the HasMCP UI.
+2. Open or create the configuration file on your computer:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+3. Paste the snippet into the `mcpServers` object.
+
+**Example Configuration:**
+
+```
+{
+  "mcpServers": {
+    "stripeAgent": {
+      "url": "http://localhost:8887/mcp/<SERVER_ID>",
+      "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### 2. Gemini CLI (Google)
+
+For developers building with Google's generative AI tools.
+
+**Setup:**
+
+1. Select the **"gemini-cli"** tab in the HasMCP UI configuration section.
+2. Copy the JSON snippet. Note that Gemini uses `httpUrl` instead of `url`.
+
+**Example Configuration:**
+
+```
+{
+  "mcpServers": {
+    "stripe-agent": {
+      "httpUrl": "http://localhost:8887/mcp/<SERVER_ID>",
+      "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### 3. Remote MCP (Bridge)
+
+Some MCP clients do not yet support direct HTTP connections (SSE) and only support local process execution (stdio). In this case, you use `npx` to run a lightweight bridge.
+
+**Setup:**
+
+1. Select the **"using remote-mcp"** tab in the HasMCP UI.
+2. This configures the client to run a local Node.js process that forwards traffic to your HasMCP server.
+
+**Setup for Cursor Desktop Free:**
+
+1. Copy the **"using remote-mcp"** snippet from the HasMCP UI.
+2. Open or create the configuration file on your computer:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+3. Paste the snippet into the `mcpServers` object.
+
+**Example Configuration:**
+
+```
+{
+  "mcpServers": {
+    "stripe-agent": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8887/mcp/<SERVER_ID>",
+        "--header",
+        "x-hasmcp-key: Bearer <YOUR_ACCESS_TOKEN>"
+      ]
+    }
+  }
+}
+```
+
+## Troubleshooting Connections
+
+If your client shows a "Connection Failed" or "Server Error" message:
+
+1. **Check Token Validity**: Ensure your token hasn't expired. You can view active tokens in the Server Details page.
+2. **Check Environment Variables**: Go to the HasMCP UI. If you see a red warning box on the Server Details page saying **"Missing Environment Variables"**, the server will reject connections until those secrets are added.
+3. **Inspect Logs**: Use the [Server Logs](essentials/server-logs) feature in HasMCP to see if the request is reaching the server and what error code is being returned (e.g., 401 Unauthorized vs. 500 Internal Error).

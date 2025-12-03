@@ -1,0 +1,59 @@
+---
+title: "Introduction"
+description: "HasMCP is a no-code builder designed to instantly convert standard HTTP APIs into Model Context Protocol (MCP) servers.
+
+Instead of writing and maintaining custom Python or TypeScript code to expose your internal tools or third-party APIs to LLMs (like Claude or Gemini), HasMCP allows you to define, test, and bundle these interactions through a visual interface."
+---
+
+### Why use HasMCP?
+
+**No-Code Bridge**: Import an OpenAPI spec or manually define endpoints, and HasMCP handles the protocol implementation.
+
+**Centralized Secrets**: Manage API keys and credentials securely in one place, injecting them dynamically into requests.
+
+**Instant Deployment**:  Generate a configuration snippet instantly to connect your new MCP server to clients like Claude Desktop or Google's Gemini.
+
+## Core Concepts
+
+HasMCP is built around a hierarchy of four main concepts. Understanding how these relate will help you build robust servers.
+
+### 1. Environment Variables
+
+_The secure foundation for credentials._
+
+Before you can connect to most APIs, you need secrets (API Keys, Bearer Tokens). In HasMCP, these are stored as **Environment Variables**.
+
+- **Type Safety**: Variables can be standard `ENV` (visible) or `SECRET` (masked in the UI).
+- **Naming Convention**: HasMCP enforces `CAPITAL_SNAKE_CASE` (e.g., `STRIPE_API_KEY`) to ensure compatibility across different provider configurations.
+- **Injection**: These variables are referenced in your Provider Headers using the `${VAR_NAME}` syntax.
+
+### 2. Providers
+
+_The definition of the external service._
+
+A **Provider** represents a specific external API service (e.g., Stripe, GitHub, or your internal backend).
+
+- **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`).
+- **Authentication**: Supports standard Header authentication and OAuth2 flows.
+- **Immutable Prefix**: When creating a provider, HasMCP generates a "Secret Prefix" (e.g., `API_STRIPE_COM`). All Environment Variables used by this provider must start with this prefix to ensure security isolation.
+
+### 3. Provider Endpoints (Tools)
+
+_The specific actions available to the LLM._
+
+**Endpoints** are the individual tools attached to a Provider. When you expose an Endpoint, it becomes a "Tool" that the LLM can call.
+
+- **Definition**: Defined by an HTTP Method (GET, POST, etc.) and a Path (e.g., `/customers/{id}`).
+- **Schemas**: HasMCP allows you to define JSON schemas for **Query Arguments** and **Request Bodies**, ensuring the LLM knows exactly how to structure its requests.
+- **Importing**: You can bulk-import endpoints using standard OpenAPI v3 or Swagger v2 specifications.
+
+### 4. MCP Servers
+
+_The deployable bundle._
+
+An **MCP Server** is the final wrapper that you connect to your LLM client.
+
+- **Bundling**: It groups a specific Provider and a selection of its Endpoints.
+- **Access Control**: You generate time-limited access tokens for the server.
+- **Configuration**: HasMCP generates the specific JSON configuration needed for clients like **Claude Desktop** or **Gemini CLI** to recognize and connect to your server.
+- **Authorize What You Need**: Select what endpoints that you need from a specific provider. 

@@ -1,0 +1,99 @@
+---
+title: "Quick Start Guide"
+description: "Get your first MCP server up and running in 5 minutes. This guide will walk you through the Happy Path to create a functional MCP server using the Coinbase API as an example. By the end, you'll have a working server connected to your LLM client."
+---
+
+## **Prerequisites:**
+
+- A running instance of HasMCP.
+- A HTTP endpoint that is functional
+
+## Step 1: Define the Provider
+
+First, we need to tell HasMCP about the external API we want to use.
+
+1. Navigate to the **Providers** tab in the sidebar.
+2. Click the **\+ (Plus)** button to open the creation form.
+3. Fill in the details:
+   - **Name**: `CoinbaseTicker`
+   - **Base URL**: `https://api.coinbase.com/v2`
+   - **Description**: `Coinbase spot crypto currency price checker`
+   - **Provider Type**: Select `REST`.
+   - **Visibility**: Select `INTERNAL`. (This is just a metadata at this point, if you are considering to share this please select `PUBLIC`.)
+4. Click **Create Provider**.
+
+> **Note**: Observe the **Secret Prefix** field (e.g., `API_COINBASE_COM`). You will need this for the next step if the endpoint requires any special headers.
+
+## Step 2: Add an Endpoint
+
+Let's add a tool that the LLM can use, such as "Get Spot Price".
+
+1. Go back to your **Providers** list and click **View** on the `CoinbaseTicker` provider.
+2. Click the **\+ (Plus)** button next to "Provider Endpoints".
+3. Fill in the endpoint details:
+   - **Method**: `GET`
+   - **Path**: `/prices/{crypoCurrency3LetterCode}-{fiatCurrency3LetterCode}/spot`
+     - The actual example path is `/prices/BTC-USD` , in this example `fromCurrencyCode` and `toCurrencyCode` are used to be descriptive to the LLMs. When a user ask to get BTC price in USD, LLM will put BTC and USD as pair accordingly.
+     - **Hint:** While defining the variable name use descriptive names.
+   - **Description**: `Get crypto currency spot prices (e.g. BTC-USD)`
+4. **Add Authentication Header** (Optional for this specific endpoint, not needed for this but it is just example):
+   - Under "HTTP Headers", add a new header.
+   - **Key**: `Authorization`
+   - **Value**: `Bearer ${API_COINBASE_COM_KEY}`
+   - _Notice how we reference the variable we created in Step 2._
+5. Click **Create Endpoint**.
+
+![MCP Provider with a Single Endpoint](/images/mcp-provider-with-endpoint.png)
+
+## Step 3: Create the MCP Server
+
+Now we bundle this provider into a deployable MCP server.
+
+1. Navigate to the **MCP Servers** tab.
+2. Click the **\+ (Plus)** button.
+3. **Name**: `CoinbaseMCP`
+4. **Select Providers**: Find `CoinbaseTicker` in the list and click the arrow to expand it.
+5. **Enable Tools**: Toggle the switch next to `GET /prices/{currency_pair}/spot`.
+6. Click **Create MCP Server**.
+
+## Step 4: Connect to Claude Desktop
+
+Finally, let's connect your new server to Claude.
+
+1. On the **MCP Server Details** page, locate the "Generate Token" button.
+2. Click **Generate Token** and copy the value.
+3. Scroll down to the **MCP Server Address** section.
+4. Copy the JSON configuration snippet. It will look something like this for Claude Desktop Free users (Free users do not have access to remote MCPs yet, so this example uses mcp-remote command to bypass this limitation):
+
+```
+{
+  "mcpServers": {
+    "coinbaseticker": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8887/mcp/<SERVERID>",
+        "--header",
+        "x-hasmcp-key: Bearer ${HASMCP_MCP_ACCESS_TOKEN}"
+      ],
+      "env": {
+        "HASMCP_MCP_ACCESS_TOKEN": "YOUR_TOKEN_VALUE_FROM_ABOVE_TOKEN_GENERATE_BUTTON"
+      }
+    }
+  }
+}
+```
+
+![Add Remote MCP server to Claude Desktop Free User Edition](/images/mcp-server-configuration-for-claude-desktop-free.png)
+
+5. Open your Claude Desktop configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+6. Paste the snippet into the file and save.
+7. Restart Claude Desktop. You should now see a 🔌 icon indicating the tool is connected!
+
+![Toggle MCP in Claude Desktop](/images/enable-disable-mcp-on-claude-desktop.png)
+
+8. See it in action
+
+![Claude Desktop Checks Current BTC Price In Multiple Currencies](/images/coinbase-spot-crypto-price-mcp-server.gif)

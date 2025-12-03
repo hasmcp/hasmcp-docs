@@ -1,0 +1,92 @@
+---
+title: "Building MCP Servers"
+description: "A comprehensive guide to bundling providers into deployable MCP Servers, configuring access, and enabling specific tools for your LLM."
+---
+
+## What is an MCP Server?
+
+In the HasMCP ecosystem, an **MCP Server** serves as the critical "last mile" delivery vehicle. It is the deployable unit that your Large Language Model (LLM) interacts with directly. While Providers act as broad libraries of potential capabilities—defining _how_ to connect to an external service—the MCP Server defines _what_ specific capabilities are exposed for a given task.
+
+Think of a Provider as a massive toolbox containing every possible wrench, hammer, and screwdriver available from an API. An MCP Server, by contrast, is a curated toolbelt you assemble for a specific worker to do a specific job. You might have a "GitHub Provider" with 50 endpoints ranging from reading issues to deleting repositories. However, for a "Code Review Assistant" bot, you would create an MCP Server that only exposes the `read_pull_request` and `post_comment` tools, deliberately excluding the ability to delete repos. This curation is essential for security, safety, and model performance.
+
+## Method 1: The One-Click Shortcut (For starters)
+
+For many use cases, especially during initial development or testing, you may want to expose every tool a provider offers. HasMCP includes a streamlined workflow for this exact scenario.
+
+1. Navigate to the **Providers** tab in the sidebar.
+2. Locate the Provider you wish to deploy and click the **View** button.
+3. In the top right corner of the Provider Details page, look for the **Convert to MCP Server** button (represented by a server icon with an arrow).
+
+**What this automated process handles for you:**
+
+- **Instant Creation**: It immediately generates a new MCP Server entry with the exact same name as your Provider.
+- **Description Syncing**: It automatically copies the Provider's description into the Server Instructions. This ensures the LLM has a baseline understanding of the tools without you needing to write a new prompt from scratch.
+- **Full Exposure**: It automatically toggles **ON** every single endpoint currently defined in that Provider. If you added 10 endpoints, all 10 are now available tools.
+- **Workflow Continuity**: You are immediately redirected to the **MCP Server Details** page for the newly created server, allowing you to instantly generate an access token and start testing.
+
+> **Tip**: This method is non-destructive. You can always go into the created server afterward and disable specific tools you don't want to expose.
+
+## Method 2: Manual Creation & Curation (Recommended, advanced)
+
+For production environments, complex workflows, or when you need granular control over the LLM's capabilities, the manual builder is the preferred approach.
+
+1. Navigate to the **MCP Servers** tab.
+2. Click the **\+ (Plus)** button to open the server creation form.
+3. **Server Name**: Assign a unique, alphanumeric name (e.g., `stripeBillingAgent`, `githubTriageBot`). This name is used in the configuration file and helps you identify the server source in your LLM client's logs.
+4. **Instructions**: This field is arguably the most important part of the configuration. It acts as the "System Prompt" that is prepended to the context window whenever this server is active.
+   - **Context Setting**: Tell the model _who_ it is when using these tools.
+   - **Operational Constraints**: Define boundaries. For example, "Never refund a transaction over \$500 without asking for human confirmation first."
+   - **Error Handling Guidance**: Instruct the model on how to react if a tool fails. "If the API returns a 404, ask the user to double-check the ID."
+   - _Example_: "You are a Level 2 Support Agent with access to Stripe. Your goal is to help users understand their billing history. You can look up invoices and subscriptions. Do NOT attempt to modify subscriptions or issue refunds; if a user asks for this, explain that you do not have permission."
+
+### Selecting Providers & Tools
+
+HasMCP currently enforces a **Single Provider Rule**: An MCP Server can currently bundle tools from only **one** Provider. This design decision encourages a "microservices" approach to your agents, keeping them focused and modular and using less tokens when interacting with LLMSs.
+
+1. In the **Select Providers** section, you will see a list of all your configured Providers.
+2. Locate your desired provider and click the arrow or the row itself to expand the accordion view.
+3. **Enable Tools**: You will see a list of every endpoint defined in that Provider.
+   - **Toggle Individually**: Use the toggle switches next to each endpoint (e.g., `GET /customers`, `POST /charges`) to granularly control access. This is where you practice "Principle of Least Privilege." If the agent only needs to _read_ data, ensure all `POST`, `PUT`, and `DELETE` endpoints are disabled.
+   - **Bulk Action**: For speed, use the **Enable All / Disable All** button at the top of the list. This is useful if you want to enable everything and then just turn off one or two dangerous endpoints.
+
+> **Validation Rule**: To ensure the server is functional, HasMCP requires you to enable **at least one endpoint** before you can save the server configuration. A server with no tools is effectively useless to an LLM.
+
+## Authorization & OAuth2
+
+If the Provider used in your MCP Server has **OAuth2 Configuration** enabled (e.g., GitHub, Google, or Spotify), you will see an **Authorize** button in the header of the Server Details page.
+
+This feature simplifies the complex process of obtaining access tokens:
+
+1. **Click Authorize**: This initiates the OAuth2 flow, redirecting you to the external service's login page (based on the `authURL` you configured in the Provider).
+2. **Grant Permissions**: You log in and approve the requested scopes. HasMCP automatically calculates the _union_ of all scopes required by the enabled endpoints in your server.
+3. **Automatic Token Management**: Upon successful redirect back to HasMCP:
+   - The system captures the `access_token` and (if available) `refresh_token`.
+   - It automatically creates or updates the corresponding **Environment Variables** (e.g., `API_GITHUB_COM_ACCESS_TOKEN`, `API_GITHUB_COM_REFRESH_TOKEN`).
+   - These variables are immediately available for use in your endpoint headers (e.g., `Authorization: Bearer ${API_GITHUB_COM_ACCESS_TOKEN}`), ensuring your server works instantly without manual copy-pasting of secrets.
+
+## Configuration Options
+
+### Proxy Incoming Headers
+
+_Found in the Server Details view._
+
+- **Setting**: `requestHeadersProxyEnabled` (Toggle: ON/OFF)
+- **Default**: `OFF`
+
+This advanced setting controls how authentication data flows from the client to the backend API.
+
+**When disabled (Default):** HasMCP uses the credentials stored in your **Environment Variables** (the `SECRET` values you configured) to authenticate with the external API. This is the standard "Service Account" model, where the LLM acts on behalf of the application itself.
+
+**When enabled (ON):** HasMCP acts as a transparent proxy for specific HTTP headers. If the MCP Client (e.g., Claude Desktop) sends a custom header—most notably `Authorization`—HasMCP will forward that header directly to the external Provider, bypassing the stored environment variables for that specific header.
+
+**Strategic Use Cases:**
+
+1. **User-Specific Actions**: If you are building an internal tool for a team, you might want the LLM to perform actions as the _specific human user_ chatting with it, rather than as a generic "bot" account. If your MCP Client supports passing the user's OAuth token or API key, enabling this setting allows the actions to be logged under that user's identity in the external system.
+2. **Dynamic Authentication**: In scenarios where tokens rotate frequently or are generated on the fly by the client, this allows the client to manage the freshness of credentials without needing to update HasMCP's variable store constantly.
+
+## Next Steps
+
+Once your server is built and configured, it exists as a definition in HasMCP. The final phase is to "plug it in" to your AI ecosystem.
+
+- [Connect to MCP Clients](/essentials/clients) - Learn how to generate secure access tokens, manage their expiration, and get the exact JSON configuration snippets needed for Claude Desktop, Gemini, or custom clients.
+- [Monitoring & Logs](/essentials/server-logs) - Once your server is live, use the real-time logging features to watch the LLM "think" and call tools. You can inspect request payloads and response data to debug issues and refine your Server Instructions.

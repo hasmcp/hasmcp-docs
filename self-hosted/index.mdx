@@ -1,0 +1,157 @@
+---
+title: "Self Hosted"
+description: "HasMCP is available to run locally and production using Docker."
+---
+
+## First-time Setup
+
+HasMCP works with both Postgres and SQLite. In this documentation, for simplicity it is working with SQLite.
+
+Create necessary folders
+
+```
+mkdir hasmcp
+cd hasmcp
+touch .env
+touch Makefile
+mkdir -p _config _certs _license _storage # creates folders
+chmod 0777 _config
+chmod 0777 _certs
+chmod 0777 _storage
+```
+
+Create .env file content based on your preferences, here is example configuration. Ensure that you have encyrption keys and secrets are different than the example below.
+
+> **WARNING: **Losing your own encryption key or secrets could block your access to DB and application. Nobody knows your encryption key and/or secret other than you! Encryption keys and secrets must be 32xN(1,2,3,4) bytes forms.
+>
+> ```yaml
+> Tip: hexdump -vn32 -e'4/4 "%08X" 1 "\n"' /dev/urandom
+> ```
+
+```yaml
+# idgen node id 0-255 (usually last section of IP would be a good choice, leave 0 to assing randomly)
+MONOFLAKE_NODE=0
+
+# locksmith
+HASMCP_HASH_SALT=gXaFk6iVt3zzjw
+HASMCP_ENCRYPTION_KEY=AABA9166CFA48C92C1C12B8EC51510C5961CBB93CECF3D7CB183734952096655
+
+# server
+PORT=80
+SSL_PORT=443
+HASMCP_SSL_ENABLED=false
+HASMCP_LETSENCRYPT_EMAIL=ssl@example.com
+HASMCP_DOMAIN_NAME=example.com
+HASMCP_SERVER_MAX_BODY_SIZE_IN_BYTES=10000000
+
+# api middlewares
+HASMCP_API_AUTH_ENABLED=true
+HASMCP_API_ACCESS_TOKEN=test # this is your password for logins and api interaction
+HASMCP_API_LOGGER_ENABLED=true
+HASMCP_API_RATELIMIT_ENABLED=true
+HASMCP_API_RATELIMIT_MAX_PER_IP=1000
+HASMCP_API_RATELIMIT_WINDOW=60s
+HASMCP_API_CORS_HOSTNAME=localhost
+
+# mcp middlewares
+HASMCP_MCP_CORS_HOSTNAME=localhost
+HASMCP_MCP_LOGGER_ENABLED=true
+HASMCP_MCP_RATELIMIT_ENABLED=true
+HASMCP_MCP_RATELIMIT_MAX_PER_IP=60
+HASMCP_MCP_RATELIMIT_WINDOW=60s
+HASMCP_MCP_JWT_SECRET=C7B30E17FE8CBBDE6CC74D54549CB3D99F3B7DDC95113BAE927C8AE17862B1AC
+
+# oauth2 middlewares
+HASMCP_OAUTH2_CORS_HOSTNAME=localhost
+HASMCP_OAUTH2_LOGGER_ENABLED=true
+HASMCP_OAUTH2_RATELIMIT_ENABLED=true
+HASMCP_OAUTH2_RATELIMIT_MAX_PER_IP=60
+HASMCP_OAUTH2_RATELIMIT_WINDOW=60s
+
+# external oauth2 providers
+HASMCP_OAUTH2_EXTERNAL_PROVIDER_JWT_SECRET=5B712508B6A090723A0A8B6D0D0C07DB
+HASMCP_OAUTH2_EXTERNAL_PROVIDER_HTTP_SCHEME=http
+```
+
+## Commands
+
+Update the Makefile content with the following content:
+
+```
+# Define the version/tag for your Docker image
+HASMPC_VERSION ?= v0.1.0
+
+# Define the full image name
+IMAGE_NAME = hasmcp/hasmcp-ce
+
+# Combine them for the full reference
+DOCKER_IMAGE = $(IMAGE_NAME):$(HASMPC_VERSION)
+
+
+stats:
+	docker stats hasmcp-ce
+
+logs:
+	docker logs -f hasmcp-ce
+
+setup:
+	docker pull $(DOCKER_IMAGE); \
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_license:/_license -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+
+update:
+	docker stop hasmcp-ce || true; \
+	docker rm hasmcp-ce || true; \
+	docker pull $(DOCKER_IMAGE); \
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_license:/_license -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+
+restart:
+	docker stop hasmcp-ce; \
+	docker rm hasmcp-ce; \
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_certs:/_certs -v ./_config:/_config -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+```
+
+### Setup
+
+First time setup, pulls docker image and runs:
+
+```
+make setup
+```
+
+### Update
+
+Update the HasMCP to desired version:
+
+```
+make update HASMCP_VERSION=v...
+```
+
+### Restart
+
+If you need make changes on env values, restart will be needed. Here is the command to restart:
+
+```
+make restart
+```
+
+### Monitoring & Logs
+
+Access docker stats:
+
+```
+make stats
+```
+
+Access logs:
+
+```
+make logs
+```
+
+## Access server
+
+1. Go to http://localhost (if you set a port other than 80, you will need to visit that port.)
+
+2. In the UI, enter the token you have defined for `HASMCP_API_ACCESS_TOKEN`
+
+3. That's all!

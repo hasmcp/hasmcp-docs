@@ -1,0 +1,89 @@
+---
+title: "Monitoring & Logs"
+description: "How to use real-time logs to debug connections, inspect payloads, and monitor LLM tool usage"
+---
+
+## Realtime LLM Interaction Logs
+
+Observability is crucial when building LLM agents. Because the model's decision-making process ("Which tool should I call?") is probabilistic, you need visibility into exactly what is happening under the hood.
+
+HasMCP provides a real-time log stream for every MCP Server you create. This allows you to see:
+
+- **Connection Events**: When a client (like Claude) connects or disconnects.
+- **Tool Calls**: The exact arguments the LLM generated.
+- **API Responses**: The raw data returned by your external provider.
+- **Errors**: Authentication failures or schema validation issues.
+
+## Accessing Logs
+
+1. Navigate to the **MCP Servers** tab.
+2. Locate the server you want to monitor.
+3. Click the **Logs** icon (a document/file icon) in the top-right corner of the server card, or click "View MCP Server Logs" inside the server details page.
+
+> **Status Indicator**: The top of the log window shows the connection status.
+>
+> - **Connecting...**: Establishing the Server-Sent Events (SSE) stream.
+> - **Streaming...**: Live and receiving data.
+> - **Disconnected**: The connection was lost or the tab was closed.
+
+## Understanding Log Entries
+
+The log viewer displays events in chronological order (newest at the top).
+
+### 1. Connection Lifecycle
+
+When you start your LLM client (e.g., open Claude Desktop), you should see an initialization sequence:
+
+- `connection: init` - The client has established an HTTP connection.
+- `capabilities: negotiation` - The client and server are agreeing on supported features (e.g., resources, tools).
+
+### 2. Request / Response Cycle (The "Thinking" Process)
+
+This is the most critical part for debugging. A typical tool use sequence looks like this:
+
+**A. The Request (Blue)** The LLM decides to call a tool. You will see an event starting with `req`.
+
+- **Event**: `req:call_tool`
+- **Data**: `{"name": "list_customers", "arguments": {"limit": 5}}`
+- _What to look for_: Did the model hallucinate an argument? Is the data type correct (e.g., string vs integer)?
+
+**B. The Response (Green)** Your HasMCP server executes the request against the external API and returns the result.
+
+- **Event**: `res:call_tool`
+- **Data**: `{"content": [{"type": "text", "text": "..."}]}`
+- _What to look for_: Did the API return the expected data? Is the JSON too large for the context window?
+
+### 3. Errors (Red)
+
+If something goes wrong, you will see a red error entry.
+
+- **401 Unauthorized**: Usually means your [Environment Variable](/essentials/variables) is missing or incorrect.
+- **404 Not Found**: The endpoint path might be configured incorrectly in the Provider settings.
+- **500 Internal Error**: A parsing error or unexpected failure in the backend.
+
+## Inspecting Payloads
+
+LLM tool calls and API responses can be large JSON objects. HasMCP truncates these in the main view to keep the log readable.
+
+**To view the full payload:**
+
+1. Click directly on the `Data: {...}` text of any log entry.
+2. A modal will open showing the **Prettified JSON**.
+3. Use the **Copy JSON** button to paste it into an external editor or validator.
+
+## Troubleshooting Common Scenarios
+
+### "I don't see any logs when I use Claude."
+
+- **Cause**: Claude Desktop might not be running or the configuration file points to the wrong URL.
+- **Fix**: Restart Claude Desktop. Ensure the `mcpServers` config in your `claude_desktop_config.json` matches the snippet provided in the Server Details page.
+
+### "The model keeps getting 'Invalid Arguments' errors."
+
+- **Cause**: The JSON Schema defined in your Provider Endpoint might not match what the API actually expects.
+- **Fix**: Go to the **Providers** tab, edit the endpoint, and check the **Query Arguments** or **Request Body** schema. Ensure `required` fields are actually marked as required.
+
+### "I see a 401 error in the logs, but I added the variable."
+
+- **Cause**: The variable name might not match the **Secret Prefix** required by the provider.
+- **Fix**: Go to the **Variables** page. Check if your variable starts with the exact prefix shown on the Provider Details page (e.g., `API_STRIPE_COM_...`).

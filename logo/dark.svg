@@ -1,0 +1,18 @@
+<svg width="24px" height="24px" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g>
+      <rect stroke="#FFFFFF" stroke-width="16" x="38" y="38" width="180" height="180" rx="18"></rect>
+      <rect fill="#FFFFFF" x="91" y="96" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="139" y="96" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="95" y="116" width="64" height="24" rx="12"></rect>
+      <rect fill="#FFFFFF" x="79" y="0" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="152" y="0" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="80" y="192" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="152" y="192" width="24" height="64" rx="12"></rect>
+      <rect fill="#FFFFFF" x="0" y="80" width="64" height="24" rx="12"></rect>
+      <rect fill="#FFFFFF" x="0" y="152" width="64" height="24" rx="12"></rect>
+      <rect fill="#FFFFFF" x="192" y="80" width="64" height="24" rx="12"></rect>
+      <rect fill="#FFFFFF" x="192" y="152" width="64" height="24" rx="12"></rect>
+    </g>
+  </g>
+</svg>

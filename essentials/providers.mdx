@@ -1,0 +1,111 @@
+---
+title: "API Providers"
+description: "Learn how to define external APIs, configure authentication strategies, and manage endpoints."
+---
+
+## Managing API Providers
+
+In HasMCP, a **Provider** is the blueprint for an external service. It defines _where_ the API lives (Base URL), _how_ to authenticate with it (Headers or OAuth), and _what_ capabilities (Endpoints) are available.
+
+Think of a Provider as a library of potential tools. You might define 50 endpoints for the "GitHub API" provider, but later create a specific MCP Server that only exposes 3 of them (e.g., "Read Issues") to the LLM.
+
+## Creating a Provider
+
+1. Navigate to the **Providers** tab.
+2. Click the **\+ (Plus)** button to open the creation form.
+3. **Basic Configuration**:
+   - **Name**: A friendly name (e.g., `StripeApi`).
+   - **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`).
+   - **Description**: Context for the LLM to understand what this service does.
+   - **Visibility**:
+     - `INTERNAL`: Only visible to you.
+     - `PUBLIC`: (Future feature) Intended for sharing within an organization.
+4. **Provider Type**: Currently, only `REST` is supported.
+
+> **⚠️ Immutable Fields**: The **Base URL** and the auto-generated **Secret Prefix** cannot be changed once the provider is created. If you make a mistake here, you will need to delete and recreate the provider.
+
+## Authentication Configuration
+
+HasMCP supports two primary methods for authenticating with external APIs.
+
+### 1. Header-Based Authentication (API Keys)
+
+This is the most common method. You define authentication headers at the **Endpoint level**, injecting secrets from your [Environment Variables](essentials/variables).
+
+- **Usage**: See the [Managing Endpoints](#managing-endpoints) section below.
+
+### 2. OAuth2 Configuration
+
+If the API requires an OAuth2 flow (like "Log in with Google"), you configure the client details at the Provider level.
+
+- **Enable OAuth2 Configuration**: Toggle this switch during creation or editing.
+- **Fields Required**:
+  - **Client ID**: Your public application ID.
+  - **Client Secret**: Your private application secret.
+  - **Auth URL**: The page where the user logs in (e.g., `https://github.com/login/oauth/authorize`).
+  - **Token URL**: The endpoint used to exchange code for token (e.g., `https://github.com/login/oauth/access_token`).
+
+> **Note**: HasMCP handles the OAuth handshake (callback handling and token storage) automatically when you authorize an MCP Server later. You just need to provide the correct endpoints here.
+
+## Managing Endpoints
+
+Endpoints represent the specific actions (HTTP requests) that the LLM can perform. You can add them in two ways:
+
+### Option A: Importing OpenAPI / Swagger (Recommended)
+
+The fastest way to onboard an API is to import its specification.
+
+1. Inside a Provider, click the **Import (Cloud Download)** icon.
+2. Paste your **OpenAPI 3.x** or **Swagger 2.0** JSON/YAML spec.
+3. Click **Start Import**.
+
+**Import Behavior:**
+
+- **Matching**: HasMCP matches endpoints based on `METHOD + PATH` (e.g., `GET /users`).
+- **Updates**: If an endpoint already exists, it will be updated with the new spec details.
+- **New**: If it doesn't exist, it will be created.
+- **Variables**: HasMCP automatically detects security schemes in the spec and creates placeholders for headers (e.g., `${API_STRIPE_COM_KEY}`).
+
+### Option B: Manual Creation
+
+For internal tools or simple APIs, you can use the visual builder.
+
+1. Click the **\+ (Plus)** button next to "Provider Endpoints".
+2. **Method & Path**: Select the verb (GET, POST, etc.) and the path (must start with `/`).
+   - _Path Parameters_: Use curly braces for dynamic values, e.g., `/users/{id}`. HasMCP automatically generates the schema for these.
+3. **Description**: Crucial for the LLM. Describe _what_ this tool does and _when_ to use it.
+4. **Headers**: Add any static headers or dynamic variables required for this specific endpoint.
+   - _Validation_: You can only reference variables that start with this provider's **Secret Prefix**.
+
+## Defining Schemas
+
+For an LLM to successfully call an API, it needs to know strictly what data to send. HasMCP allows you to define JSON Schemas for both inputs and outputs.
+
+### Query Arguments
+
+Define parameters appended to the URL (e.g., `?limit=10&status=active`).
+
+- **Type**: String, Number, Boolean, or Arrays.
+- **Required**: Mark fields that are mandatory.
+- **Description**: Explain what the parameter controls (e.g., "Number of items to return, max 100").
+
+### Request Body (JSON)
+
+For `POST`, `PUT`, and `PATCH` requests, you must define the payload structure.
+
+**The "Smart Inference" Feature**: You don't need to write complex JSON Schema manually.
+
+1. Paste a **sample JSON payload** into the "Sample Body or Schema" text area.
+
+   ```
+   {
+     "name": "New Project",
+     "private": true
+   }
+   
+   ```
+2. HasMCP will automatically convert this into a valid JSON Schema when you save, adding types and structure definitions for the LLM.
+
+### OAuth2 Scopes
+
+If you enabled OAuth2 for the provider, you can define specific **Scopes** required for each endpoint (e.g., `read:user`, `repo:status`). These are cumulative; when a user authorizes an MCP Server, HasMCP requests the union of all scopes for the enabled endpoints.

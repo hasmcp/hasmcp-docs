@@ -1,0 +1,2251 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "HasMCP Manager API",
+    "version": "1.0.0",
+    "description": "API for managing HasMCP components like Variables, Providers, MCP Servers, Resources, and Prompts."
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/variables": {
+      "get": {
+        "summary": "List Variables",
+        "operationId": "listVariables",
+        "responses": {
+          "200": {
+            "description": "A list of variables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListVariablesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Variable",
+        "operationId": "createVariable",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVariableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Variable created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateVariableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/variables/{id}": {
+      "patch": {
+        "summary": "Update Variable",
+        "operationId": "updateVariable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Variable ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVariableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Variable updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateVariableResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Variable",
+        "operationId": "deleteVariable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Variable ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Variable deleted"
+          }
+        }
+      }
+    },
+    "/providers": {
+      "get": {
+        "summary": "List Providers",
+        "operationId": "listProviders",
+        "parameters": [
+          {
+            "name": "nameContains",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseURLContains",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apiType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of providers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListProvidersResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Provider",
+        "operationId": "createProvider",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProviderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Provider created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProviderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{id}": {
+      "get": {
+        "summary": "Get Provider",
+        "operationId": "getProvider",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProviderResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Provider",
+        "operationId": "updateProvider",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProviderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Provider updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateProviderResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Provider",
+        "operationId": "deleteProvider",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Provider deleted"
+          }
+        }
+      }
+    },
+    "/providers/{id}/endpoints": {
+      "get": {
+        "summary": "List Provider Endpoints",
+        "operationId": "listProviderEndpoints",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of provider endpoints",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListProviderEndpointsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Provider Endpoint",
+        "operationId": "createProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProviderEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Endpoint created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProviderEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{id}/endpoints/{endpointID}": {
+      "get": {
+        "summary": "Get Provider Endpoint",
+        "operationId": "getProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "endpointID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Endpoint ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endpoint details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProviderEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Provider Endpoint",
+        "operationId": "updateProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "endpointID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Endpoint ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProviderEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Endpoint updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateProviderEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Provider Endpoint",
+        "operationId": "deleteProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "endpointID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Endpoint ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Endpoint deleted"
+          }
+        }
+      }
+    },
+    "/servers": {
+      "get": {
+        "summary": "List MCP Servers",
+        "operationId": "listServers",
+        "responses": {
+          "200": {
+            "description": "A list of MCP servers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListServersResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create MCP Server",
+        "operationId": "createServer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "MCP Server created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{id}": {
+      "get": {
+        "summary": "Get MCP Server",
+        "operationId": "getServer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MCP Server details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update MCP Server",
+        "operationId": "updateServer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateServerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP Server updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateServerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete MCP Server",
+        "operationId": "deleteServer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "MCP Server deleted"
+          }
+        }
+      }
+    },
+    "/servers/{id}/tokens": {
+      "post": {
+        "summary": "Create MCP Server Token",
+        "operationId": "createServerToken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServerTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "MCP Server Token created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServerTokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{id}/endpoints": {
+      "get": {
+        "summary": "List MCP Server Endpoints",
+        "operationId": "listServerEndpoints",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of associated endpoints",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListServerEndpointsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create MCP Server Endpoint Association",
+        "operationId": "createServerEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServerEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Endpoint associated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServerEndpointResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{id}/endpoints/{endpointID}": {
+      "delete": {
+        "summary": "Delete MCP Server Endpoint Association",
+        "operationId": "deleteServerEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          },
+          {
+            "name": "endpointID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Endpoint association deleted"
+          }
+        }
+      }
+    },
+    "/resources": {
+      "get": {
+        "summary": "List Resources",
+        "operationId": "listResources",
+        "responses": {
+          "200": {
+            "description": "A list of resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Resource",
+        "operationId": "createResource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResourceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}": {
+      "get": {
+        "summary": "Get Resource",
+        "operationId": "getResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Resource ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResourceResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Resource",
+        "operationId": "updateResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Resource ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resource updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResourceResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Resource",
+        "operationId": "deleteResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Resource ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource deleted"
+          }
+        }
+      }
+    },
+    "/prompts": {
+      "get": {
+        "summary": "List Prompts",
+        "operationId": "listPrompts",
+        "responses": {
+          "200": {
+            "description": "A list of prompts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPromptsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Prompt",
+        "operationId": "createPrompt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Prompt created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prompts/{id}": {
+      "get": {
+        "summary": "Get Prompt",
+        "operationId": "getPrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Prompt ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prompt details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Prompt",
+        "operationId": "updatePrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Prompt ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Prompt updated"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Prompt",
+        "operationId": "deletePrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Prompt ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Prompt deleted"
+          }
+        }
+      }
+    },
+    "/servers/{id}/resources": {
+      "get": {
+        "summary": "List MCP Server Resource Associations",
+        "operationId": "listServerResources",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of associated resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListServerResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create MCP Server Resource Association",
+        "operationId": "createServerResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServerResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource associated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServerResourceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{id}/resources/{resourceID}": {
+      "delete": {
+        "summary": "Delete MCP Server Resource Association",
+        "operationId": "deleteServerResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          },
+          {
+            "name": "resourceID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Resource ID to disassociate"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource association deleted"
+          }
+        }
+      }
+    },
+    "/servers/{id}/prompts": {
+      "get": {
+        "summary": "List MCP Server Prompt Associations",
+        "operationId": "listServerPrompts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of associated prompts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListServerPromptsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create MCP Server Prompt Association",
+        "operationId": "createServerPrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServerPromptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Prompt associated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServerPromptResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{id}/prompts/{promptID}": {
+      "delete": {
+        "summary": "Delete MCP Server Prompt Association",
+        "operationId": "deleteServerPrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "MCP Server ID"
+            }
+          },
+          {
+            "name": "promptID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Prompt ID to disassociate"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Prompt association deleted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Enter 'Bearer' followed by a space and your token (e.g., 'Bearer ${HASMCP_ACCESS_TOKEN}')."
+      }
+    },
+    "schemas": {
+      "Variable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "description": "0: INVALID, 1: ENV, 2: SECRET",
+            "example": "ENV"
+          },
+          "value": {
+            "type": "string",
+            "description": "The variable's value. Will be '***' if type is SECRET on retrieval."
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "VariableCreate": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "0: INVALID, 1: ENV, 2: SECRET",
+            "example": "ENV"
+          },
+          "value": {
+            "type": "string",
+            "description": "The variable's value."
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "VariableUpdate": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The variable's value."
+          }
+        }
+      },
+      "CreateVariableRequest": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "$ref": "#/components/schemas/VariableCreate"
+          }
+        }
+      },
+      "CreateVariableResponse": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "$ref": "#/components/schemas/Variable"
+          }
+        }
+      },
+      "UpdateVariableRequest": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "$ref": "#/components/schemas/VariableUpdate"
+          }
+        }
+      },
+      "UpdateVariableResponse": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "$ref": "#/components/schemas/Variable"
+          }
+        }
+      },
+      "ListVariablesResponse": {
+        "type": "object",
+        "properties": {
+          "variables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Variable"
+            }
+          }
+        }
+      },
+      "ProviderOAuth2Config": {
+        "type": "object",
+        "properties": {
+          "clientID": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          },
+          "authURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "tokenURL": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "apiType": {
+            "type": "string",
+            "description": "0: INVALID, 1: REST",
+            "example": "REST"
+          },
+          "visibilityType": {
+            "type": "string",
+            "description": "0: INVALID, 1: INTERNAL, 2: PUBLIC",
+            "example": "PUBLIC"
+          },
+          "baseURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "documentURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "iconURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "secretPrefix": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/ProviderEndpoint"
+            }
+          },
+          "oauth2Config": {
+            "$ref": "#/components/schemas/ProviderOAuth2Config"
+          }
+        }
+      },
+      "ProviderCreate": {
+        "type": "object",
+        "properties": {
+          "apiType": {
+            "type": "string",
+            "description": "0: INVALID, 1: REST",
+            "example": "REST"
+          },
+          "visibilityType": {
+            "type": "string",
+            "description": "0: INVALID, 1: INTERNAL, 2: PUBLIC",
+            "example": "PUBLIC"
+          },
+          "baseURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "documentURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "iconURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "oauth2Config": {
+            "$ref": "#/components/schemas/ProviderOAuth2Config"
+          }
+        }
+      },
+      "CreateProviderRequest": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/ProviderCreate"
+          }
+        }
+      },
+      "CreateProviderResponse": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          }
+        }
+      },
+      "UpdateProviderRequest": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/ProviderCreate"
+          }
+        }
+      },
+      "UpdateProviderResponse": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          }
+        }
+      },
+      "ListProvidersResponse": {
+        "type": "object",
+        "properties": {
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          },
+          "matchCount": {
+            "type": "integer"
+          },
+          "nextToken": {
+            "type": "string"
+          }
+        }
+      },
+      "GetProviderResponse": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          }
+        }
+      },
+      "ProviderEndpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "providerID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "method": {
+            "type": "string",
+            "example": "GET"
+          },
+          "path": {
+            "type": "string",
+            "example": "/users/{id}"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pathArgsJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "queryArgsJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "reqBodyJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "resBodyJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointHeader"
+            }
+          },
+          "oauth2Scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ProviderEndpointCreate": {
+        "type": "object",
+        "properties": {
+          "providerID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "description": "This will be ignored, as providerID is taken from the path."
+          },
+          "method": {
+            "type": "string",
+            "example": "GET"
+          },
+          "path": {
+            "type": "string",
+            "example": "/users/{id}"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pathArgsJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "queryArgsJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "reqBodyJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "resBodyJSONSchema": {
+            "type": "object",
+            "description": "A raw JSON schema.",
+            "additionalProperties": true
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointHeader"
+            }
+          },
+          "oauth2Scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EndpointHeader": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateProviderEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ProviderEndpointCreate"
+          }
+        }
+      },
+      "CreateProviderEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ProviderEndpoint"
+          }
+        }
+      },
+      "UpdateProviderEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ProviderEndpointCreate"
+          }
+        }
+      },
+      "UpdateProviderEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ProviderEndpoint"
+          }
+        }
+      },
+      "ListProviderEndpointsResponse": {
+        "type": "object",
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderEndpoint"
+            }
+          }
+        }
+      },
+      "GetProviderEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ProviderEndpoint"
+          }
+        }
+      },
+      "Server": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "requestHeadersProxyEnabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Resource"
+            }
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Prompt"
+            }
+          }
+        }
+      },
+      "ServerCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "providers": {
+            "type": "array",
+            "description": "Array of providers to associate, only ID and nested Endpoint IDs are used.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9]{11}$",
+                  "example": "kSuB9Gf6aD4"
+                },
+                "endpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9]{11}$",
+                        "example": "kSuB9Gf6aD4"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "resources": {
+            "type": "array",
+            "description": "Array of resources to associate, only ID is used.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9]{11}$",
+                  "example": "kSuB9Gf6aD4"
+                }
+              }
+            }
+          },
+          "prompts": {
+            "type": "array",
+            "description": "Array of prompts to associate, only ID is used.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9]{11}$",
+                  "example": "kSuB9Gf6aD4"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateServerRequest": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "$ref": "#/components/schemas/ServerCreate"
+          }
+        }
+      },
+      "CreateServerResponse": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "$ref": "#/components/schemas/Server"
+          }
+        }
+      },
+      "ListServersResponse": {
+        "type": "object",
+        "properties": {
+          "servers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Server"
+            }
+          }
+        }
+      },
+      "GetServerResponse": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "$ref": "#/components/schemas/Server"
+          }
+        }
+      },
+      "UpdateServerRequest": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "$ref": "#/components/schemas/ServerCreate"
+          }
+        }
+      },
+      "UpdateServerResponse": {
+        "type": "object",
+        "properties": {
+          "server": {
+            "$ref": "#/components/schemas/Server"
+          }
+        }
+      },
+      "ServerToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "serverID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "description": "Token value, only present on creation.",
+            "readOnly": true
+          }
+        }
+      },
+      "ServerTokenCreate": {
+        "type": "object",
+        "properties": {
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateServerTokenRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/ServerTokenCreate"
+          }
+        }
+      },
+      "CreateServerTokenResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/ServerToken"
+          }
+        }
+      },
+      "ListServerTokensResponse": {
+        "type": "object",
+        "properties": {
+          "tokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerToken"
+            }
+          }
+        }
+      },
+      "ServerEndpoint": {
+        "type": "object",
+        "properties": {
+          "serverID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "providerID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "endpointID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          }
+        }
+      },
+      "CreateServerEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ServerEndpoint"
+          }
+        }
+      },
+      "CreateServerEndpointResponse": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/ServerEndpoint"
+          }
+        }
+      },
+      "ListServerEndpointsResponse": {
+        "type": "object",
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerEndpoint"
+            }
+          }
+        }
+      },
+      "Resource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "mimeType": {
+            "type": "string",
+            "example": "text/plain"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "annotations": {
+            "type": "object",
+            "description": "A raw JSON message for annotations.",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ResourceCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "mimeType": {
+            "type": "string",
+            "example": "text/plain"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "annotations": {
+            "type": "object",
+            "description": "A raw JSON message for annotations.",
+            "additionalProperties": true
+          }
+        }
+      },
+      "CreateResourceRequest": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ResourceCreate"
+          }
+        }
+      },
+      "CreateResourceResponse": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/Resource"
+          }
+        }
+      },
+      "GetResourceResponse": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/Resource"
+          }
+        }
+      },
+      "ListResourcesResponse": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Resource"
+            }
+          }
+        }
+      },
+      "UpdateResourceRequest": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ResourceCreate"
+          }
+        }
+      },
+      "UpdateResourceResponse": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/Resource"
+          }
+        }
+      },
+      "Prompt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "object",
+            "description": "A raw JSON message for arguments (e.g., []PromptArgument).",
+            "additionalProperties": true
+          },
+          "messages": {
+            "type": "object",
+            "description": "A raw JSON message for messages (e.g., []PromptMessage).",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PromptCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "object",
+            "description": "A raw JSON message for arguments (e.g., []PromptArgument).",
+            "additionalProperties": true
+          },
+          "messages": {
+            "type": "object",
+            "description": "A raw JSON message for messages (e.g., []PromptMessage).",
+            "additionalProperties": true
+          }
+        }
+      },
+      "CreatePromptRequest": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/PromptCreate"
+          }
+        }
+      },
+      "CreatePromptResponse": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/Prompt"
+          }
+        }
+      },
+      "GetPromptResponse": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/Prompt"
+          }
+        }
+      },
+      "ListPromptsResponse": {
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Prompt"
+            }
+          }
+        }
+      },
+      "UpdatePromptRequest": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/PromptCreate"
+          }
+        }
+      },
+      "ServerResource": {
+        "type": "object",
+        "properties": {
+          "serverID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "resourceID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          }
+        }
+      },
+      "CreateServerResourceRequest": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ServerResource"
+          }
+        }
+      },
+      "CreateServerResourceResponse": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ServerResource"
+          }
+        }
+      },
+      "ListServerResourcesResponse": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerResource"
+            }
+          }
+        }
+      },
+      "ServerPrompt": {
+        "type": "object",
+        "properties": {
+          "serverID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          },
+          "promptID": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{11}$",
+            "example": "kSuB9Gf6aD4"
+          }
+        }
+      },
+      "CreateServerPromptRequest": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/ServerPrompt"
+          }
+        }
+      },
+      "CreateServerPromptResponse": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/ServerPrompt"
+          }
+        }
+      },
+      "ListServerPromptsResponse": {
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerPrompt"
+            }
+          }
+        }
+      }
+    }
+  }
+}

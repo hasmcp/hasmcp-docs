@@ -1,0 +1,90 @@
+---
+title: "Environment Variables & Secrets"
+description: "A comprehensive guide to securely managing credentials, understanding naming conventions, and mastering the security isolation rules in HasMCP."
+---
+
+## What are Environment Variable & Secrets 
+
+HasMCP serves as the bridge between your LLM and the external world. To cross that bridge securely, it includes a robust, centralized vault for storing sensitive information like API Keys, Bearer Tokens, and Client Secrets.
+
+Instead of hardcoding credentials directly into your provider configurations—which risks exposing them in export files or screenshots—you define them once in this secure vault. You then reference them dynamically throughout your application. This separation of concerns aligns with industry-standard "Twelve-Factor App" methodologies, ensuring your configuration remains portable while your secrets remain protected.
+
+## Variable Types
+
+When creating a new entry in the vault, you must categorize the data based on its sensitivity. HasMCP distinguishes between two fundamental types of variables:
+
+| Type       | Description                       | Visibility & Security                                                                                                                                                                                                 | Recommended Usage                                                                                                                       |
+| :--------- | :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| **ENV**    | Standard configuration variables. | **Plain Text**. These values remain visible in the UI after saving. They are not redacted in logs.                                                                                                                    | Use for non-sensitive data such as `API_VERSION`, `REGION` (e.g., `us-east-1`), or `environment` flags (e.g., `production`, `staging`). |
+| **SECRET** | High-security credentials.        | **Masked**. Once saved, the value is permanently replaced with asterisks (e.g., `********`) in the UI. The actual value is never sent to the client-side browser again; it exists only in the secure backend storage. | **Mandatory** for `API_KEYS`, `ACCESS_TOKENS`, `CLIENT_SECRETS`, and `PRIVATE_KEYS`.                                                    |
+
+> **Security Note**: Never store a credential as an `ENV` type. Even if you are working locally, building the habit of using `SECRET` for credentials prevents accidental leaks if you later share your configuration or screen.
+
+## Naming Conventions & Sanitization
+
+To ensure compatibility across various operating systems, deployment environments (like Docker or Linux), and the internal token generation logic, HasMCP enforces strict naming rules.
+
+The system performs **Automatic Sanitization** on your input to guarantee validity:
+
+1. **Capital Snake Case Conversion**:
+   - The system automatically converts all letters to uppercase.
+   - Spaces (` `) and hyphens (`-`) are converted to underscores (`_`).
+   - _Example_: Inputting `stripe api key` will automatically be saved as `STRIPE_API_KEY`.
+2. **Alphanumeric Filtering**:
+   - Any special characters that are not alphanumeric (A-Z, 0-9) or underscores are stripped out.
+   - _Example_: Inputting `my-app:key@v1` will be sanitized to `MY_APP_KEY_V1`.
+
+These strict conventions prevent syntax errors when these variables are eventually injected into HTTP headers or interpolated into command-line arguments for MCP clients.
+
+## The "Provider Prefix" Rule
+
+**This is the single most critical security concept in HasMCP.**
+
+HasMCP implements a strict **Namespace Isolation Policy** known as the "Prefix Rule." This mechanism prevents "Credential Stuffing" attacks where a malicious or misconfigured provider might try to access secrets belonging to a different service.
+
+### How Isolation Works
+
+Every secret in HasMCP is "scoped" to a specific domain. A variable acts like a key, and the provider acts like a lock. The key only fits if it matches the lock's specific shape.
+
+1. **Automatic Prefix Generation**: When you create a **Provider**, HasMCP analyzes the `Base URL` and automatically generates a unique, immutable **Secret Prefix**.
+   - **Base URL**: `https://api.coinbase.com/v2`
+   - **Derived Domain**: `coinbase.com`
+   - **Generated Prefix**: `API_COINBASE_COM`
+2. **Enforcement**: Any variable you wish to inject into the headers of this provider **MUST** begin with that exact prefix. You cannot use a generic name like `API_KEY` because HasMCP would not know which service owns it.
+
+### Prefix Scenarios
+
+| Provider     | Generated Prefix   | Valid Variable Name     | Invalid Variable Name | Reason for Invalidity      |
+| :----------- | :----------------- | :---------------------- | :-------------------- | :------------------------- |
+| **Coinbase** | `API_COINBASE_COM` | `API_COINBASE_COM_KEY`  | `COINBASE_KEY`        | Missing the full prefix.   |
+| **Stripe**   | `API_STRIPE_COM`   | `API_STRIPE_COM_SECRET` | `STRIPE_SECRET`       | Missing `API_` or `_COM`.  |
+| **OpenAI**   | `API_OPENAI_COM`   | `API_OPENAI_COM_TOKEN`  | `MY_TOKEN`            | Generic names are blocked. |
+
+> **Error Prevention**: The UI actively validates your configuration. If you attempt to save an Endpoint that references a variable (e.g., `${MY_KEY}`) that does not match the provider's prefix, the save operation will be blocked with a validation error.
+
+## Referencing Variables
+
+Once you have defined your variables in the vault, they become available for dynamic injection throughout your **Provider Endpoints**. You reference them using the standard template literal syntax: `${VARIABLE_NAME}`.
+
+### Header Injection
+
+This is the most common use case. When configuring an Endpoint (under the **Providers** tab), you can construct complex header values by mixing static text with dynamic variables.
+
+- **Bearer Token Auth**:
+  - **Key**: `Authorization`
+  - **Value**: `Bearer ${API_COINBASE_COM_KEY}`
+  - _Result_: The system concatenates "Bearer " with your secret key.
+- **Custom API Key Headers**:
+  - **Key**: `X-API-Key`
+  - **Value**: `${API_STRIPE_COM_SECRET}`
+- **Basic Auth (Base64)**:
+  - **Key**: `Authorization`
+  - **Value**: `Basic ${API_SERVICE_COM_B64_CREDENTIALS}`
+  - _Note_: You must ensure the variable value stored in the vault is already Base64 encoded if the API requires it.
+
+### Security in Logs
+
+HasMCP takes specific measures to ensure `SECRET` variables do not leak during debugging or operation.
+
+1. **Server-Side Injection**: Variable substitution happens **only** on the backend server, microseconds before the request is sent to the external API. The frontend never sees the populated headers.
+2. **Log Redaction**: If you view the **Server Logs**, the actual values of any variable marked as `SECRET` are redacted or completely omitted from the log output. You will see the request was made, but you will not see the credential in plain text.

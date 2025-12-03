@@ -1,0 +1,191 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "HasMCP Docs",
+  "colors": {
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "index",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Essentials",
+            "pages": [
+              "essentials/providers",
+              "essentials/variables",
+              "essentials/servers",
+              "essentials/clients",
+              "essentials/server-logs"
+            ]
+          },
+          {
+            "group": "Self-hosted",
+            "pages": [
+              "self-hosted"
+            ]
+          },
+          {
+            "group": "Licenses",
+            "pages": [
+              "licenses"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API documentation",
+            "pages": [
+            {
+                "group": "Prompts",
+                "pages": [
+                  "api-reference/prompts/list-prompts",
+                  "api-reference/prompts/create-prompt",
+                  "api-reference/prompts/get-prompt",
+                  "api-reference/prompts/update-prompt",
+                  "api-reference/prompts/delete-prompt"
+                ]
+              },
+              {
+                "group": "Providers",
+                "pages": [
+                  "api-reference/providers/list-providers",
+                  "api-reference/providers/create-provider",
+                  "api-reference/providers/get-provider",
+                  "api-reference/providers/update-provider",
+                  "api-reference/providers/delete-provider",
+                  {
+                    "group": "Provider Endpoints",
+                    "pages": [
+                      "api-reference/providers/endpoints/list-provider-endpoints",
+                      "api-reference/providers/endpoints/create-provider-endpoint",
+                      "api-reference/providers/endpoints/get-provider-endpoint",
+                      "api-reference/providers/endpoints/update-provider-endpoint",
+                      "api-reference/providers/endpoints/delete-provider-endpoint"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Resources",
+                "pages": [
+                  "api-reference/resources/list-resources",
+                  "api-reference/resources/create-resource",
+                  "api-reference/resources/get-resource",
+                  "api-reference/resources/update-resource",
+                  "api-reference/resources/delete-resource"
+                ]
+              },
+              {
+                "group": "Servers",
+                "pages": [
+                  "api-reference/servers/list-mcp-servers",
+                  "api-reference/servers/create-mcp-server",
+                  "api-reference/servers/get-mcp-server",
+                  "api-reference/servers/update-mcp-server",
+                  "api-reference/servers/delete-mcp-server",
+                  {
+                    "group": "Server Tokens",
+                    "pages": [
+                      "api-reference/servers/tokens/create-mcp-server-token"
+                    ]
+                  },
+                  {
+                    "group": "Server Endpoints",
+                    "pages": [
+                      "api-reference/servers/endpoints/list-mcp-server-endpoints",
+                      "api-reference/servers/endpoints/create-mcp-server-endpoint-association",
+                      "api-reference/servers/endpoints/delete-mcp-server-endpoint-association"
+                    ]
+                  },
+                  {
+                    "group": "Server Prompts",
+                    "pages": [
+                      "api-reference/servers/prompts/list-mcp-server-prompt-associations",
+                      "api-reference/servers/prompts/create-mcp-server-prompt-association",
+                      "api-reference/servers/prompts/delete-mcp-server-prompt-association"
+                    ]
+                  },
+                  {
+                    "group": "Server Resources",
+                    "pages": [
+                      "api-reference/servers/resources/list-mcp-server-resource-associations",
+                      "api-reference/servers/resources/create-mcp-server-resource-association",
+                      "api-reference/servers/resources/delete-mcp-server-resource-association"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Variables",
+                "pages": [
+                  "api-reference/variables/list-variables",
+                  "api-reference/variables/create-variable",
+                  "api-reference/variables/update-variable",
+                  "api-reference/variables/delete-variable"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Github",
+          "href": "https://github.com/hasmcp/hasmcp-docs",
+          "icon": "book-open-cover"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:hi@hasmcp.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
+    }
+  },
+  "contextual": {
+    "options": [
+     "copy",
+     "view",
+     "chatgpt",
+     "claude",
+     "perplexity",
+     "mcp",
+     "cursor",
+     "vscode"
+   ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/hasmcp"
+    }
+  }
+}
