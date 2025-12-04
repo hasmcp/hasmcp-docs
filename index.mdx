@@ -2,7 +2,7 @@
 title: "Introduction"
 description: "HasMCP is a no-code builder designed to instantly convert standard HTTP APIs into Model Context Protocol (MCP) servers.
 
-Instead of writing and maintaining custom Python or TypeScript code to expose your internal tools or third-party APIs to LLMs (like Claude or Gemini), HasMCP allows you to define, test, and bundle these interactions through a visual interface."
+Instead of writing and maintaining custom Python or TypeScript code to expose your internal tools or third-party APIs to LLMs (like Claude or Gemini), HasMCP allows creating MCP servers without any coding by wrapping your endpoints with latest protocol spec using Streamable HTTP."
 ---
 
 ### Why use HasMCP?
@@ -11,7 +11,7 @@ Instead of writing and maintaining custom Python or TypeScript code to expose yo
 
 **Centralized Secrets**: Manage API keys and credentials securely in one place, injecting them dynamically into requests.
 
-**Instant Deployment**:  Generate a configuration snippet instantly to connect your new MCP server to clients like Claude Desktop or Google's Gemini.
+**Instant Deployment**: Generate a configuration snippet instantly to connect your new MCP server to clients like Claude Desktop or Google's Gemini.
 
 ## Core Concepts
 
@@ -56,4 +56,4 @@ An **MCP Server** is the final wrapper that you connect to your LLM client.
 - **Bundling**: It groups a specific Provider and a selection of its Endpoints.
 - **Access Control**: You generate time-limited access tokens for the server.
 - **Configuration**: HasMCP generates the specific JSON configuration needed for clients like **Claude Desktop** or **Gemini CLI** to recognize and connect to your server.
-- **Authorize What You Need**: Select what endpoints that you need from a specific provider. 
+- **Authorize What You Need**: Select what endpoints that you need from a specific provider.
