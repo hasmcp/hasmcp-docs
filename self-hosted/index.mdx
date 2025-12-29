@@ -105,18 +105,18 @@ logs:
 
 setup:
 	docker pull $(DOCKER_IMAGE); \
-	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_license:/_license -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
 
 update:
 	docker stop hasmcp-ce || true; \
 	docker rm hasmcp-ce || true; \
 	docker pull $(DOCKER_IMAGE); \
-	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_license:/_license -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
 
 restart:
 	docker stop hasmcp-ce; \
 	docker rm hasmcp-ce; \
-	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_certs:/_certs -v ./_config:/_config -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
+	docker run --env-file .env -p 80:80 -p 443:443 --name hasmcp-ce -v ./_certs:/_certs -v ./_storage:/_storage -d --restart always $(DOCKER_IMAGE)
 ```
 
 ### Setup
