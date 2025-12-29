@@ -69,13 +69,13 @@
                   "api-reference/providers/update-provider",
                   "api-reference/providers/delete-provider",
                   {
-                    "group": "Provider Endpoints",
+                    "group": "Provider Tools",
                     "pages": [
-                      "api-reference/providers/endpoints/list-provider-endpoints",
-                      "api-reference/providers/endpoints/create-provider-endpoint",
-                      "api-reference/providers/endpoints/get-provider-endpoint",
-                      "api-reference/providers/endpoints/update-provider-endpoint",
-                      "api-reference/providers/endpoints/delete-provider-endpoint"
+                      "api-reference/providers/tools/list-provider-tools",
+                      "api-reference/providers/tools/create-provider-tool",
+                      "api-reference/providers/tools/get-provider-tool",
+                      "api-reference/providers/tools/update-provider-tool",
+                      "api-reference/providers/tools/delete-provider-tool"
                     ]
                   }
                 ]
@@ -105,11 +105,11 @@
                     ]
                   },
                   {
-                    "group": "Server Endpoints",
+                    "group": "Server Tools",
                     "pages": [
-                      "api-reference/servers/endpoints/list-mcp-server-endpoints",
-                      "api-reference/servers/endpoints/create-mcp-server-endpoint-association",
-                      "api-reference/servers/endpoints/delete-mcp-server-endpoint-association"
+                      "api-reference/servers/tools/list-mcp-server-tools",
+                      "api-reference/servers/tools/create-mcp-server-tool-association",
+                      "api-reference/servers/tools/delete-mcp-server-tool-association"
                     ]
                   },
                   {
