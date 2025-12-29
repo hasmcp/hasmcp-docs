@@ -288,10 +288,10 @@
         }
       }
     },
-    "/providers/{id}/endpoints": {
+    "/providers/{id}/tools": {
       "get": {
-        "summary": "List Provider Endpoints",
-        "operationId": "listProviderEndpoints",
+        "summary": "List Provider Tools",
+        "operationId": "listProviderTools",
         "parameters": [
           {
             "name": "id",
@@ -305,11 +305,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of provider endpoints",
+            "description": "A list of provider tools",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListProviderEndpointsResponse"
+                  "$ref": "#/components/schemas/ListProviderToolsResponse"
                 }
               }
             }
@@ -317,8 +317,8 @@
         }
       },
       "post": {
-        "summary": "Create Provider Endpoint",
-        "operationId": "createProviderEndpoint",
+        "summary": "Create Provider Tool",
+        "operationId": "createProviderTool",
         "parameters": [
           {
             "name": "id",
@@ -335,18 +335,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProviderEndpointRequest"
+                "$ref": "#/components/schemas/CreateProviderToolRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Endpoint created",
+            "description": "Tool created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateProviderEndpointResponse"
+                  "$ref": "#/components/schemas/CreateProviderToolResponse"
                 }
               }
             }
@@ -354,10 +354,10 @@
         }
       }
     },
-    "/providers/{id}/endpoints/{endpointID}": {
+    "/providers/{id}/tools/{toolID}": {
       "get": {
-        "summary": "Get Provider Endpoint",
-        "operationId": "getProviderEndpoint",
+        "summary": "Get Provider Tool",
+        "operationId": "getProviderTool",
         "parameters": [
           {
             "name": "id",
@@ -369,22 +369,22 @@
             }
           },
           {
-            "name": "endpointID",
+            "name": "toolID",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "description": "Endpoint ID"
+              "description": "Tool ID"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Endpoint details",
+            "description": "Tool details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetProviderEndpointResponse"
+                  "$ref": "#/components/schemas/GetProviderToolResponse"
                 }
               }
             }
@@ -392,8 +392,8 @@
         }
       },
       "patch": {
-        "summary": "Update Provider Endpoint",
-        "operationId": "updateProviderEndpoint",
+        "summary": "Update Provider Tool",
+        "operationId": "updateProviderTool",
         "parameters": [
           {
             "name": "id",
@@ -405,12 +405,12 @@
             }
           },
           {
-            "name": "endpointID",
+            "name": "toolID",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "description": "Endpoint ID"
+              "description": "Tool ID"
             }
           }
         ],
@@ -419,18 +419,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProviderEndpointRequest"
+                "$ref": "#/components/schemas/UpdateProviderToolRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Endpoint updated",
+            "description": "Tool updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateProviderEndpointResponse"
+                  "$ref": "#/components/schemas/UpdateProviderToolResponse"
                 }
               }
             }
@@ -438,8 +438,8 @@
         }
       },
       "delete": {
-        "summary": "Delete Provider Endpoint",
-        "operationId": "deleteProviderEndpoint",
+        "summary": "Delete Provider Tool",
+        "operationId": "deleteProviderTool",
         "parameters": [
           {
             "name": "id",
@@ -451,18 +451,18 @@
             }
           },
           {
-            "name": "endpointID",
+            "name": "toolID",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "description": "Endpoint ID"
+              "description": "Tool ID"
             }
           }
         ],
         "responses": {
           "204": {
-            "description": "Endpoint deleted"
+            "description": "Tool deleted"
           }
         }
       }
@@ -636,10 +636,10 @@
         }
       }
     },
-    "/servers/{id}/endpoints": {
+    "/servers/{id}/tools": {
       "get": {
-        "summary": "List MCP Server Endpoints",
-        "operationId": "listServerEndpoints",
+        "summary": "List MCP Server Tools",
+        "operationId": "listServerTools",
         "parameters": [
           {
             "name": "id",
@@ -653,11 +653,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of associated endpoints",
+            "description": "A list of associated tools",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListServerEndpointsResponse"
+                  "$ref": "#/components/schemas/ListServerToolsResponse"
                 }
               }
             }
@@ -665,8 +665,8 @@
         }
       },
       "post": {
-        "summary": "Create MCP Server Endpoint Association",
-        "operationId": "createServerEndpoint",
+        "summary": "Create MCP Server Tool Association",
+        "operationId": "createServerTool",
         "parameters": [
           {
             "name": "id",
@@ -683,18 +683,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateServerEndpointRequest"
+                "$ref": "#/components/schemas/CreateServerToolRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Endpoint associated",
+            "description": "Tool associated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateServerEndpointResponse"
+                  "$ref": "#/components/schemas/CreateServerToolResponse"
                 }
               }
             }
@@ -702,10 +702,10 @@
         }
       }
     },
-    "/servers/{id}/endpoints/{endpointID}": {
+    "/servers/{id}/tools/{toolID}": {
       "delete": {
-        "summary": "Delete MCP Server Endpoint Association",
-        "operationId": "deleteServerEndpoint",
+        "summary": "Delete MCP Server Tool Association",
+        "operationId": "deleteServerTool",
         "parameters": [
           {
             "name": "id",
@@ -717,7 +717,7 @@
             }
           },
           {
-            "name": "endpointID",
+            "name": "toolID",
             "in": "path",
             "required": true,
             "schema": {
@@ -727,7 +727,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Endpoint association deleted"
+            "description": "Tool association deleted"
           }
         }
       }
@@ -1366,11 +1366,11 @@
           "description": {
             "type": "string"
           },
-          "endpoints": {
+          "tools": {
             "type": "array",
             "readOnly": true,
             "items": {
-              "$ref": "#/components/schemas/ProviderEndpoint"
+              "$ref": "#/components/schemas/ProviderTool"
             }
           },
           "oauth2Config": {
@@ -1471,7 +1471,7 @@
           }
         }
       },
-      "ProviderEndpoint": {
+      "ProviderTool": {
         "type": "object",
         "properties": {
           "id": {
@@ -1519,7 +1519,7 @@
           "headers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EndpointHeader"
+              "$ref": "#/components/schemas/ToolHeader"
             }
           },
           "oauth2Scopes": {
@@ -1530,7 +1530,7 @@
           }
         }
       },
-      "ProviderEndpointCreate": {
+      "ProviderToolCreate": {
         "type": "object",
         "properties": {
           "providerID": {
@@ -1573,7 +1573,7 @@
           "headers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EndpointHeader"
+              "$ref": "#/components/schemas/ToolHeader"
             }
           },
           "oauth2Scopes": {
@@ -1584,7 +1584,7 @@
           }
         }
       },
-      "EndpointHeader": {
+      "ToolHeader": {
         "type": "object",
         "properties": {
           "key": {
@@ -1595,54 +1595,54 @@
           }
         }
       },
-      "CreateProviderEndpointRequest": {
+      "CreateProviderToolRequest": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ProviderEndpointCreate"
+          "tool": {
+            "$ref": "#/components/schemas/ProviderToolCreate"
           }
         }
       },
-      "CreateProviderEndpointResponse": {
+      "CreateProviderToolResponse": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ProviderEndpoint"
+          "tool": {
+            "$ref": "#/components/schemas/ProviderTool"
           }
         }
       },
-      "UpdateProviderEndpointRequest": {
+      "UpdateProviderToolRequest": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ProviderEndpointCreate"
+          "tool": {
+            "$ref": "#/components/schemas/ProviderToolCreate"
           }
         }
       },
-      "UpdateProviderEndpointResponse": {
+      "UpdateProviderToolResponse": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ProviderEndpoint"
+          "tool": {
+            "$ref": "#/components/schemas/ProviderTool"
           }
         }
       },
-      "ListProviderEndpointsResponse": {
+      "ListProviderToolsResponse": {
         "type": "object",
         "properties": {
-          "endpoints": {
+          "tools": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ProviderEndpoint"
+              "$ref": "#/components/schemas/ProviderTool"
             }
           }
         }
       },
-      "GetProviderEndpointResponse": {
+      "GetProviderToolResponse": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ProviderEndpoint"
+          "tool": {
+            "$ref": "#/components/schemas/ProviderTool"
           }
         }
       },
@@ -1713,7 +1713,7 @@
           },
           "providers": {
             "type": "array",
-            "description": "Array of providers to associate, only ID and nested Endpoint IDs are used.",
+            "description": "Array of providers to associate, only ID and nested Tool IDs are used.",
             "items": {
               "type": "object",
               "properties": {
@@ -1722,7 +1722,7 @@
                   "pattern": "^[A-Za-z0-9]{11}$",
                   "example": "kSuB9Gf6aD4"
                 },
-                "endpoints": {
+                "tools": {
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -1891,7 +1891,7 @@
           }
         }
       },
-      "ServerEndpoint": {
+      "ServerTool": {
         "type": "object",
         "properties": {
           "serverID": {
@@ -1904,36 +1904,36 @@
             "pattern": "^[A-Za-z0-9]{11}$",
             "example": "kSuB9Gf6aD4"
           },
-          "endpointID": {
+          "toolID": {
             "type": "string",
             "pattern": "^[A-Za-z0-9]{11}$",
             "example": "kSuB9Gf6aD4"
           }
         }
       },
-      "CreateServerEndpointRequest": {
+      "CreateServerToolRequest": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ServerEndpoint"
+          "tool": {
+            "$ref": "#/components/schemas/ServerTool"
           }
         }
       },
-      "CreateServerEndpointResponse": {
+      "CreateServerToolResponse": {
         "type": "object",
         "properties": {
-          "endpoint": {
-            "$ref": "#/components/schemas/ServerEndpoint"
+          "tool": {
+            "$ref": "#/components/schemas/ServerTool"
           }
         }
       },
-      "ListServerEndpointsResponse": {
+      "ListServerToolsResponse": {
         "type": "object",
         "properties": {
-          "endpoints": {
+          "tools": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ServerEndpoint"
+              "$ref": "#/components/schemas/ServerTool"
             }
           }
         }

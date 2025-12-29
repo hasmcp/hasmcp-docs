@@ -176,10 +176,10 @@ paths:
       responses:
         "204":
           description: Provider deleted
-  /providers/{id}/endpoints:
+  /providers/{id}/tools:
     get:
-      summary: List Provider Endpoints
-      operationId: listProviderEndpoints
+      summary: List Provider Tools
+      operationId: listProviderTools
       parameters:
         - name: id
           in: path
@@ -189,14 +189,14 @@ paths:
             description: Provider ID
       responses:
         "200":
-          description: A list of provider endpoints
+          description: A list of provider tools
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListProviderEndpointsResponse"
+                $ref: "#/components/schemas/ListProviderToolsResponse"
     post:
-      summary: Create Provider Endpoint
-      operationId: createProviderEndpoint
+      summary: Create Provider Tool
+      operationId: createProviderTool
       parameters:
         - name: id
           in: path
@@ -209,18 +209,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateProviderEndpointRequest"
+              $ref: "#/components/schemas/CreateProviderToolRequest"
       responses:
         "201":
-          description: Endpoint created
+          description: Tool created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateProviderEndpointResponse"
-  /providers/{id}/endpoints/{endpointID}:
+                $ref: "#/components/schemas/CreateProviderToolResponse"
+  /providers/{id}/tools/{toolID}:
     get:
-      summary: Get Provider Endpoint
-      operationId: getProviderEndpoint
+      summary: Get Provider Tool
+      operationId: getProviderTool
       parameters:
         - name: id
           in: path
@@ -228,22 +228,22 @@ paths:
           schema:
             type: string
             description: Provider ID
-        - name: endpointID
+        - name: toolID
           in: path
           required: true
           schema:
             type: string
-            description: Endpoint ID
+            description: Tool ID
       responses:
         "200":
-          description: Endpoint details
+          description: Tool details
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetProviderEndpointResponse"
+                $ref: "#/components/schemas/GetProviderToolResponse"
     patch:
-      summary: Update Provider Endpoint
-      operationId: updateProviderEndpoint
+      summary: Update Provider Tool
+      operationId: updateProviderTool
       parameters:
         - name: id
           in: path
@@ -251,28 +251,28 @@ paths:
           schema:
             type: string
             description: Provider ID
-        - name: endpointID
+        - name: toolID
           in: path
           required: true
           schema:
             type: string
-            description: Endpoint ID
+            description: Tool ID
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateProviderEndpointRequest"
+              $ref: "#/components/schemas/UpdateProviderToolRequest"
       responses:
         "200":
-          description: Endpoint updated
+          description: Tool updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateProviderEndpointResponse"
+                $ref: "#/components/schemas/UpdateProviderToolResponse"
     delete:
-      summary: Delete Provider Endpoint
-      operationId: deleteProviderEndpoint
+      summary: Delete Provider Tool
+      operationId: deleteProviderTool
       parameters:
         - name: id
           in: path
@@ -280,15 +280,15 @@ paths:
           schema:
             type: string
             description: Provider ID
-        - name: endpointID
+        - name: toolID
           in: path
           required: true
           schema:
             type: string
-            description: Endpoint ID
+            description: Tool ID
       responses:
         "204":
-          description: Endpoint deleted
+          description: Tool deleted
   /servers:
     get:
       summary: List MCP Servers
@@ -394,10 +394,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateServerTokenResponse"
-  /servers/{id}/endpoints:
+  /servers/{id}/tools:
     get:
-      summary: List MCP Server Endpoints
-      operationId: listServerEndpoints
+      summary: List MCP Server Tools
+      operationId: listServerTools
       parameters:
         - name: id
           in: path
@@ -407,14 +407,14 @@ paths:
             description: MCP Server ID
       responses:
         "200":
-          description: A list of associated endpoints
+          description: A list of associated tools
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListServerEndpointsResponse"
+                $ref: "#/components/schemas/ListServerToolsResponse"
     post:
-      summary: Create MCP Server Endpoint Association
-      operationId: createServerEndpoint
+      summary: Create MCP Server Tool Association
+      operationId: createServerTool
       parameters:
         - name: id
           in: path
@@ -427,18 +427,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateServerEndpointRequest"
+              $ref: "#/components/schemas/CreateServerToolRequest"
       responses:
         "201":
-          description: Endpoint associated
+          description: Tool associated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateServerEndpointResponse"
-  /servers/{id}/endpoints/{endpointID}:
+                $ref: "#/components/schemas/CreateServerToolResponse"
+  /servers/{id}/tools/{toolID}:
     delete:
-      summary: Delete MCP Server Endpoint Association
-      operationId: deleteServerEndpoint
+      summary: Delete MCP Server Tool Association
+      operationId: deleteServerTool
       parameters:
         - name: id
           in: path
@@ -446,14 +446,14 @@ paths:
           schema:
             type: string
             description: MCP Server ID
-        - name: endpointID
+        - name: toolID
           in: path
           required: true
           schema:
             type: string
       responses:
         "204":
-          description: Endpoint association deleted
+          description: Tool association deleted
   /resources:
     get:
       summary: List Resources
@@ -868,11 +868,11 @@ components:
           type: string
         description:
           type: string
-        endpoints:
+        tools:
           type: array
           readOnly: true
           items:
-            $ref: "#/components/schemas/ProviderEndpoint"
+            $ref: "#/components/schemas/ProviderTool"
         oauth2Config:
           $ref: "#/components/schemas/ProviderOAuth2Config"
     ProviderCreate:
@@ -937,7 +937,7 @@ components:
       properties:
         provider:
           $ref: "#/components/schemas/Provider"
-    ProviderEndpoint:
+    ProviderTool:
       type: object
       properties:
         id:
@@ -955,6 +955,14 @@ components:
         path:
           type: string
           example: "/users/{id}"
+        name:
+          type: string
+          description: MCP tool name (camelCase up to 20chars)
+          example: makePayment
+        title:
+          type: string
+          description: MCP tool title (Free text up to 64 chars)
+          example: Make Payment
         description:
           type: string
         pathArgsJSONSchema:
@@ -969,19 +977,15 @@ components:
           type: object
           description: A raw JSON schema.
           additionalProperties: true
-        resBodyJSONSchema:
-          type: object
-          description: A raw JSON schema.
-          additionalProperties: true
         headers:
           type: array
           items:
-            $ref: "#/components/schemas/EndpointHeader"
+            $ref: "#/components/schemas/ToolHeader"
         oauth2Scopes:
           type: array
           items:
             type: string
-    ProviderEndpointCreate:
+    ProviderToolCreate:
       type: object
       properties:
         providerID:
@@ -995,6 +999,14 @@ components:
         path:
           type: string
           example: "/users/{id}"
+        name:
+          type: string
+          description: MCP tool name (camelCase up to 20chars)
+          example: makePayment
+        title:
+          type: string
+          description: MCP tool title (Free text up to 64 chars)
+          example: Make Payment
         description:
           type: string
         pathArgsJSONSchema:
@@ -1009,57 +1021,53 @@ components:
           type: object
           description: A raw JSON schema.
           additionalProperties: true
-        resBodyJSONSchema:
-          type: object
-          description: A raw JSON schema.
-          additionalProperties: true
         headers:
           type: array
           items:
-            $ref: "#/components/schemas/EndpointHeader"
+            $ref: "#/components/schemas/ToolHeader"
         oauth2Scopes:
           type: array
           items:
             type: string
-    EndpointHeader:
+    ToolHeader:
       type: object
       properties:
         key:
           type: string
         value:
           type: string
-    CreateProviderEndpointRequest:
+    CreateProviderToolRequest:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ProviderEndpointCreate"
-    CreateProviderEndpointResponse:
+        tool:
+          $ref: "#/components/schemas/ProviderToolCreate"
+    CreateProviderToolResponse:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ProviderEndpoint"
-    UpdateProviderEndpointRequest:
+        tool:
+          $ref: "#/components/schemas/ProviderTool"
+    UpdateProviderToolRequest:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ProviderEndpointCreate"
-    UpdateProviderEndpointResponse:
+        tool:
+          $ref: "#/components/schemas/ProviderToolCreate"
+    UpdateProviderToolResponse:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ProviderEndpoint"
-    ListProviderEndpointsResponse:
+        tool:
+          $ref: "#/components/schemas/ProviderTool"
+    ListProviderToolsResponse:
       type: object
       properties:
-        endpoints:
+        tools:
           type: array
           items:
-            $ref: "#/components/schemas/ProviderEndpoint"
-    GetProviderEndpointResponse:
+            $ref: "#/components/schemas/ProviderTool"
+    GetProviderToolResponse:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ProviderEndpoint"
+        tool:
+          $ref: "#/components/schemas/ProviderTool"
     Server:
       type: object
       properties:
@@ -1109,7 +1117,7 @@ components:
           format: int32
         providers:
           type: array
-          description: Array of providers to associate, only ID and nested Endpoint IDs are used.
+          description: Array of providers to associate, only ID and nested Tool IDs are used.
           items:
             type: object
             properties:
@@ -1117,7 +1125,7 @@ components:
                 type: string
                 pattern: "^[A-Za-z0-9]{11}$"
                 example: "kSuB9Gf6aD4"
-              endpoints:
+              tools:
                 type: array
                 items:
                   type: object
@@ -1228,7 +1236,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ServerToken"
-    ServerEndpoint:
+    ServerTool:
       type: object
       properties:
         serverID:
@@ -1239,27 +1247,27 @@ components:
           type: string
           pattern: "^[A-Za-z0-9]{11}$"
           example: "kSuB9Gf6aD4"
-        endpointID:
+        toolID:
           type: string
           pattern: "^[A-Za-z0-9]{11}$"
           example: "kSuB9Gf6aD4"
-    CreateServerEndpointRequest:
+    CreateServerToolRequest:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ServerEndpoint"
-    CreateServerEndpointResponse:
+        tool:
+          $ref: "#/components/schemas/ServerTool"
+    CreateServerToolResponse:
       type: object
       properties:
-        endpoint:
-          $ref: "#/components/schemas/ServerEndpoint"
-    ListServerEndpointsResponse:
+        tool:
+          $ref: "#/components/schemas/ServerTool"
+    ListServerToolsResponse:
       type: object
       properties:
-        endpoints:
+        tools:
           type: array
           items:
-            $ref: "#/components/schemas/ServerEndpoint"
+            $ref: "#/components/schemas/ServerTool"
     Resource:
       type: object
       properties:
