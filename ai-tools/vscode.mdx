@@ -1,0 +1,89 @@
+---
+title: "Connect HasMCP MCP servers to Visual Studio Code"
+description: "How to connect HasMCP servers to VS Code using native Agent Mode or extensions like Cline."
+---
+
+# Using MCP in Visual Studio Code
+
+Visual Studio Code supports the Model Context Protocol (MCP) through several paths, allowing AI agents to use tools from your HasMCP servers directly in your editor.
+
+## 1. Native Agent Mode (GitHub Copilot)
+
+VS Code's built-in Chat with **Agent Mode** supports remote MCP servers over HTTP.
+
+### Setup
+
+1.  **Generate a Token**: In the HasMCP dashboard, go to your server and click **Generate Token**.
+2.  **Add Server**:
+    - Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`).
+    - Type and select **MCP: Add Server**.
+    - Choose **HTTP (Http or Server-Sent Events)**.
+3.  **Configure**:
+
+    - Enter a name for your server (e.g., `hasmcp-db`).
+    - Select **Workspace Settings** to create a `.vscode/mcp.json` file.
+    - Enter your HasMCP server URL (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+
+4.  **Add Authentication**:
+    Open the generated `.vscode/mcp.json` and add the `headers` object with your token:
+
+```json
+{
+  "servers": {
+    "hasmcp-server": {
+      "type": "http",
+      "url": "https://app.hasmcp.com/mcp/<SERVER_ID>",
+      "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+## 2. Extensions (Cline / Roo Code)
+
+Cline and Roo Code are highly capable AI agents for VS Code that support remote MCP servers.
+
+### Setup
+
+Click the MCP icon (a plug or network icon) in the extension's sidebar.
+
+Click Configure MCP Servers or Edit Global Config. This opens the configuration JSON file.
+
+Add your HasMCP server using the Remote MCP (Bridge) format since most local extensions prefer stdio execution:
+
+```json
+{
+  "mcpServers": {
+    "myServer": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://app.hasmcp.com/mcp/<SERVER_ID>",
+        "--header",
+        "x-hasmcp-key: Bearer ${HASMCP_MCP_ACCESS_TOKEN}"
+      ],
+      "env": {
+        "HASMCP_MCP_ACCESS_TOKEN": "YOUR_TOKEN_VALUE"
+      }
+    }
+  }
+}
+```
+
+## Verifying Connections
+
+In Native Mode: Open the Chat panel, select Agent Mode, and click the 🛠️ (tools) icon. Your HasMCP server and its tools should appear in the list.
+
+In Extensions: The MCP sidebar tab will show a green status indicator once the server is successfully initialized.
+
+## Troubleshooting
+
+SSE Support: If using native VS Code support, ensure you are on version 1.101 or later for full remote MCP compatibility.
+
+Logs: You can view detailed connection logs by selecting your server in the MCP: List Servers view or checking the Output panel in VS Code.
+
+```
+
+```

@@ -1,0 +1,54 @@
+---
+title: "Connect HasMCP MCP Servers to ChatGPT"
+description: "How to connect HasMCP servers to ChatGPT web app using Custom GPT Actions."
+---
+
+# Connecting to ChatGPT
+
+You can connect your HasMCP servers to ChatGPT by creating a **Custom GPT Apps**. This allows ChatGPT to interact with your tools and APIs using the OpenAPI specification provided by HasMCP.
+
+## Setup Instructions
+
+For ChatGPT Apps, HasMCP allows you to pass your access key directly in the URL using a query string, simplifying the configuration process.
+
+### 1. Generate a Token
+
+In your HasMCP dashboard, navigate to your **MCP Server** and click **Generate Token** to create a secure access key.
+
+### 2. Construct the MCP URL
+
+ChatGPT requires a base URL for the Apps. Append your token to your server's endpoint using the `token` query parameter:
+
+On top right of the screen click on Settings
+
+```
+Settings &gt; Apps &gt; Advanced settings &gt; Create app &gt;
+```
+
+**Name:**
+myServer
+
+**Description:**
+Your description
+
+**MCP Server URL:**
+`https://app.hasmcp.com/mcp/<SERVER_ID>?token=<YOUR_ACCESS_TOKEN>`
+
+**Authentication:**
+Choose `No Auth` since we passed the token as query string already.
+
+Click `Create` button at the bottom of the modal window to activate the MCP Server.
+
+## Why use Query Strings?
+
+While standard MCP clients use the `x-hasmcp-key` header, using the `?token=<>` query string is ideal for ChatGPT Actions because:
+
+- **Compatibility**: It bypasses potential header-stripping issues in the ChatGPT Action interface.
+- **Simplicity**: You do not need to configure an "API Key" in the ChatGPT authentication settings.
+- **Security**: The token is still validated by HasMCP before any tools are executed.
+
+## Troubleshooting
+
+- **Token Mismatch**: Ensure there are no spaces or extra characters in the `?token=` value.
+- **Endpoint Errors**: Ensure the `SERVER_ID` in the URL matches the one provided in your dashboard.
+- **Method Support**: ChatGPT Actions primarily use standard HTTP methods (GET/POST). Ensure your tools are configured correctly in the HasMCP Provider.

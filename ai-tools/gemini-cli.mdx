@@ -1,0 +1,84 @@
+---
+title: "Connect HasMCP MCP servers to Gemini CLI"
+description: "Guide to connecting your HasMCP servers to the Google Gemini CLI."
+---
+
+# Connecting to Gemini CLI
+
+The [Gemini CLI](https://github.com/google/gemini-cli) allows you to interact with Google's multi-modal models from your terminal while leveraging tools and context from your HasMCP servers.
+
+## Prerequisites
+
+1.  **Install the CLI**:
+    ```bash
+    npm install -g @google/gemini-cli
+    ```
+2.  **Authenticate**: Run `gemini` in your terminal and follow the login flow to authenticate with your Google account.
+
+## Setup Instructions
+
+HasMCP servers are typically exposed via **Streamable HTTP**, which is supported by the Gemini CLI.
+
+### Option 1: Quick Setup (Recommended)
+
+Use the built-in `gemini mcp add` command to register your server without manually editing JSON files.
+
+1.  Go to the **MCP Servers** tab in HasMCP and select your server.
+2.  Click **Generate Token** to create a secure access key.
+3.  Run the following command:
+
+```bash
+gemini mcp add <SERVER_NAME> <HASMCP_URL> \
+  --transport http \
+  --header "x-hasmcp-key: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+SERVER_NAME: A unique label for the server (e.g., dbAgent).
+
+HASMCP_URL: The endpoint from your Server Details page (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+
+TOKEN: The access token generated in Step 2.
+
+### Option 2: Manual Configuration
+
+You can also add the server directly to your configuration file.
+
+Open your settings file:
+
+macOS/Linux: ~/.gemini/settings.json
+
+Windows: %USERPROFILE%\.gemini\settings.json
+
+Insert your server details into the mcpServers object:
+
+```
+{
+  "mcpServers": {
+    "hasmcpAbc": {
+    "httpUrl": "https://app.hasmcp.com/mcp/<SERVER_ID>",
+    "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+## Verifying the Connection
+
+Restart the Gemini CLI and use the list command to check the status:
+
+```
+gemini
+/mcp list
+```
+
+A green indicator next to your server name confirms that Gemini has successfully discovered your HasMCP tools.
+
+## Troubleshooting
+
+Missing Variables: If you see a warning in the HasMCP UI about missing environment variables, the server will reject connections.
+
+Token Expiry: HasMCP tokens are time-limited. If you receive a 401 Unauthorized error, generate a new token and update your config.
+
+Transport Mode: Ensure you are using httpUrl (or --transport http) as Gemini requires this for streamable HTTP connections.

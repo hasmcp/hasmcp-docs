@@ -1,0 +1,64 @@
+---
+title: "Connect HasMCP MCP Servers to Google Antigravity"
+description: "How to connect HasMCP servers to the Google Antigravity editor."
+---
+
+# Connecting to Google Antigravity
+
+Google Antigravity supports the Model Context Protocol (MCP) natively, allowing the editor to securely connect to tools and external services defined in your HasMCP dashboard.
+
+## Setup Instructions
+
+Antigravity manages connections through its built-in **MCP Store**.
+
+### 1. Access the MCP Configuration
+
+1.  Open the **Antigravity Editor**.
+2.  Locate the **Agent Panel** in the side panel.
+3.  Click the **"..." (three dots) dropdown** at the top of the panel.
+4.  Select **Manage MCP Servers**.
+
+### 2. Configure Custom HasMCP Server
+
+1.  In the Manage MCP Servers view, click on **View raw config**.
+2.  This will open your `mcp_config.json` file.
+3.  Add your HasMCP server to the `mcpServers` object. For remote servers, it is recommended to use the `@hasmcp/remote-mcp` bridge:
+
+```json
+{
+  "mcpServers": {
+    "myServer": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://app.hasmcp.com/mcp/<SERVER_ID>",
+        "--header",
+        "x-hasmcp-key: Bearer ${HASMCP_MCP_ACCESS_TOKEN}"
+      ],
+      "env": {
+        "HASMCP_MCP_ACCESS_TOKEN": "YOUR_TOKEN_VALUE"
+      }
+    }
+  }
+}
+```
+
+SERVER_ID: Your unique server identifier from the HasMCP dashboard.
+
+ACCESS_TOKEN: The secure token generated for your server.
+
+### 3. Save and Verify
+
+Save the mcp_config.json file.
+
+The editor will automatically attempt to initialize the connection.
+
+Resources and tools from your HasMCP server will now be available to the AI agent for real-time context and action execution.
+
+## Troubleshooting
+
+Authentication: Ensure your token is valid and the header is correctly prefixed with Bearer.
+
+Node.js Required: Since the connection uses npx, ensure Node.js is installed on your system.
+
+Manual Refresh: If tools do not appear immediately, try toggling the server off and on within the Manage MCP Servers list.

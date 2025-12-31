@@ -1,0 +1,63 @@
+---
+title: "Connect HasMCP MCP servers to Cursor"
+description: "How to connect HasMCP servers to the Cursor code editor."
+---
+
+# Using MCP in Cursor
+
+Cursor provides native support for the Model Context Protocol (MCP), allowing its AI features like Composer and Chat to directly use tools and context from your HasMCP servers.
+
+## 1. Setup via Settings UI
+
+The easiest way to add a server is through Cursor's graphical interface.
+
+1.  Open **Cursor Settings** (Keyboard shortcut: `Cmd + ,` on macOS or `Ctrl + ,` on Windows).
+2.  Navigate to **Cursor Settings > MCP**.
+3.  Click the **+ Add New MCP Server** button.
+4.  Configure the following fields:
+    - **Name**: A recognizable name (e.g., `hasmcp-prod`).
+    - **Type**: Select `sse` (Server-Sent Events) for remote HasMCP connections.
+    - **URL**: Your HasMCP server endpoint (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+
+## 2. Setup via `mcp.json` (Advanced)
+
+For version-controlled or global configuration, you can edit the `mcp.json` file directly.
+
+### Configuration Paths
+
+- **Global (macOS/Linux)**: `~/.cursor/mcp.json`
+- **Global (Windows)**: `%USERPROFILE%\.cursor\mcp.json`
+- **Project-Specific**: `.cursor/mcp.json` in your project root
+
+### Example Configuration
+
+Add your server details to the `mcpServers` object. Use headers to provide your HasMCP access token:
+
+```json
+{
+  "mcpServers": {
+    "hasmcp-server": {
+      "url": "https://app.hasmcp.com/mcp/<SERVER_ID>",
+      "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+## Verifying the Connection
+
+Once added, your server will appear in the MCP servers list.
+
+Status Indicator: A green dot next to the server name indicates a successful connection.
+
+Tool Discovery: Expand the server entry to see the list of tools that Cursor has discovered from your HasMCP configuration.
+
+Using in Chat: You can now ask Cursor to use specific tools by name (e.g., "Use my db-agent tool to query the users table").
+
+## Troubleshooting
+
+Token Expiry: If the connection dot turns red, your token may have expired. Generate a new one in the HasMCP dashboard and update your config.
+
+Restarting: After manually editing mcp.json, you must restart Cursor for the changes to take effect.

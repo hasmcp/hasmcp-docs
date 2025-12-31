@@ -1,0 +1,47 @@
+---
+title: "Connect HasMCP MCP Servers to Windsurf"
+description: "How to connect HasMCP servers to the Windsurf editor."
+---
+
+# Using MCP in Windsurf
+
+Windsurf, the AI-powered IDE from Codeium, features native support for the Model Context Protocol (MCP). This allows the Windsurf agent to leverage tools and context from your HasMCP servers to assist with coding tasks.
+
+## 1. Setup via Settings UI
+
+Windsurf provides a dedicated interface for managing MCP servers.
+
+1.  Open **Windsurf Settings** (Shortcut: `Cmd + ,` on macOS or `Ctrl + ,` on Windows).
+2.  Navigate to the **MCP** section in the sidebar.
+3.  Click **Add New Server**.
+4.  Configure the following:
+    - **Name**: A descriptive name for your server (e.g., `hasmcp-api`).
+    - **Type**: Choose `sse` (Server-Sent Events) for remote HasMCP connections.
+    - **URL**: Your HasMCP server endpoint (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+
+## 2. Setup via `mcp_config.json` (Manual)
+
+If you prefer manual configuration, you can edit the Windsurf MCP configuration file directly.
+
+### Configuration Paths
+
+- **macOS/Linux**: `~/.codeium/windsurf/mcp_config.json`
+- **Windows**: `%USERPROFILE%\.codeium\windsurf\mcp_config.json`
+
+### Example Configuration
+
+Add your HasMCP server to the `mcpServers` object. Be sure to include your authentication token in the `headers`:
+
+```json
+{
+  "mcpServers": {
+    "hasmcp-server": {
+      "type": "sse",
+      "url": "https://app.hasmcp.com/mcp/<SERVER_ID>",
+      "headers": {
+        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
+      }
+    }
+  }
+}
+```

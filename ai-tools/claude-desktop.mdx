@@ -1,0 +1,74 @@
+---
+title: "Connect HasMCP MCP Servers to Claude Desktop"
+description: "Instructions for connecting HasMCP servers to the Claude Desktop application."
+---
+
+# Connecting to Claude Desktop
+
+Claude Desktop supports the Model Context Protocol (MCP) natively, allowing you to bridge remote HasMCP servers directly into your chat sessions.
+
+## Setup Instructions
+
+### 1. Locate the Configuration File
+
+Claude Desktop reads its MCP server definitions from a specific JSON file based on your operating system:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Quick Tip**: You can open this file directly from the app by going to **Settings > Developer > Edit Config**.
+
+### 2. Configure the Remote Server
+
+Add your HasMCP server details to the `mcpServers` object in the configuration file. Use the `mcp-remote` utility (provided via `npx`) to establish the connection.
+
+```json
+{
+  "mcpServers": {
+    "myServer": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://app.hasmcp.com/mcp/<SERVER_ID>",
+        "--header",
+        "x-hasmcp-key: Bearer ${HASMCP_MCP_ACCESS_TOKEN}"
+      ],
+      "env": {
+        "HASMCP_MCP_ACCESS_TOKEN": "YOUR_TOKEN_VALUE"
+      }
+    }
+  }
+}
+```
+
+SERVER_ID: Your unique server identifier from the HasMCP dashboard.
+
+ACCESS_TOKEN: The secure token generated for your server.
+
+### 3. Restart Claude Desktop
+
+For changes to take effect, you must fully quit the application (not just close the window) and restart it:
+
+macOS: Right-click the Claude icon in the menu bar and select Quit.
+
+Windows: Right-click the Claude icon in the system tray and select Quit.
+
+## Verifying the Connection
+
+Once restarted, look for the tools icon (typically a wrench or hammer symbol) in the bottom right of the message input box.
+
+Click the icon to see a list of available tools discovered from your HasMCP server.
+
+If the server is connected, your tools will be listed under the name you provided (e.g., hasmcp-server).
+
+## Troubleshooting
+
+Logs: Check the logs for connection errors at:
+
+macOS: ~/Library/Logs/Claude/mcp.log
+
+Windows: %APPDATA%\Claude\logs\mcp.log
+
+Authentication: Ensure your x-hasmcp-key header is correctly formatted with the Bearer prefix.
+
+Dependencies: Ensure you have Node.js installed on your system to run the npx command.
