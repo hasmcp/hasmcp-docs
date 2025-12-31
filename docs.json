@@ -50,24 +50,18 @@
           {
             "group": "Desktop/Command Line",
             "pages": [
-              "api-tools/antigravity",
-              "api-tools/claude-desktop",
-              "api-tools/cursor",
-              "api-tools/gemini-cli",
-              "api-tools/vscode",
-              "api-tools/windsurf"
+              "ai-tools/antigravity",
+              "ai-tools/claude-desktop",
+              "ai-tools/cursor",
+              "ai-tools/gemini-cli",
+              "ai-tools/vscode",
+              "ai-tools/windsurf"
             ]
           },
           {
             "group": "Web based",
             "pages": [
               "api-tools/chatgpt"
-            ]
-          },
-          {
-            "group": "Licenses",
-            "pages": [
-              "licenses"
             ]
           }
         ]
