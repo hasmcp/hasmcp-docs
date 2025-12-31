@@ -11,33 +11,29 @@ You can connect your HasMCP servers to ChatGPT by creating a **Custom GPT Apps**
 
 For ChatGPT Apps, HasMCP allows you to pass your access key directly in the URL using a query string, simplifying the configuration process.
 
-### 1. Generate a Token
+<Steps>
+  <Step title="Generate a Token">
+    In your HasMCP dashboard, navigate to your **MCP Server** and click **Generate Token** to create a secure access key.
+  </Step>
 
-In your HasMCP dashboard, navigate to your **MCP Server** and click **Generate Token** to create a secure access key.
+  <Step title="Construct the MCP URL">
+    ChatGPT requires a base URL for the Apps. Append your token to your server's endpoint using the `token` query parameter.
 
-### 2. Construct the MCP URL
+    On top right of the screen click on **Settings**:
 
-ChatGPT requires a base URL for the Apps. Append your token to your server's endpoint using the `token` query parameter.
+    ```text
+    Settings » Apps » Advanced settings » Create app » Enter details below » Create
+    ```
 
-On top right of the screen click on Settings
+    * **Name**: `myServer`
+    * **Description**: Your description
+    * **MCP Server URL**: `https://app.hasmcp.com/mcp/<SERVER_ID>?token=<YOUR_ACCESS_TOKEN>`
+    * **Authentication**: Choose `No Auth` since we passed the token as query string already.
 
-```
-Settings » Apps » Advanced settings » Create app » Enter details below » Create
-```
+    Click the **Create** button at the bottom of the modal window to activate the MCP Server.
 
-**Name:**
-myServer
-
-**Description:**
-Your description
-
-**MCP Server URL:**
-`https://app.hasmcp.com/mcp/<SERVER_ID>?token=<YOUR_ACCESS_TOKEN>`
-
-**Authentication:**
-Choose `No Auth` since we passed the token as query string already.
-
-Click `Create` button at the bottom of the modal window to activate the MCP Server.
+  </Step>
+</Steps>
 
 ## Why use Query Strings?
 
@@ -49,6 +45,16 @@ While standard MCP clients use the `x-hasmcp-key` header, using the `?token=<>` 
 
 ## Troubleshooting
 
-- **Token Mismatch**: Ensure there are no spaces or extra characters in the `?token=` value.
-- **Endpoint Errors**: Ensure the `SERVER_ID` in the URL matches the one provided in your dashboard.
-- **Method Support**: ChatGPT Actions primarily use standard HTTP methods (GET/POST). Ensure your tools are configured correctly in the HasMCP Provider.
+<AccordionGroup>
+  <Accordion title="Token Mismatch">
+    Ensure there are no spaces or extra characters in the `?token=` value.
+  </Accordion>
+  <Accordion title="Endpoint Errors">
+    Ensure the `SERVER_ID` in the URL matches the one provided in your
+    dashboard.
+  </Accordion>
+  <Accordion title="Method Support">
+    ChatGPT Actions primarily use standard HTTP methods (GET/POST). Ensure your
+    tools are configured correctly in the HasMCP Provider.
+  </Accordion>
+</AccordionGroup>
