@@ -32,17 +32,13 @@ If you prefer manual configuration, you can edit the Windsurf MCP configuration 
 
 ### Example Configuration
 
-Add your HasMCP server to the `mcpServers` object. Be sure to include your authentication token in the `headers`:
+Add your HasMCP server to the `mcpServers` object. Be sure to include your token as `?token=` query string:
 
 ```json
 {
   "mcpServers": {
     "hasmcp-server": {
-      "type": "sse",
-      "url": "https://app.hasmcp.com/mcp/<SERVER_ID>",
-      "headers": {
-        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
-      }
+      "serverUrl": "https://app.hasmcp.com/mcp/<SERVER_ID>?token=<YOUR_ACCESS_TOKEN>"
     }
   }
 }
