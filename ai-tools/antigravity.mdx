@@ -13,16 +13,29 @@ Antigravity manages connections through its built-in **MCP Store**.
 
 ### 1. Access the MCP Configuration
 
-1.  Open the **Antigravity Editor**.
-2.  Locate the **Agent Panel** in the side panel.
-3.  Click the **"..." (three dots) dropdown** at the top of the panel.
-4.  Select **Manage MCP Servers**.
+<Steps>
+  <Step title="Open Agent Panel">
+    Open the **Antigravity Editor** and locate the **Agent Panel** in the side
+    panel.
+  </Step>
+  <Step title="Manage Servers">
+    Click the **"..." (three dots) dropdown** at the top of the panel and select
+    **Manage MCP Servers**.
+  </Step>
+</Steps>
 
 ### 2. Configure Custom HasMCP Server
 
-1.  In the Manage MCP Servers view, click on **View raw config**.
-2.  This will open your `mcp_config.json` file.
-3.  Add your HasMCP server to the `mcpServers` object. For remote servers, it is recommended to use the `@hasmcp/remote-mcp` bridge:
+<Steps>
+  <Step title="Edit Config">
+    In the Manage MCP Servers view, click on **View raw config**. This will open
+    your `mcp_config.json` file.
+  </Step>
+  <Step title="Add Server">
+    Add your HasMCP server to the `mcpServers` object. For remote servers, it is
+    recommended to use the `@hasmcp/remote-mcp` bridge:
+  </Step>
+</Steps>
 
 ```json
 {

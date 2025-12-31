@@ -9,15 +9,17 @@ Windsurf, the AI-powered IDE from Codeium, features native support for the Model
 
 ## 1. Setup via Settings UI
 
-Windsurf provides a dedicated interface for managing MCP servers.
-
-1.  Open **Windsurf Settings** (Shortcut: `Cmd + ,` on macOS or `Ctrl + ,` on Windows).
-2.  Navigate to the **MCP** section in the sidebar.
-3.  Click **Add New Server**.
-4.  Configure the following:
-    - **Name**: A descriptive name for your server (e.g., `hasmcp-api`).
-    - **Type**: Choose `sse` (Server-Sent Events) for remote HasMCP connections.
-    - **URL**: Your HasMCP server endpoint (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+<Steps>
+  <Step title="Open Settings">
+    Open **Windsurf Settings** (Shortcut: `Cmd + ,` on macOS or `Ctrl + ,` on Windows) and navigate to the **MCP** section in the sidebar.
+  </Step>
+  <Step title="Add New Server">
+    Click **Add New Server** and configure the following:
+    * **Name**: A descriptive name for your server (e.g., `hasmcp-api`).
+    * **Type**: Choose `sse` (Server-Sent Events) for remote HasMCP connections.
+    * **URL**: Your HasMCP server endpoint (e.g., `https://app.hasmcp.com/mcp/<SERVER_ID>`).
+  </Step>
+</Steps>
 
 ## 2. Setup via `mcp_config.json` (Manual)
 
@@ -45,3 +47,26 @@ Add your HasMCP server to the `mcpServers` object. Be sure to include your authe
   }
 }
 ```
+
+## Verifying the Connection
+
+- **Status Indicators**: After adding a server, check the MCP settings panel. A green status indicates a successful connection.
+- **Tool Discovery**: You can click on the server entry to see which tools Windsurf has successfully discovered and made available to the AI agent.
+- **Using Tools**: Simply prompt the Windsurf agent (e.g., in the chat or through the "Cascade" feature) to use a specific tool (e.g., "List the current projects using the project-manager tool").
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Token Refresh">
+    If tools stop responding, check the HasMCP dashboard to ensure your token
+    hasn't expired. Replace it in your configuration if necessary.
+  </Accordion>
+  <Accordion title="Restarting">
+    If the UI doesn't reflect changes made to `mcp_config.json`, try restarting
+    Windsurf.
+  </Accordion>
+  <Accordion title="SSE Support">
+    Ensure your HasMCP server is configured as an SSE-compatible server, as this
+    is the standard for remote connections in Windsurf.
+  </Accordion>
+</AccordionGroup>

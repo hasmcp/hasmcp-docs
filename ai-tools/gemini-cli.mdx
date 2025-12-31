@@ -23,9 +23,13 @@ HasMCP servers are typically exposed via **Streamable HTTP**, which is supported
 
 Use the built-in `gemini mcp add` command to register your server without manually editing JSON files.
 
-1.  Go to the **MCP Servers** tab in HasMCP and select your server.
-2.  Click **Generate Token** to create a secure access key.
-3.  Run the following command:
+<Steps>
+  <Step title="Generate Token">
+    Go to the **MCP Servers** tab in HasMCP, select your server, and click
+    **Generate Token** to create a secure access key.
+  </Step>
+  <Step title="Run Command">Run the following command:</Step>
+</Steps>
 
 ```bash
 gemini mcp add <SERVER_NAME> <HASMCP_URL> \
