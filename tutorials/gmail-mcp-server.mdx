@@ -120,6 +120,20 @@ We will create three tools. We will define the API endpoints and use interceptor
   alt="Add Response Interceptor"
 />
 
+<CodeBlock language="json">
+```
+{
+ snippet: snippet,
+ subject: payload.headers[?name=='Subject'].value | [0],
+ from: payload.headers[?name=='From'].value | [0],
+ to: payload.headers[?name=='To'].value | [0],
+ cc: payload.headers[?name=='Cc'].value | [0] || '',
+ date: payload.headers[?name=='Date'].value | [0],
+ threadId: threadId
+}
+```
+</CodeBlock>
+
 </Card>
 </CardGroup>
 
