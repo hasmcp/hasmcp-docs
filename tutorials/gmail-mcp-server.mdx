@@ -219,7 +219,6 @@ We will create three tools. We will define the API endpoints and use interceptor
 
 Click on `Add Request Interceptor` button, on the popup window as name use `gmailSendEmailMapper` and the following code snippet:
 
-<CodeBlock language="javascript">
 ```js
 function btoa(input) {
   var chars =
@@ -227,20 +226,20 @@ function btoa(input) {
   var str = String(input);
   var output = "";
 
-for (
-var block, charCode, idx = 0, map = chars;
-str.charAt(idx | 0) || ((map = "="), idx % 1);
-output += map.charAt(63 & (block >> (8 - (idx % 1) \* 8)))
-) {
-charCode = str.charCodeAt((idx += 3 / 4));
-if (charCode > 0xff) {
-throw new Error(
-"'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.",
-);
-}
-block = (block << 8) | charCode;
-}
-return output;
+  for (
+    var block, charCode, idx = 0, map = chars;
+    str.charAt(idx | 0) || ((map = "="), idx % 1);
+    output += map.charAt(63 & (block >> (8 - (idx % 1) * 8)))
+  ) {
+    charCode = str.charCodeAt((idx += 3 / 4));
+    if (charCode > 0xff) {
+      throw new Error(
+        "'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.",
+      );
+    }
+    block = (block << 8) | charCode;
+  }
+  return output;
 }
 var nl = "\r\n";
 var boundary = "===============" + Date.now() + "==";
@@ -248,22 +247,22 @@ var headers = [];
 
 // --- 1. Construct Headers ---
 if (input.to && input.to.length > 0) {
-headers.push("To: " + input.to.join(", "));
+  headers.push("To: " + input.to.join(", "));
 }
 
 headers.push("Subject: " + (input.subject || ""));
 
 if (input.cc && input.cc.length > 0) {
-headers.push("Cc: " + input.cc.join(", "));
+  headers.push("Cc: " + input.cc.join(", "));
 }
 
 if (input.bcc && input.bcc.length > 0) {
-headers.push("Bcc: " + input.bcc.join(", "));
+  headers.push("Bcc: " + input.bcc.join(", "));
 }
 
 if (input.inReplyTo) {
-headers.push("In-Reply-To: " + input.inReplyTo);
-headers.push("References: " + input.inReplyTo);
+  headers.push("In-Reply-To: " + input.inReplyTo);
+  headers.push("References: " + input.inReplyTo);
 }
 
 headers.push("MIME-Version: 1.0");
@@ -272,28 +271,28 @@ headers.push("MIME-Version: 1.0");
 var bodyContent = "";
 
 if (input.htmlBody && input.body) {
-// Both Plain Text and HTML -> multipart/alternative
-headers.push(
-'Content-Type: multipart/alternative; boundary="' + boundary + '"',
-);
+  // Both Plain Text and HTML -> multipart/alternative
+  headers.push(
+    'Content-Type: multipart/alternative; boundary="' + boundary + '"',
+  );
 
-bodyContent += "--" + boundary + nl;
-bodyContent += 'Content-Type: text/plain; charset="UTF-8"' + nl + nl;
-bodyContent += input.body + nl + nl;
+  bodyContent += "--" + boundary + nl;
+  bodyContent += 'Content-Type: text/plain; charset="UTF-8"' + nl + nl;
+  bodyContent += input.body + nl + nl;
 
-bodyContent += "--" + boundary + nl;
-bodyContent += 'Content-Type: text/html; charset="UTF-8"' + nl + nl;
-bodyContent += input.htmlBody + nl + nl;
+  bodyContent += "--" + boundary + nl;
+  bodyContent += 'Content-Type: text/html; charset="UTF-8"' + nl + nl;
+  bodyContent += input.htmlBody + nl + nl;
 
-bodyContent += "--" + boundary + "--";
+  bodyContent += "--" + boundary + "--";
 } else if (input.htmlBody) {
-// HTML only
-headers.push('Content-Type: text/html; charset="UTF-8"');
-bodyContent = input.htmlBody;
+  // HTML only
+  headers.push('Content-Type: text/html; charset="UTF-8"');
+  bodyContent = input.htmlBody;
 } else {
-// Plain Text only (default)
-headers.push('Content-Type: text/plain; charset="UTF-8"');
-bodyContent = input.body || "";
+  // Plain Text only (default)
+  headers.push('Content-Type: text/plain; charset="UTF-8"');
+  bodyContent = input.body || "";
 }
 
 var fullMessage = headers.join(nl) + nl + nl + bodyContent;
@@ -307,17 +306,15 @@ var raw = encoded.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
 // --- 4. Construct Output ---
 var result = {
-raw: raw,
+  raw: raw,
 };
 
 if (input.threadId) {
-result.threadId = input.threadId;
+  result.threadId = input.threadId;
 }
 
 result;
-
 ```
-</CodeBlock>
 
 <img
   src="/images/tutorials/gmail/add-jmespath-request-interceptor-for-gmail-mcp-server.png"
@@ -331,15 +328,17 @@ result;
 ## Step 4: Generate and Authenticate
 
 <Steps>
-    <Step>Go to the **Providers** list.</Step>
-    <Step>Click the **Generate MCP Server** icon next to `gmail`.</Step>
-    <Step>On the Server page, click **Generate Token**.</Step>
-    <Step>
-    **Important**: A popup will appear asking you to log in to Google. Grant the requested permissions.
-    </Step>
-    <Step>
-    Once authenticated, copy the **Connection Address** into your MCP client configuration (e.g., `claude_desktop_config.json`).
-    </Step>
+  <Step>Go to the **Providers** list.</Step>
+  <Step>Click the **Generate MCP Server** icon next to `gmail`.</Step>
+  <Step>On the Server page, click **Generate Token**.</Step>
+  <Step>
+    **Important**: A popup will appear asking you to log in to Google. Grant the
+    requested permissions.
+  </Step>
+  <Step>
+    Once authenticated, copy the **Connection Address** into your MCP client
+    configuration (e.g., `claude_desktop_config.json`).
+  </Step>
 </Steps>
 
 ---
@@ -349,17 +348,19 @@ result;
 Since we are dealing with complex authentication and raw data formats, observability is critical to debugging.
 
 <Steps>
-    <Step>Open the **Server Logs** tab in HasMCP.</Step>
-    <Step>Ask your MCP Client: _"Search for the last email from hasmcp.com."_</Step>
-    <Step>
-    Watch the logs:
-    - You will see the request hit `/users/me/messages` with `q=from:hasmcp.com`.
-    - You will see the JSON response from Google listing message IDs.
-    </Step>
-    <Step>
-    Ask your MCP Client: _"Send an email to me saying Hello."_
-    - You will see the Model attempt to construct the `raw` base64 string.
-    </Step>
+  <Step>Open the **Server Logs** tab in HasMCP.</Step>
+  <Step>
+    Ask your MCP Client: _"Search for the last email from hasmcp.com."_
+  </Step>
+  <Step>
+    Watch the logs: - You will see the request hit `/users/me/messages` with
+    `q=from:hasmcp.com`. - You will see the JSON response from Google listing
+    message IDs.
+  </Step>
+  <Step>
+    Ask your MCP Client: _"Send an email to me saying Hello."_ - You will see
+    the Model attempt to construct the `raw` base64 string.
+  </Step>
 </Steps>
 
 <img
@@ -370,4 +371,7 @@ Since we are dealing with complex authentication and raw data formats, observabi
 ## Conclusion
 
 You have successfully connected a high-security OAuth2 API to an MCP server without writing a single line of code!
+
+```
+
 ```
