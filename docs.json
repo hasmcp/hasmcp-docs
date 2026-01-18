@@ -37,6 +37,14 @@
             ]
           },
           {
+            "group": "Tutorials",
+            "pages": [
+              "tutorials",
+              "tutorials/coinbase-public-api-mcp-server",
+              "tutorials/gmail-mcp-server"
+            ]
+          },
+          {
             "group": "Licenses",
             "pages": [
               "licenses"
