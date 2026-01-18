@@ -6,9 +6,9 @@ description: "Build a Gmail MCP server using HasMCP with OAuth2, and request/res
 In this tutorial, you will build a fully functional Gmail MCP server to search, read, and send emails. We will use **HasMCP**'s native OAuth2 support to handle authentication securely.
 
 <Info>
-  Unlike previous tutorials, we will rely entirely on the LLM's intelligence to
-  handle data formatting, skipping the need for JavaScript interceptors for some
-  tools.
+  Unlike previous tutorials, we will not rely entirely on the LLM's intelligence
+  to handle data formatting, and will request/response interceptors to optimize
+  token usage and handle complex scenarios like base64 encoding.
 </Info>
 
 ## Prerequisites
