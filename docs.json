@@ -85,7 +85,8 @@
           {
             "group": "Web based",
             "pages": [
-              "ai-tools/chatgpt"
+              "ai-tools/chatgpt",
+              "ai-tools/claude-web"
             ]
           }
         ]
