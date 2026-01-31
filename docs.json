@@ -43,7 +43,9 @@
               "features/native-mcp-elicitation-auth",
               "features/observability-telemetry",
               "features/real-time-dynamic-tooling",
-              "features/secure-secret-proxy-management"
+              "features/secure-secret-proxy-management",
+              "features/groups-users-permissions",
+              "features/audit-logs"
             ]
           },
           {
