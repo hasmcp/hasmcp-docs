@@ -1,0 +1,16 @@
+---
+title: Automated OpenAPI Mapping | HasMCP Features
+description: Learn how HasMCP's Automated OpenAPI Mapping feature automatically translates your existing OpenAPI and Swagger files into an LLM-usable format.
+---
+
+HasMCP's **Automated OpenAPI Mapping** feature is a core component that streamlines the process of making existing APIs available to Large Language Models (LLMs). Here's a breakdown of what that means:
+
+- **What it does:** It takes your existing API documentation, specifically OpenAPI (version 3.0 or 3.1) or Swagger files, and automatically translates them into a format that LLMs can understand and use. This format is called the Model Context Protocol (MCP).
+- **Why it's important:** Normally, connecting an LLM to an API requires a developer to write a significant amount of "glue code" to handle things like authentication, data formatting, and error handling. HasMCP automates this, saving significant time and effort.
+- **How it works:** HasMCP analyzes your OpenAPI specification to understand the available endpoints, the required parameters, and the structure of the data that is sent and received. It then generates the necessary MCP "tool" definitions. This allows an LLM, like Gemini, to see your API as a tool it can use to perform tasks.
+- **Key benefits:**
+  - **Speed:** Go from an OpenAPI file to an LLM-callable tool in seconds.
+  - **Accuracy:** By using the formal OpenAPI definition, the chance of errors in the integration is significantly reduced.
+  - **No-Code:** You don't need to write any server-side code to make your API available to an LLM.
+
+In essence, Automated OpenAPI Mapping acts as a bridge, allowing you to quickly and easily connect your existing APIs to the world of generative AI without being a burden on your engineering team.

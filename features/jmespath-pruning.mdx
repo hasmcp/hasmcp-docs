@@ -1,0 +1,136 @@
+---
+title: JMESPath Pruning | HasMCP Features
+description: Learn how HasMCP's JMESPath Pruning feature optimizes your interactions with LLMs by reducing the amount of data sent to the model.
+---
+
+This feature is a key part of HasMCP's **Context Window Optimization**. It's a powerful tool for reducing the amount of data that gets sent to the LLM, which in turn saves you money and makes your application faster.
+
+- **What it is:**
+  - **JMESPath:** A query language specifically designed for JSON. Think of it like SQL, but for JSON data.
+  - **Pruning:** The process of cutting away unnecessary parts of the data.
+  - **JMESPath Pruning in HasMCP:** HasMCP uses JMESPath to allow you to declaratively filter and reshape JSON responses from your APIs before they are sent to the LLM.
+- **Why it's important:** APIs often return much more data than is actually needed for a specific task. For example, an API might return a user object with 50 fields, but you only need the user's name and email address. Sending all 50 fields to the LLM is wasteful.
+- **How it works:** With HasMCP, you can define a JMESPath query that will be applied to the JSON response from your API. This query specifies exactly which fields to keep and which to discard. The "pruning" happens automatically before the data is passed to the LLM.
+- **Key benefits:**
+  - **Declarative and Simple:** JMESPath provides a simple, declarative way to specify the data you need. You don't have to write any procedural code.
+  - **Efficient:** JMESPath is highly optimized for JSON data, so the pruning process is very fast.
+  - **Reduces "Noise":** By removing irrelevant data, you can help the LLM focus on the information that is most important for the task at hand.
+
+## Example
+
+Let's say an API returns a comprehensive user object:
+
+```json
+{
+  "user": {
+    "id": "u123",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "zip": "12345"
+    },
+    "preferences": {
+      "newsletter": true,
+      "notifications": false
+    }
+  },
+  "order_history": [
+    {
+      "order_id": "o987",
+      "item": "Laptop",
+      "price": 1200
+    },
+    {
+      "order_id": "o654",
+      "item": "Mouse",
+      "price": 25
+    }
+  ]
+}
+```
+
+If your LLM only needs the user's name and email, you can use the following JMESPath expression to prune the response:
+
+`user.{name: name, email: email}`
+
+This will transform the data sent to the LLM into a much smaller, more relevant payload:
+
+```json
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}
+```
+
+## PII Redaction Example
+
+JMESPath can also be used for basic PII (Personally Identifiable Information) redaction by selecting only the fields you want to expose. This "allowlisting" approach ensures that sensitive data is not sent to the LLM.
+
+Considering the same API response, let's say you want to provide the LLM with the user's ID and preferences, but redact their name, email, and address. You can achieve this by explicitly selecting the non-PII fields:
+
+`user.{id: id, preferences: preferences}`
+
+The resulting payload sent to the LLM would be:
+
+```json
+{
+  "id": "u123",
+  "preferences": {
+    "newsletter": true,
+    "notifications": false
+  }
+}
+```
+
+While effective for simple cases, this method can become cumbersome if you have many fields to allowlist. For more advanced redaction scenarios, such as replacing values or handling nested PII, using Goja (JS) Logic is recommended.
+
+### List Filtering Example
+
+JMESPath excels at filtering and transforming lists of objects. Consider an API response containing a list of products:
+
+```json
+{
+  "products": [
+    {
+      "name": "Laptop",
+      "price": 1200,
+      "in_stock": true
+    },
+    {
+      "name": "Mouse",
+      "price": 25,
+      "in_stock": false
+    },
+    {
+      "name": "Keyboard",
+      "price": 75,
+      "in_stock": true
+    }
+  ]
+}
+```
+
+To retrieve only the names and prices of products that are currently in stock, you can use the following JMESPath expression:
+
+`products[?in_stock].{name: name, price: price}`
+
+This expression filters the `products` list for items where `in_stock` is true, and then projects only the `name` and `price` fields for the matching items. The pruned output sent to the LLM would be:
+
+```json
+[
+  {
+    "name": "Laptop",
+    "price": 1200
+  },
+  {
+    "name": "Keyboard",
+    "price": 75
+  }
+]
+```
+
+This demonstrates how JMESPath can efficiently refine large lists of data to extract only the most relevant information for your LLM.
+
+In short, JMESPath Pruning is a powerful and efficient way to optimize the data that you send to LLMs, and it's a core feature of HasMCP.

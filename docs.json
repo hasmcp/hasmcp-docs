@@ -31,6 +31,22 @@
             ]
           },
           {
+            "group": "Features",
+            "pages": [
+              "features",
+              "features/automated-openapi-mapping",
+              "features/context-window-optimization",
+              "features/goja-js-logic",
+              "features/grpc",
+              "features/jmespath-pruning",
+              "features/mcp-composition",
+              "features/native-mcp-elicitation-auth",
+              "features/observability-telemetry",
+              "features/real-time-dynamic-tooling",
+              "features/secure-secret-proxy-management"
+            ]
+          },
+          {
             "group": "Self-hosted",
             "pages": [
               "self-hosted"

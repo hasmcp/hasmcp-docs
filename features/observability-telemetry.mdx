@@ -1,0 +1,21 @@
+---
+title: Observability & Telemetry | HasMCP Features
+description: Learn how HasMCP's Observability & Telemetry features provide visibility into what your AI agents are doing for debugging, monitoring, and understanding tool usage.
+---
+
+This set of features is about giving you visibility into what your AI agents are doing. It's crucial for debugging, monitoring, and understanding how your tools are being used.
+
+- **What it is:** **Observability & Telemetry** is a collection of tools within HasMCP that provide insights into the performance, usage, and security of your MCP servers.
+- **Why it's important:** When you have LLMs calling your APIs, it can be difficult to understand what's happening "under the hood." Good observability tools are essential for:
+  - **Debugging:** When something goes wrong, you need to be able to trace the flow of requests and responses to identify the source of the problem.
+  - **Performance Monitoring:** You need to be able to monitor the latency and error rates of your tool calls to ensure that your application is performing well.
+  - **Usage Tracking:** You need to be able to track who is using your tools and how often, which is important for billing and for understanding which tools are most valuable.
+  - **Security Auditing:** You need to be able to monitor for suspicious activity and ensure that your security policies are being enforced.
+
+Here's a breakdown of the specific observability features offered by HasMCP:
+
+- **Tool Call Analytics:** This feature allows you to see which of your tools are being used most frequently. This can help you identify your most valuable tools and prioritize future development efforts.
+- **User Governance:** This feature allows you to track tool usage on a per-user basis. This is essential for billing and for auditing tool usage across different users and departments.
+- **Token Economics:** This feature helps you quantify the cost savings that you are achieving through HasMCP's context window optimization features. It shows you how much you are saving on LLM inference costs by pruning and optimizing your API responses.
+- **Streaming Debug Console:** This feature provides a real-time stream of events from your MCP server, allowing you to see what's happening as it happens. This is an invaluable tool for debugging.
+- **Payload Inspector:** This feature allows you to see the "before" and "after" of your data transformations. You can see the original, raw JSON response from your API, and the final, optimized JSON that is sent to the LLM.

@@ -1,0 +1,146 @@
+---
+title: Goja (JS) Logic | HasMCP Features
+description: Discover how HasMCP's Goja (JS) Logic feature allows you to write JavaScript code to perform complex data transformations on API responses.
+---
+
+This feature is another key part of HasMCP's **Context Window Optimization**, offering a more powerful and flexible way to manipulate data than JMESPath Pruning.
+
+- **What it is:**
+  - **Goja:** An engine that allows you to run JavaScript code within a Go application.
+  - **Goja (JS) Logic in HasMCP:** HasMCP embeds the Goja engine, allowing you to write "JavaScript Interceptors." These are snippets of JavaScript code that can intercept and modify the responses from your APIs before they are sent to the LLM.
+- **Why it's important:** Sometimes, simple filtering with JMESPath isn't enough. You might need to perform more complex transformations on the data, such as:
+  - Combining multiple fields into a single, more descriptive field.
+  - Formatting dates or numbers.
+  - Applying conditional logic (e.g., if a field has a certain value, then modify another field).
+  - Enriching the data with information from other sources.
+- **How it works:** In HasMCP, you can write a JavaScript function that will be executed on the JSON response from your API. This function has access to the full JSON object, and it can return a new, modified JSON object. This new object is then what gets sent to the LLM.
+- **Key benefits:**
+  - **Flexibility:** The full power of JavaScript is at your disposal, allowing you to perform almost any data transformation you can imagine.
+  - **Procedural Logic:** Unlike the declarative nature of JMESPath, JavaScript allows you to write procedural code, with loops, conditionals, and other control structures.
+  - **Stateful Transformations:** You can perform more complex, stateful transformations that are not possible with a simple filtering language.
+
+## Example
+
+Consider the same comprehensive user object from an API response as in the JMESPath example:
+
+```json
+{
+  "user": {
+    "id": "u123",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "zip": "12345"
+    },
+    "preferences": {
+      "newsletter": true,
+      "notifications": false
+    }
+  },
+  "order_history": [
+    {
+      "order_id": "o987",
+      "item": "Laptop",
+      "price": 1200
+    },
+    {
+      "order_id": "o654",
+      "item": "Mouse",
+      "price": 25
+    }
+  ]
+}
+```
+
+If you need to extract the user's full name and email, _and also_ calculate the total value of their `order_history`, a simple JMESPath query might not suffice. Here's how a Goja (JavaScript) interceptor can achieve this:
+
+```javascript
+function intercept(data) {
+  const user = data.user;
+  const orderHistory = data.order_history;
+
+  let totalOrderValue = 0;
+  if (orderHistory) {
+    for (let i = 0; i < orderHistory.length; i++) {
+      totalOrderValue += orderHistory[i].price;
+    }
+  }
+
+  return {
+    fullName: user.name,
+    emailAddress: user.email,
+    totalOrders: totalOrderValue,
+  };
+}
+
+intercept(input);
+```
+
+This Goja interceptor would transform the original data into a highly customized and concise payload for the LLM:
+
+```json
+{
+  "fullName": "John Doe",
+  "emailAddress": "john.doe@example.com",
+  "totalOrders": 1225
+}
+```
+
+## PII Redaction Example
+
+Goja provides a much more flexible and powerful way to handle PII redaction compared to JMESPath. You can easily remove fields, or replace their values with placeholders.
+
+Using the same initial JSON data, here's how you could write a Goja interceptor to redact PII by replacing values:
+
+```javascript
+function intercept(data) {
+  if (data.user) {
+    data.user.name = "[REDACTED]";
+    data.user.email = "[REDACTED]";
+    if (data.user.address) {
+      data.user.address.street = "[REDACTED]";
+    }
+  }
+  return data;
+}
+
+intercept(input);
+```
+
+This would produce the following output, preserving the structure of the data while redacting the sensitive information:
+
+```json
+{
+  "user": {
+    "id": "u123",
+    "name": "[REDACTED]",
+    "email": "[REDACTED]",
+    "address": {
+      "street": "[REDACTED]",
+      "city": "Anytown",
+      "zip": "12345"
+    },
+    ...
+  },
+  ...
+}
+```
+
+Alternatively, you could choose to completely remove the sensitive fields:
+
+```javascript
+function intercept(data) {
+  if (data.user) {
+    delete data.user.name;
+    delete data.user.email;
+    delete data.user.address;
+  }
+  return data;
+}
+```
+
+This level of granular control makes Goja (JS) Logic an ideal choice for implementing robust PII redaction and other security-focused data transformations.
+
+In conclusion, Goja (JS) Logic is a powerful feature for advanced data manipulation. It complements JMESPath Pruning by providing a way to handle more complex scenarios, giving you complete control over the data that is sent to your LLM.

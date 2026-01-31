@@ -1,0 +1,21 @@
+---
+title: Native MCP Elicitation Auth | HasMCP Features
+description: Discover how HasMCP's Native MCP Elicitation Auth securely handles authentication with protocols like OAuth2 when an LLM needs to use an API on your behalf.
+---
+
+This feature is about solving the complex problem of authentication when an LLM needs to use an API on your behalf. Here's a deeper dive:
+
+- **What it is:** "Elicitation" is a fancy word for "asking for." In the context of MCP, it's a secure way for the system to pause and ask the user for information. "Native MCP Elicitation Auth" means that HasMCP has built-in support for using this "asking" mechanism to handle authentication, specifically with OAuth2.
+- **Why it's important:** You can't just give an LLM your username and password. That would be a huge security risk. Instead, modern applications use protocols like OAuth2, where you are redirected to a trusted website (like Google or your corporate login page) to sign in. HasMCP's Elicitation Auth manages this process.
+- **How it works:**
+  1.  The LLM decides it needs to use a tool that requires you to be logged in.
+  2.  HasMCP, acting as the MCP server, detects this and initiates the OAuth2 flow.
+  3.  It then "elicits" your permission by providing a secure URL. You, the user, would then click this link, which takes you to the standard login page.
+  4.  After you successfully log in, the authentication service sends a secure token back to HasMCP.
+  5.  HasMCP can then use this token to make API calls on your behalf.
+- **Key benefits:**
+  - **Security:** Your credentials are never exposed to the LLM or stored in an insecure way. The process follows industry-standard security protocols.
+  - **User Experience:** You get the familiar "Log in with..." experience you're used to in other applications.
+  - **Automation:** The process is handled automatically by HasMCP, so developers don't have to build this complex authentication logic themselves.
+
+In short, Native MCP Elicitation Auth is a secure and user-friendly way to handle API authentication in an LLM-powered world, and HasMCP has this capability built-in from the ground up.

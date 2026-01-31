@@ -1,0 +1,18 @@
+---
+title: Context Window Optimization | HasMCP Features
+description: Learn how HasMCP's Context Window Optimization feature makes your interactions with LLMs faster and cheaper by reducing unnecessary data.
+---
+
+This feature is all about making your interactions with LLMs faster and cheaper. It addresses a fundamental challenge with how LLMs work:
+
+- **What it is:** The "context window" is the amount of information an LLM can "remember" at any given time. Everything you say to it, and everything it says back, goes into this window. Larger context windows are powerful but also more expensive and slower to process. HasMCP's **Context Window Optimization** is a set of tools to reduce the amount of unnecessary data that goes into this window.
+- **Why it's important:** When an LLM calls an API, the API might return a lot of data that isn't relevant to the immediate task. Sending all of this data to the LLM is wasteful. It increases the cost of the LLM interaction (since you're paying per token) and it can slow down the response time.
+- **How it works:** HasMCP provides two primary ways to optimize the context window:
+  1.  **JMESPath Pruning:** JMESPath is a query language for JSON. It allows you to specify exactly which parts of a JSON response you want to extract. For example, if an API returns a large user object, you could use a JMESPath expression to pull out just the user's name and email address, and discard the rest. This is a very fast and efficient way to filter data.
+  2.  **Goja (JS) Logic:** For more complex situations, HasMCP includes the Goja engine, which allows you to write JavaScript code to process the API response. This gives you the full power of a programming language to manipulate the data before it's sent to the LLM. You could, for example, combine multiple fields, format dates, or perform other transformations.
+- **Key benefits:**
+  - **Cost Savings:** By reducing the number of tokens sent to the LLM, you can significantly lower your API costs.
+  - **Improved Performance:** Smaller amounts of data can be processed more quickly, leading to faster response times from the LLM.
+  - **Increased Relevance:** By only sending the most relevant data, you can help the LLM focus on what's important and provide more accurate responses.
+
+In summary, Context Window Optimization is a critical feature for building efficient and cost-effective LLM-powered applications, and HasMCP provides powerful tools to achieve this.

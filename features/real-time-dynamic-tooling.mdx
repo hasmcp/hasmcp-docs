@@ -1,0 +1,25 @@
+---
+title: Real-time Dynamic Tooling | HasMCP Features
+description: Discover how HasMCP's Real-time Dynamic Tooling ensures that your LLM always has an up-to-date understanding of the tools available to it.
+---
+
+This feature addresses the need for agility and responsiveness in an AI-powered ecosystem. It's about ensuring that the LLM always has an up-to-date understanding of the tools available to it.
+
+- **What it is:** **Real-time Dynamic Tooling** is a capability of the Model Context Protocol (MCP) that allows the list of available tools to change on the fly, without requiring a server restart or manual intervention. HasMCP supports this through the `tool_changed` event.
+- **Why it's important:** In a real-world environment, the tools available to an LLM are not static.
+  - An API might be temporarily down for maintenance.
+  - A new API might be deployed.
+  - A user's permissions might change, giving them access to new tools or revoking access to old ones.
+  - The structure of an API might change, with new parameters or different return values.
+- **How it works:**
+  1.  HasMCP continuously monitors the health and status of the APIs it's connected to.
+  2.  If it detects a change (e.g., an API goes offline, a new one comes online, or a user's authentication status changes), it sends a `tool_changed` event to the LLM.
+  3.  The LLM then knows that it needs to refresh its list of available tools.
+  4.  This ensures that the LLM is always working with the most current information.
+- **Key benefits:**
+  - **Agility:** Your AI agents can adapt to changes in the environment in real-time.
+  - **Resilience:** If a tool becomes unavailable, the LLM will know not to use it, preventing errors.
+  - **Scalability:** New tools can be added to the system without any downtime.
+  - **Security:** If a user's permissions are revoked, their access to tools is immediately cut off.
+
+In essence, Real-time Dynamic Tooling brings a level of dynamism and robustness to LLM-powered applications that is essential for building real-world, production-ready systems.
