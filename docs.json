@@ -39,6 +39,23 @@
             ]
           },
           {
+            "group": "Self-hosted",
+            "pages": [
+              "self-hosted"
+            ]
+          },
+          {
+            "group": "Licenses",
+            "pages": [
+              "licenses"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Features",
+        "groups": [
+          {
             "group": "Features",
             "pages": [
               "features",
@@ -54,18 +71,6 @@
               "features/secure-secret-proxy-management",
               "features/groups-users-permissions",
               "features/audit-logs"
-            ]
-          },
-          {
-            "group": "Self-hosted",
-            "pages": [
-              "self-hosted"
-            ]
-          },
-          {
-            "group": "Licenses",
-            "pages": [
-              "licenses"
             ]
           }
         ]
