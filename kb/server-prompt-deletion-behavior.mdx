@@ -1,0 +1,22 @@
+---
+title: What happens to the prompt when I delete its association with an MCP server?
+description: HasMCP guarantees data persistence and segregation between Server bindings and intrinsic Provider Prompts.
+---
+
+# Scope of Prompt Association Deletions
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+Removing an instruction template from a Server's operational context is entirely non-destructive to the original Prompt object.
+
+## State Preservation
+
+When you issue an explicit `DELETE /servers/{serverId}/prompts/{promptId}` network request to HasMCP:
+- The orchestration node natively targets the generic `ServerPrompt` link binding the designated `{serverId}` and `{promptId}` variables.
+- It severs that specific link dynamically.
+
+Consequently, while the agent running downstream immediately loses its operational instruction set via its subsequent `prompts/list` query loop, the actual `messages` payload and semantic definitions mapping the Prompt remain safely locked inside the parent **Provider** layer structure. 
+
+### Why Orchestrate This Way?
+
+This absolute separation of concerns guarantees that one agent environment (e.g. `Server A` performing testing) can freely construct and destruct mapping dependencies without inadvertently sabotaging `Server B` operations—which may still rely continuously on that exact same origin Prompt array operating inside the parent Provider.

@@ -1,0 +1,32 @@
+---
+title: What data is required to map a prompt to a server?
+description: Demystifying the highly distilled CreateServerPromptRequest schema utilized in dynamic orchestration bindings.
+---
+
+# Payload for Server Prompt Mapping
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+Unlike configuring explicit structural Tools—which enforces specifying the origin `providerID` inside the payload mapping to prevent transversal vulnerabilities—associating Prompts utilizes an abstracted, flattened architecture mapped natively by ID.
+
+## Standard POST Instantiation
+
+To bridge a programmatic template via the `POST /servers/{serverId}/prompts` endpoint, you must adhere strictly to the `CreateServerPromptRequest` wrapper constraints.
+
+### Implicit Relationships
+
+Because HasMCP assigns a globally unique string hash across every platform entity dynamically, the routing layer automatically interpolates the `providerID` intuitively by analyzing the target `promptID`. Therefore, the creation payload only requires declaring two mapping strings:
+
+- **`serverID`** *(string)*: Must rigorously match the `{serverId}` variable deployed in the HTTP action URI string. Dictates the destination orchestrator node.
+- **`promptID`** *(string)*: The pre-calculated globally unique identifier of your overarching prompt target entity.
+
+```json
+{
+  "prompt": {
+    "serverID": "sE8vKd2qLp9",
+    "promptID": "mX5vTr9pK2w"
+  }
+}
+```
+
+Posting this JSON structure natively bridges the orchestration pipeline safely, rejecting attempts immediately if the origin mapping hashes deviate from available contextual scopes or execution boundaries.

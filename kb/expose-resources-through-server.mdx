@@ -1,0 +1,27 @@
+---
+title: How are resources exposed through an MCP server?
+description: Understand the translation layer brokering REST API responses down into Model Context Protocol native schemas.
+---
+
+# Exploring Server Data Exposure Mechanisms
+
+When you map a Resource via the HasMCP API configuration, how does the native Model Context Protocol proxy handle that data securely for the connecting LLM client?
+
+## The MCP Translation Engine
+
+Once linked (via the UI or the `POST /servers/{serverId}/resources` endpoint), HasMCP radically shifts its behavior.
+
+### 1. Indexing via `resources/list`
+
+When a local client (like Claude Desktop) boots up and handshakes with your `Server Token` authenticated URL, the first step it generally executes is polling the Server capabilities. 
+
+HasMCP catches the `resources/list` protocol request, iterates rapidly through the `ServerResource` database mapping, pulls the `name`, `mimeType`, and target `uri` schemas stored natively on the associated Provider definitions, and translates them back into a unified JSON-RPC response dictating all available context locations.
+
+### 2. Executing via `resources/read`
+
+When the LLM explicitly decides it needs the data indicated by the URI route (e.g. `file:///logs/backend/fatal`), it submits a strictly formatted `resources/read` JSON-RPC map to the Server connection.
+
+1. **HasMCP** intercepts the request.
+2. It verifies the mapping association exists and the active Token has authorization.
+3. It maps the URI back internally, triggering the original API HTTP target hosted inside the **Provider** abstraction layer.
+4. It streams the binary or plaintext blob back down the Server websocket/stdio buffer natively into the LLM context window wrapper. 

@@ -1,0 +1,32 @@
+---
+title: What data is required to map a resource to a server?
+description: Deep dive into the simplified JSON object mapping Provider Resources down to individual MCP environments. 
+---
+
+# Payload for Server Resource Mapping
+
+Unlike Tools—which require extremely rigid triangular definitions mapping `providerID`, `toolID`, and `serverID` simultaneously—Resource definitions rely solely on a dual identifier model.
+
+## The Minimal Path
+
+When defining a link physically through a `POST /servers/{serverId}/resources` request, HasMCP utilizes an abstracted lookup mechanism based upon the `resourceID` provided. Because every created object on the platform resolves to an explicit ID hash (guaranteeing uniqueness), the system implicitly derives the Provider origin via a subquery.
+
+### Required Fields
+
+For the `CreateServerResourceRequest`:
+
+- **`serverID`** *(string)*: The 11-character hash establishing the recipient MCP environment acting as the unified gateway for LLMs. This value must mirror the `{serverId}` deployed in your URL pathing.
+- **`resourceID`** *(string)*: The precise 11-character identifier locked onto the specific piece of data mapping.
+
+### Example Construction
+
+```json
+{
+  "resource": {
+    "serverID": "sE8vKd2qLp9",
+    "resourceID": "rA9BdO1kZ5T"
+  }
+}
+```
+
+By ensuring your automation pipelines pass these two distinct properties accurately in the JSON mapping tree, HasMCP flawlessly associates the data exposure automatically securely without further abstraction requirements.

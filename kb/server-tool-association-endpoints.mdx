@@ -1,0 +1,34 @@
+---
+title: What is the endpoint to add a tool to an MCP server?
+description: API reference identifying the exact POST endpoint and payload structure for creating Server-to-Tool associations.
+---
+
+# Defining the Tool Association Endpoint
+
+The core mechanism for extending an MCP server's execution capabilities is securely linking it to pre-defined Provider Tools.
+
+## The API Endpoint
+
+To authorize new tool access for a specific server, use the highly specific `POST` routing path built around the server's unique identifier.
+
+**`POST /servers/{serverId}/tools`**
+
+- `{serverId}` dictates the 11-character hash indicating the specific agent environment. 
+
+### Structuring the Association
+
+Because tools belong to specific API integrations, the `CreateServerToolRequest` mandates passing an object defining the entire triangular relationship. You cannot simply pass the tool ID; you must also declare `providerID` and `serverID` inside the payload object.
+
+```json
+{
+  "tool": {
+    "serverID": "sE8vKd2qLp9",
+    "providerID": "kSuB9Gf6aD4",
+    "toolID": "tH4mZw9xV2n"
+  }
+}
+```
+
+### Successful Response
+
+The command yields `200 OK` upon success, replying with the mapped `CreateServerToolResponse` object. The server immediately begins reporting this new tool structure in its `ListTools` protocol handler to downstream LLM inferences.

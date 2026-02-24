@@ -1,0 +1,39 @@
+---
+title: How do I remove a tool association from an MCP server?
+description: Follow these instructions to revoke an MCP server's executable access to a specific provider tool.
+---
+
+# Removing a Tool Association from an MCP Server
+
+## Using HasMCP UI
+
+![Remove Server Tool Confirmation](../images/kb/remove-server-tool.png)
+
+When an AI agent no longer needs an execution capability, it's best practice to explicitly sever the integration for security reasons.
+
+1. Locate the specific MCP server on the dashboard.
+2. Open its **Tools** tab.
+3. Find the tool you wish to revoke in the active list.
+4. Click its **Remove Tool** (Delete) action. 
+5. Confirm the action in the validation modal.
+
+> **Crucial Detail:** Clicking "Remove Tool" within a server's dashboard *only severs the association link* between the server and the tool. It **does not** delete the underlying tool definition from the parent Provider catalog.
+
+## Using REST API
+
+To procedurally enforce least-privilege principles by revoking a tool programmatically, you command the manager to destroy the mapping linkage.
+
+### The API Endpoint
+
+**`DELETE /servers/{serverId}/tools/{toolId}`**
+
+You must map both the 11-character `{serverId}` housing the capability and the exact `{toolId}` to be expunged.
+
+### Actioning the Deletion
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tools/tH4mZw9xV2n \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+Because deletion implies state modification without data return, the system triggers a `204 No Content` code. The server's MCP clients will immediately cease returning the tool in standardized `tools/list` interactions.

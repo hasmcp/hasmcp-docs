@@ -1,0 +1,21 @@
+---
+title: What happens to the resource when I delete its association with an MCP server?
+description: Explaining data sovereignty; how destroying server linkages leaves raw provider configurations functionally untouched. 
+---
+
+# Scope of Resource Association Deletions
+
+Removing a resource map from an active MCP agent does **not** harm the underlying origin API endpoints.
+
+## The Architectural Divide
+
+In HasMCP, Provider APIs define *what* data exists, while Server Instances define *who* (which LLMs) get to see that data.
+
+### Deleting an Association
+
+When you issue the command `DELETE /servers/{serverId}/resources/{resourceId}` or use the HasMCP dashboard to click the Remove icon in the Server's tab, you are only destroying the transient database linkage object (`ServerResource`) maintained by the orchestrator.
+
+1. **Agent Behavior**: Any local MCP client polling that server will silently stop indexing the targeted resource URI during their routine `resources/list` handshake.
+2. **Provider Immortality**: Inside the parent Provider where the URI logic was originally mapped, the tool continues to exist flawlessly. 
+
+You can confidently link, sever, and re-link resources across dozens of distinct Model orchestration servers without fear of accidentally destroying the underlying configuration logic or inadvertently deleting actual company data.

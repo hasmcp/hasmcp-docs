@@ -1,0 +1,19 @@
+---
+title: Can a variable be shared among different providers?
+description: Unpacking the global architecture of HasMCP Variables and their native relationship with distinct Tool Providers.
+---
+
+# Sharing Variables Across Providers
+
+**Yes.** By default, all HasMCP Variables operate as universally accessible global configurations dynamically mapped during runtime.
+
+Because you create a Variable at the root infrastructure level (i.g. `POST /variables`), the literal parameter exists entirely independent of individual Servers or specific Providers. This decoupled architecture is intentional.
+
+## How Sharing Works
+
+If you establish an explicit global Secret named `GITHUB_PRIVATE_TOKEN`, the orchestration logic treats that string as a universal key.
+
+1. **Provider 1 (Github Pull Requests)**: You deploy a Provider focused on managing PR logic mapped to Server A. The Provider configures its internal tool execution loop to query the `GITHUB_PRIVATE_TOKEN` mapping. HasMCP securely injects the value downstream at runtime.
+2. **Provider 2 (Github Issue Sync)**: You deploy a secondary Provider focused entirely on syncing internal Jira tickets to Github issues on Server B. This tool also explicitly queries `GITHUB_PRIVATE_TOKEN`. HasMCP effortlessly pipelines the identical Secret into this distinct proxy loop simultaneously.
+
+By adopting a universal `Variable` repository design, you guarantee single-source-of-truth configuration management natively. If a core API key inherently rotates externally, you only update the single HasMCP Variable—and every downstream Provider demanding that key receives the updated payload automatically upon the next execution request. 

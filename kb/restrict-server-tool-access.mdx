@@ -1,0 +1,30 @@
+---
+title: Can I associate a single provider's tool to multiple MCP servers?
+description: Understand the many-to-many relationship capability inside the HasMCP platform routing. 
+---
+
+# Associating a Tool Across Multiple Servers
+
+**Yes.** A single Provider Tool acting as the base configuration can be independently associated with an unlimited number of discrete MCP servers. HasMCP orchestrates completely independent routing topologies.
+
+## Scenario: The Generic "Jira Query"
+
+Imagine you built a highly optimized REST API tool designed to search Jira tickets. This tool ("Search Tickets", ID: `tH4mZw9xV2n`) exists inside your "Standard Enterprise Providers" catalog.
+
+You have three completely different AI Agent environments running in your business:
+1. A Software Development Code-Review Agent (`Server A`)
+2. A Product Management Roadmap Analytics Agent (`Server B`)
+3. A Customer Support Triage Agent (`Server C`)
+
+### Independent Linking
+
+Using either the Dashboard or by firing three independent POST requests to the API, you can link the exact same `tH4mZw9xV2n` tool into Server A, Server B, and Server C.
+
+- When Agent A requests `tools/list`, it receives the "Search Tickets" schema. 
+- When Agent C executes `tools/call`, it utilizes the exact same provider configuration, seamlessly authenticating the query.
+
+### Updating Impacts
+
+Because of the architectural separation of concerns, updating the *source definition* of the tool directly inside its Provider will automatically cascade and upgrade the parameter expectations and descriptions immediately across Server A, B, and C simultaneously without modifying their actual association linkages. 
+
+Conversely, deleting the association from Server B stops that single agent from querying Jira without restricting the capabilities of Servers A and C.

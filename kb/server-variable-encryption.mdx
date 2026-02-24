@@ -1,0 +1,27 @@
+---
+title: Are Server Variables encrypted?
+description: Security guidelines handling explicit Variable generation parameters ensuring credentials stay locally and remotely secure.
+---
+
+# Server Variable Encryption
+
+HasMCP handles two distinct data models for orchestrating API payloads across the boundary of an MCP agent: `ENV` and `SECRET`. 
+
+Because you are likely piping high-level authorization tokens internally (e.g. mapping Claude natively to internal Salesforce CRM structures), defining proper classification during Variable generation prevents data exploitation.
+
+## The Two Types
+
+When utilizing the `POST /variables` API correctly or the global UI Dashboard, you dictate the format dynamically:
+
+1. **ENV**: Stored inherently in plaintext database arrays. HasMCP retains the literal string natively. When you explicitly query the dashboard visually or call the `/variables` API, the plaintext string safely returns precisely as written.
+2. **SECRET**: Irreversibly hashed iteratively explicitly within HasMCP utilizing standard enterprise cryptography layers. The exact string representation effectively dies instantly inside the HasMCP cluster exactly after the initial `201 Created` returns. 
+
+### Why Use Secret?
+
+If you instantiate a parameter using `"type": "SECRET"` natively, the proxy orchestrator intelligently maps the token blindly to outbound Provider HTTP execution wrappers.
+
+- **Storage**: Never stored in plaintext anywhere safely globally.
+- **Retrieval**: `GET /variables` universally returns `***` structurally intentionally cleanly. 
+- **Execution**: Safely passes precisely into local Server environments when required seamlessly intelligently.
+
+Never utilize `ENV` for `GITHUB_TOKEN`, `STRIPE_KEY`, or `BEARERAUTH` properties to ensure a secure infrastructure.

@@ -1,0 +1,36 @@
+---
+title: How do I troubleshoot failing server-tool execution associations?
+description: Typical pitfalls and diagnostics when LLM agents fail to see or execute assigned tools in the HasMCP environment.
+---
+
+# Troubleshooting Server-Tool Associations
+
+If your connected LLM application states it doesn't have a tool available, or throws routing errors when attempting an execution via an MCP server, follow these diagnostic steps to identify the configuration gap.
+
+## 1. Verify the Association Linkage
+
+The primary reason agents fail to report tools is that the explicit association linkage in the HasMCP dashboard does not exist.
+
+**Action:** Execute a `GET /servers/{serverId}/tools` mapped against your target agent server.
+- **Check:** Does the tool physically appear in the returned array? If not, the association POST failed or was structurally skipped. You must recreate the link.
+
+## 2. Validate the Parent Provider Status
+
+Even if a server correctly links to a tool, if the origin Provider owning that tool is inactive, malformed, or suffering authorization failures, the tool will fail downstream.
+
+**Action:** 
+1. Open the **Tools** tab in the *Provider* details. 
+2. Verify the underlying tool routing (`execution.method` and `execution.path`) resolves logically against the Provider's absolute base URL template.
+
+## 3. Tool Deletion Race Conditions
+
+Because HasMCP supports dynamic composition, it is possible for an administrator to delete a Tool directly from a Provider catalog *after* it has been associated with an active Agent Server. 
+
+- HasMCP actively suppresses the execution of orphaned tools.
+- An LLM utilizing `tools/list` simply will not receive the tool schema if the parent structure backing the linkage no longer exists. 
+
+## 4. Client Caching
+
+The Model Context Protocol actively transmits updated tool lists recursively based on internal events. However, if your specific conversational LLM client heavily caches the initial `tools/list` transaction without parsing server notifications, it might be blind to newly `POST`ed tools.
+
+**Action:** Radically force a reconnect of the SSE/stdio transport layer on your local client (e.g., restart Claude Desktop) to enforce a fresh capability handshake.

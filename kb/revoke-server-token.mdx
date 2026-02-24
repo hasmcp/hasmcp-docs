@@ -1,0 +1,37 @@
+---
+title: How do I securely revoke a breached or redundant server token?
+description: Immediate action guides for surgically scrubbing unauthorized key authentication structures spanning HasMCP deployments.
+---
+
+# Revoking Server Tokens
+
+## Using HasMCP UI
+
+![Revoke Server Token Confirmaton](../images/kb/revoke-server-token.png)
+
+Whether an internal server was compromised, or an employee possessing an active credential leaves the organization rapidly, you must deprecate execution pipelines efficiently.
+
+1. Navigate deeply into the affected Server context starting strictly from your **MCP Servers** dashboard array loop.
+2. Select the **Configuration** tab.
+3. Locate the compromised mapping entity residing within the **Server Tokens** table internally.
+4. Click the associated **Delete** (Trash) icon native to that row.
+5. Explicitly confirm the `Delete Token` modal action to permanently invalidate the hash organically.
+
+## Using REST API
+
+For heavily automated scaling arrays mapped dynamically to temporary cluster pods logically, you typically delete internal environment strings rapidly leveraging operational orchestration destruction hook workflows directly against the controller API proxy natively.
+
+### The API Endpoint
+
+**`DELETE /servers/{serverId}/tokens/{tokenId}`**
+
+You must natively structure the HTTP command passing both the target orchestration `{serverId}` node identifier safely accompanied by the exact mapped internal database schema `{tokenId}` hash configuration manually.
+
+### Expected Behavior
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tokens/tQ9pV1mN8xK \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
+```
+
+The system immediately clears the internal database hash securely responding cleanly mapping a standard `204 No Content`. Any remote infrastructure clients utilizing the original unencrypted cryptography value matrix instantly fail routing authentication on subsequent Model Context Protocol execution invocations seamlessly.

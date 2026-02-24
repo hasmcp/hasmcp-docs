@@ -161,6 +161,91 @@
               "kb/update-provider-resource",
               "kb/delete-provider-resource"
             ]
+          },
+          {
+            "group": "Provider Prompts",
+            "pages": [
+              "kb/add-prompt-to-provider",
+              "kb/list-provider-prompts",
+              "kb/get-provider-prompt-details",
+              "kb/update-provider-prompt",
+              "kb/delete-provider-prompt"
+            ]
+          },
+          {
+            "group": "Server Tools",
+            "pages": [
+              "kb/assign-tool-to-server",
+              "kb/list-server-tools-api",
+              "kb/server-tool-association-endpoints",
+              "kb/remove-tool-from-server",
+              "kb/check-server-tool-status",
+              "kb/server-tool-permissions",
+              "kb/bulk-assign-server-tools",
+              "kb/server-tool-execution-logs",
+              "kb/restrict-server-tool-access",
+              "kb/troubleshoot-server-tool-execution"
+            ]
+          },
+          {
+            "group": "Server Resources",
+            "pages": [
+              "kb/associate-resource-to-server",
+              "kb/server-resource-association-endpoint",
+              "kb/list-server-resources-api",
+              "kb/bind-multiple-resources-to-server",
+              "kb/disassociate-server-resource",
+              "kb/server-resource-deletion-behavior",
+              "kb/query-server-resources",
+              "kb/payload-server-resource-mapping",
+              "kb/expose-resources-through-server",
+              "kb/dynamic-server-resource-attachment"
+            ]
+          },
+          {
+            "group": "Server Prompts",
+            "pages": [
+              "kb/associate-prompt-to-server",
+              "kb/server-prompt-association-endpoint",
+              "kb/list-server-prompts-api",
+              "kb/bind-multiple-prompts-to-server",
+              "kb/disassociate-server-prompt",
+              "kb/server-prompt-deletion-behavior",
+              "kb/query-server-prompts",
+              "kb/payload-server-prompt-mapping",
+              "kb/expose-prompts-through-server",
+              "kb/dynamic-server-prompt-attachment"
+            ]
+          },
+          {
+            "group": "Tokens & Authentication",
+            "pages": [
+              "kb/generate-server-token",
+              "kb/create-server-token-endpoint",
+              "kb/list-server-tokens-api",
+              "kb/server-token-limitations",
+              "kb/revoke-server-token",
+              "kb/authenticate-mcp-client",
+              "kb/token-payload-structure",
+              "kb/server-token-expiration",
+              "kb/missing-token-errors",
+              "kb/securely-store-server-token"
+            ]
+          },
+          {
+            "group": "Server Variables",
+            "pages": [
+              "kb/create-server-variable",
+              "kb/create-server-variable-endpoint",
+              "kb/list-server-variables-api",
+              "kb/server-variable-encryption",
+              "kb/delete-server-variable",
+              "kb/variable-provider-sharing",
+              "kb/variable-payload-structure",
+              "kb/missing-variable-handling",
+              "kb/update-server-variable",
+              "kb/duplicate-variable-names"
+            ]
           }
         ]
       },

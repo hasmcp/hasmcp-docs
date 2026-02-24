@@ -1,0 +1,44 @@
+---
+title: How do I list all the prompts currently associated with an MCP server?
+description: Polling endpoints for discovering active server prompt orchestration topologies. 
+---
+
+# Listing Associated Server Prompts
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+To understand which conversational templates and logic matrices are actively exposed via standard MCP translation logic to your localized LLMs, you can interrogate the Server abstraction programmatically.
+
+## Using REST API
+
+Instead of querying the Model Context Protocol stdio client loop, backend engineers can simply verify the HasMCP orchestration database natively.
+
+### The API Endpoint
+
+**`GET /servers/{serverId}/prompts`**
+
+Executing a GET query against this unified directory path triggers HasMCP to output an aggregate `ListServerPromptsResponse`.
+
+### Using Curl
+
+```bash
+curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/prompts \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+The response is packaged as a `prompts` array dictionary, detailing every explicit assignment loop mapped securely to the designated agent runtime environment.
+
+```json
+{
+  "prompts": [
+    {
+      "serverID": "sE8vKd2qLp9",
+      "promptID": "mX5vTr9pK2w"
+    },
+    {
+       "serverID": "sE8vKd2qLp9",
+       "promptID": "aL2mZq8yV1t"
+    }
+  ]
+}
+```

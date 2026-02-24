@@ -1,0 +1,32 @@
+---
+title: What is the payload structure of a server variable?
+description: Understanding the JSON schema utilized during polling or generating HasMCP configurations.
+---
+
+# Server Variable Payload Structure
+
+Whether you are polling the global array via `GET /variables` or structurally defining an explicit parameter via `POST /variables`, understanding the exact JSON schema dictating the architecture is critical for successful programmatic integrations.
+
+## The Model Schema
+
+The standard structured `Variable` object inherently defines:
+
+```json
+{
+  "id": "tQ9pV1mN8xK",
+  "createdAt": "2026-03-01T14:30:00Z",
+  "updatedAt": "2026-03-01T14:30:00Z",
+  "type": "SECRET",
+  "value": "***",
+  "name": "PINECONE_DB_KEY"
+}
+```
+
+### Property Breakdown
+
+- **`id`** *(string, readOnly)*: The explicit 11-char database hash uniquely determining this specific row object log. Required if you need to execute an HTTP `PATCH` or `DELETE` request against the credential later.
+- **`createdAt`** *(string, date-time, readOnly)*: System-stamped ISO 8601 initialization metric natively mapping its inception.
+- **`updatedAt`** *(string, date-time, readOnly)*: System-stamped metric tracking modifications.
+- **`type`** *(string)*: Indicates execution handling logic (e.g., `0: INVALID`, `1: ENV`, `2: SECRET`).
+- **`value`** *(string)*: The explicit unformatted text value natively mapped. If the type is `SECRET`, standard retrieval routes actively mask the value dynamically with `***`.
+- **`name`** *(string)*: The human-readable string key dictating exactly how downstream integrations request the variable properly during capability generation.

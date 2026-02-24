@@ -1,0 +1,23 @@
+---
+title: Can I dynamically attach and detach prompts from a running server API?
+description: Scaling and managing real-time LLM execution behavior logically via asynchronous orchestration patterns securely. 
+---
+
+# Dynamic Server Prompt Attachment
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+**Yes**. HasMCP inherently acts as a constantly mutating orchestrational buffer securely decoupling the generative application natively from its operational resources.
+
+## Asynchronous Context Updates
+
+Executing explicit `POST` actions to `/servers/{serverId}/prompts` immediately updates the relational state logic bridging your active infrastructure globally without requiring container restarts intuitively.
+
+### Exploiting Notification Architectures
+
+Because the Model Context Protocol supports live bi-directional notifications natively (e.g. `notifications/prompts/list_changed`), developers can manipulate active context boundaries dynamically safely.
+
+1. **State Trigger:** Your external infrastructure flags that a critical database schema change has occurred natively. Ensure operational integrity actively.
+2. **API Manipulation:** Your infrastructure orchestrator fires a `POST` transaction cleanly to the HasMCP server context securely containing an updated "Emergency DB Handling Guide" `promptID` actively.
+3. **Internal Routing:** HasMCP binds the relational object globally and immediately deploys a native state alteration packet down through the active execution layer intelligently.
+4. **Agent Recognition:** The LLM natively processes the notification, polling `prompts/list` silently again safely and integrating the emergency workflow instruction securely before resuming processing.

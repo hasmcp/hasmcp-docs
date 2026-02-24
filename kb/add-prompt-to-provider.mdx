@@ -1,0 +1,49 @@
+---
+title: How do I add a prompt to a provider?
+description: Understand how to define reusable LLM Prompts and attach them to your HasMCP API Providers.
+---
+
+# Adding a Prompt to a Provider
+
+A `Prompt` acts as a pre-constructed set of instructions or templates that any connected MCP server can utilize to standardize interactions. 
+
+## Using REST API
+
+To programmatically bind a new prompt instruction set to a provider, issue a `POST` request with the `ProviderPromptCreate` payload.
+
+**`POST /providers/{providerId}/prompts`**
+
+### JSON Payload Requirements
+
+Your payload requires a `prompt` object composed of exactly 4 fields:
+- **`name`** (string): A distinct programmatic identifier.
+- **`description`** (string, optional): Context clarifying when the LLM should use this prompt.
+- **`arguments`** (object array): JSON array defining expected variables (e.g., `[{"name": "repo_name", "description": "Name of git repository", "required": true}]`).
+- **`messages`** (object array): JSON array mapping the template content (e.g., `[{"role": "user", "content": {"type": "text", "text": "Analyze the codebase for {repo_name}"}}]`).
+
+### Example JSON Request
+
+```json
+{
+  "prompt": {
+    "name": "code_review_assistant",
+    "description": "A system prompt instructing the LLM to aggressively review incoming PR code for security vulnerabilities.",
+    "arguments": [
+        {
+            "name": "pull_request_number",
+            "description": "The PR number to query via the underlying tool.",
+            "required": true
+        }
+    ],
+    "messages": [
+        {
+            "role": "user",
+            "content": {
+                "type": "text",
+                "text": "Review PR #{pull_request_number} and return only critical security alerts."
+            }
+        }
+    ]
+  }
+}
+```

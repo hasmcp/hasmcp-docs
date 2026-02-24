@@ -1,0 +1,49 @@
+---
+title: What endpoint is used to create a server token?
+description: Technical breakdown of the POST requirements mapping explicit authentication credentials back to MCP architectures. 
+---
+
+# The Server Token Creation Endpoint
+
+For engineers automating the deployment of new AI agent infrastructure, generating deterministic authentication boundaries dynamically relies heavily on the token instantiation endpoint.
+
+## The API Endpoint
+
+**`POST /servers/{serverId}/tokens`**
+
+The target orchestration node is inferred inherently from the `{serverId}` deployed directly into the network HTTP request path.
+
+### Request Body Formatting
+
+Using the mapped `CreateServerTokenRequest` structure, submit a JSON object housing a `token` map mapping the constraints explicitly to `ServerTokenCreate`.
+
+```json
+{
+  "token": {
+    "name": "Pipeline Deploy Key",
+    "expiresAt": "2027-01-01T00:00:00Z"
+  }
+}
+```
+
+- **`name`** *(string)*: A mandatory human-readable identifier. Useful when listing and auditing long-term credentials later to determine deprecation readiness.
+- **`expiresAt`** *(string, optional)*: An ISO 8601 formatted datetime layout dictating when the credential inherently self-destructs. If omitted entirely, the credential maintains active perpetuity natively.
+
+### Important: Handling the Response
+
+The `200 OK` return delivers the `CreateServerTokenResponse` mapping object explicitly containing the newly generated schema.  
+
+```json
+{
+  "token": {
+    "id": "tQ9pV1mN8xK",
+    "serverID": "sE8vKd2qLp9",
+    "name": "Pipeline Deploy Key",
+    "expiresAt": "2027-01-01T00:00:00Z",
+    "createdAt": "2026-02-24T00:00:00Z",
+    "value": "mcp_rt_81K..." 
+  }
+}
+```
+
+Crucially, the `value` property contains the raw, globally unique cryptography string your downstream pipelines need to communicate natively with HasMCP. You must cache/inject this intelligently.

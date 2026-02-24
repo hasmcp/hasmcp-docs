@@ -1,0 +1,39 @@
+---
+title: What payload is needed to create an MCP server tool association?
+description: A deep breakdown of the required POST payload and its rigid relationship mappings.
+---
+
+# Payload for Creating a Tool Association
+
+When granting a new executable capability to your MCP server via the `/servers/{serverId}/tools` endpoint, the integration relies heavily upon explicitly proving the relationship framework. 
+
+## The Rigid Request Structure
+
+Unlike updating an abstract entity (which only requires localized changes), forming an association is an absolute mapping mechanism. The payload mandates constructing a `CreateServerToolRequest` housing a `tool` block. 
+
+### Mandatory Fields
+
+The `tool` object strictly requires all three of these properties to execute correctly:
+
+- **`serverID`** *(string)*: The 11-character hash dictating the target MCP environment. This **must** perfectly match the `{serverId}` deployed in the URL path of your POST request. 
+- **`providerID`** *(string)*: The 11-character hash indicating the root API Provider which currently "owns" the original tool logic.
+- **`toolID`** *(string)*: The specific 11-character hash that points exactly to the executable tool configuration living inside the provider.
+
+### The JSON Format
+
+```json
+{
+  "tool": {
+    "serverID": "sE8vKd2qLp9",
+    "providerID": "kSuB9Gf6aD4",
+    "toolID": "tH4mZw9xV2n"
+  }
+}
+```
+
+## Why are all three IDs required?
+
+HasMCP thrives on secure multi-provider routing. By forcing the inclusion of the `providerID` alongside the `toolID`, the system definitively protects against traversal or orphaned ID injections. The controller actively verifies:
+1. Does the specified `providerID` exist?
+2. Does the specified `toolID` physically belong to that explicit Provider?
+3. If valid, lock that verified capability to the `serverID`.

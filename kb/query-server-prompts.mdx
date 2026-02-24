@@ -1,0 +1,39 @@
+---
+title: How do I query the prompts available to an MCP server?
+description: Discover the GET routing structures utilized for auditing abstract execution configurations across active agents.
+---
+
+# Querying Available MCP Server Prompts
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+To proactively audit which Model Context Protocol templates are actively exposed to your running large language models—even without directly intercepting the raw stdio streams natively—you can leverage the robust HasMCP API matrix.
+
+## The Associational Proxy Layer
+
+HasMCP retains explicit knowledge of every active mapping binding a Server to a Prompt.
+
+### Executing the GET Query
+
+**`GET /servers/{serverId}/prompts`**
+
+Because you query the `{serverId}` directly as the root target node, HasMCP does the heavy lifting of gathering all associated Prompt references, regardless of which underlying proprietary Provider configuration inherently owns the baseline instruction sets.
+
+### Payload Schema Returns
+
+```json
+{
+  "prompts": [
+    {
+      "serverID": "sE8vKd2qLp9",
+      "promptID": "mX5vTr9pK2w"
+    },
+    {
+       "serverID": "sE8vKd2qLp9",
+       "promptID": "aL2mZq8yV1t"
+    }
+  ]
+}
+```
+
+The returned schema distinctly outlines an array populated with `ServerPrompt` objects, yielding explicit confidence into the orchestrated templates accessible out-of-the-box by the next automated MCP client invocation loop.

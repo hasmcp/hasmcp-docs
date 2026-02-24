@@ -1,0 +1,32 @@
+---
+title: What is the API endpoint to link a resource to an MCP server?
+description: Detailed endpoint routing instructions and JSON payload schema for programmatic Server-Resource linkages.
+---
+
+# The Server Resource Association Endpoint
+
+To grant an MCP Server read-access to a newly minted Provider Resource (such as an internal documentation wiki or a system log), use the nested POST endpoint targeting the specific server identifier.
+
+## The API Endpoint
+
+**`POST /servers/{serverId}/resources`** 
+
+By posting to this specific 11-character `{serverId}`, the HasMCP manager inherently knows which control-plane API to update.
+
+### The JSON Dependency Payload
+
+Your JSON payload must strictly conform to the `CreateServerResourceRequest` structure. It contains a `resource` object mapping exactly two constraints:
+
+```json
+{
+  "resource": {
+    "serverID": "sE8vKd2qLp9",
+    "resourceID": "rA9BdO1kZ5T"
+  }
+}
+```
+
+- **`serverID`**: Must perfectly mirror the `{serverId}` deployed in your URL path.
+- **`resourceID`**: The explicit 11-character hash pointing to the data mapping sitting inside the Provider. Note that the API relies on HasMCP's internal abstraction engine to automatically deduce the origin Provider from the `resourceID` globally.
+
+A successful assignment triggers a `200 OK`. Downstream LLMs connected to this exact server can immediately retrieve this newly linked data blob.

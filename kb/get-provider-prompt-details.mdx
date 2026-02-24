@@ -1,0 +1,27 @@
+---
+title: How do I get the details of a specific provider prompt?
+description: Learn how to isolate an individual provider prompt's configuration (including its dynamic arguments) via the HasMCP API.
+---
+
+# Retrieving Details of a Specific Provider Prompt
+
+If you need the exhaustive JSON schema mapping of an individual prompt programmatically, structure a `GET` request uniquely identifying its exact ID nested within its parent provider.
+
+## Using REST API
+
+### The API Endpoint
+
+**`GET /providers/{providerId}/prompts/{id}`**
+
+You must provide two specific hash identifiers to form the endpoint:
+- `{providerId}`: The ID dictating the overarching API integration domain.
+- `{id}`: The distinct 11-character hash linking directly to this individual Prompt.
+
+### Example Request
+
+```bash
+curl -X GET https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts/pT9XyM1qL2b \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+If successful, the API serves a `GetProviderPromptResponse` with a `200 OK` status. This payload yields the complete `prompt` dictionary mapping its parameterized `arguments` and the nested array structuring its formatted `messages`.

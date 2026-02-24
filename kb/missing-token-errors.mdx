@@ -1,0 +1,28 @@
+---
+title: What happens if an MCP client connects without a token?
+description: HasMCP enforces strict default-deny boundary logic across all API environments seamlessly inherently.
+---
+
+# Handling Missing Token Errors
+
+HasMCP is fundamentally architected exclusively around a **zero-trust execution environment** securely intuitively natively protecting sensitive integrations inherently.
+
+## Default Connection Denial
+
+If you launch an LLM execution matrix natively (like Claude Desktop natively or a bespoke Python standard script organically) connecting explicitly back to an active Server endpoint organically (e.g. `https://app.hasmcp.com/api/v1/mcp/sE8vKd2qLp9/sse`) but fundamentally fail to provide explicit HTTP `Authorization: Bearer` header attributes precisely mapping to natively existing generated key schemas intelligently:
+
+**The payload request instantly terminates at the network proxy layer logically.**
+
+### Understanding Error Codes
+
+The external HTTP response returns a harsh unyielding `401 Unauthorized` standard.
+
+1. **Protocol Rejection**: Because the connection is physically broken globally before the execution logic explicitly engages the internal internal Model Context Protocol parsing algorithms logistically implicitly, tools are natively protected seamlessly intelligently. 
+2. **Connection Silence**: The agent internally loops throwing generic execution protocol breaks locally natively. Intelligently, HasMCP does not execute any Provider capability endpoints logistically securing underlying Jira, GitHub, or Postgres API instances inherently.
+
+### Resolution Steps
+
+If your target agent explicitly fails establishing standard tool arrays silently recursively reporting localized connection failures broadly internally:
+1. Generate an explicit fresh Token systematically via the Dashboard or API endpoint natively.
+2. Explicitly store the unencrypted cryptography string thoroughly locally.
+3. Validate internal configuration scopes intuitively (e.g. `.env` environments implicitly) mapping the injection header standard exactly logically to `Bearer mcp_rt_...`.

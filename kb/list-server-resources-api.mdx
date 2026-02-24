@@ -1,0 +1,30 @@
+---
+title: How do I see a list of all resources attached to an MCP server?
+description: Operational runbook to audit the full catalog of exact resourceURIs exposed to an active agent model.
+---
+
+# Listing All Resources Attached to an MCP Server
+
+## Using HasMCP UI
+
+If you need a human-readable visual confirmation of precisely what data endpoints your LLM can read:
+1. Navigate to your target Server inside the **MCP Servers** dashboard.
+2. Select the **Resources** tab.
+3. This dynamically queries the `listServerResources` request, rendering out all authorized data blob definitions (including their MIME types and human-readable names) alongside the provider configurations acting as their hosts.
+
+## Using REST API
+
+Automated orchestration frameworks or observability dashboards can fetch the live catalog of a server's data integrations actively using the `GET` resources array endpoint.
+
+### The API Endpoint
+
+**`GET /servers/{serverId}/resources`**
+
+### Formatting the Request
+
+```bash
+curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+A properly formed, authenticated request returns the `ListServerResourcesResponse` payload. Inside, a `resources` array lists out every individual association block, definitively outlining the `serverID` and `resourceID` mappings explicitly exposing data down to the end-user Model Context Protocol client.

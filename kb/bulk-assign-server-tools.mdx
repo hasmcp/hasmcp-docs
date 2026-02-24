@@ -1,0 +1,53 @@
+---
+title: Is there a way to bulk-assign tools to an MCP server?
+description: Best practices for scaling tool associations iteratively against the HasMCP Server Tool endpoint.
+---
+
+# Bulk Assigning Server Tools
+
+## Single Association Architecture
+
+Currently, the HasMCP API philosophy revolves around discrete, explicit capability grants. The primary endpoint for authorizing a tool (`POST /servers/{serverId}/tools`) expects a solitary `ServerTool` mapping object per request. 
+
+**There is no native single REST endpoint that accepts an array of tool parameters to instantiate a massive bulk mapping in one transaction.**
+
+## Creating Bulk Workflows Programmatically
+
+To achieve bulk assignment when migrating environments or initializing complex composite AI models, administrators can easily script the iteration. 
+
+Because the endpoint is lightweight, you can iterate over arrays of target `toolID` variables within standard automation scripts (Bash, Python, Go) executing rapid sequential `POST` calls.
+
+### Example Automation Pattern (Bash)
+
+```bash
+#!/bin/bash
+
+# Target Infrastructure
+SERVER_ID="sE8vKd2qLp9"
+PROVIDER_ID="kSuB9Gf6aD4"
+
+# Array of Tools to Link
+declare -a TARGET_TOOLS=(
+  "tH4mZw9xV2n" 
+  "aB8cV5nXm0q"
+  "zP3lKj7yR1w"
+)
+
+# Loop and Post
+for tool in "${TARGET_TOOLS[@]}"
+do
+   # Executing the individual POST request
+   curl -X POST "https://app.hasmcp.com/api/v1/servers/${SERVER_ID}/tools" \
+     -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d "{
+           \"tool\": {
+             \"serverID\": \"${SERVER_ID}\",
+             \"providerID\": \"${PROVIDER_ID}\",
+             \"toolID\": \"${tool}\"
+           }
+         }"
+done
+```
+
+> **Performance Note:** The HasMCP orchestration engine handles synchronous capability additions rapidly. All tools bound sequentially via iteration will immediately index and reflect simultaneously on the next `tools/list` LLM request.

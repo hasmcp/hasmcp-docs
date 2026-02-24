@@ -1,0 +1,27 @@
+---
+title: How do I disassociate a prompt from my MCP server?
+description: Explaining the DELETE lifecycle utilized to revoke execution templates from LLM context layers.
+---
+
+# Disassociating Server Prompts
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+To actively sanitize and scale down an agent's orchestration complexity programmatically—such as removing a generalized "v1 Debug Template" in favor of a "v2 Specific Error Template"—you sever the assignment utilizing a destructive state transition endpoint.
+
+## The API Endpoint
+
+**`DELETE /servers/{serverId}/prompts/{promptId}`**
+
+You must explicitly map both the target orchestrator (`serverId`) and the target capability instruction (`promptId`). 
+
+### Utilizing Automation
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/prompts/mX5vTr9pK2w \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+Executing this logic against the proxy causes the HasMCP routing engine to scrub the specific `ServerPrompt` dependency mapping from its relational architecture instantly. Mapped responses return an empty `204 No Content`.
+
+As a direct consequence, the next immediate `prompts/list` Model Context Protocol interrogation originating from downstream connected artificial agents will simply drop the instruction package from the array structure seamlessly.

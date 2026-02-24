@@ -1,0 +1,36 @@
+---
+title: What is the structure of a server token payload?
+description: Parsing the JSON Schema outputted when instantiating or listing Server Tokens across the HasMCP REST API natively.
+---
+
+# Server Token Payload Structure
+
+*Note: You will only ever view the complete, raw cryptographic payload structure natively exactly once during the `POST /servers/{serverId}/tokens` instantiation cycle securely.*
+
+When interfacing closely with the HasMCP REST APIs configuring orchestration matrices programmatically organically, understanding the `ServerToken` object map defines secure parsing behaviors intelligently.
+
+## The Model Schema
+
+The core standard JSON object representing an active credential explicitly:
+
+```json
+{
+  "id": "tQ9pV1mN8xK",
+  "serverID": "sE8vKd2qLp9",
+  "name": "Local Desktop Exec",
+  "createdAt": "2026-03-01T14:30:00Z",
+  "expiresAt": "2026-12-31T23:59:59Z",
+  "value": "mcp_rt_8JkL9PmN2Q..."
+}
+```
+
+### Property Breakdown
+
+- **`id`** *(string, readOnly)*: The explicit 11-char database hash uniquely determining this specific row object log. Used later if you need to surgically execute an HTTP `DELETE` request destroying the credential permanently natively.
+- **`serverID`** *(string)*: The explicit 11-char hash identifying intuitively the target MCP Orchestrator node protecting its capabilities natively.
+- **`name`** *(string)*: The human-readable internal designator applied upon generation securely.
+- **`createdAt`** *(string, date-time, readOnly)*: System-stamped ISO 8601 initialization metric natively.
+- **`expiresAt`** *(string, date-time, optional)*: Explicit timestamp dictating automated cryptographic invalidation inherently.
+- **`value`** *(string, readOnly)*: The unencrypted, raw token cryptography logically required by connecting agents securely.
+
+> **Crucial Persistence Warning:** The `value` string is permanently scrubbed from all HasMCP database endpoints inherently after the initial HTTP `200 OK` return completes organically. If you submit a `GET /servers/{serverId}/tokens` request logically the next day, the structure intelligently suppresses the `value` field internally for security best-practices flawlessly.

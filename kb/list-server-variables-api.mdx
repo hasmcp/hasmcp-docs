@@ -1,0 +1,44 @@
+---
+title: How do I get a list of server variables via the API?
+description: Learn how to poll the overarching configuration map protecting your active MCP environments.
+---
+
+# Listing Server Variables via API
+
+Because Variables orchestrate data injection globally across all valid MCP Server contexts, polling the master `GET` endpoint securely reveals every explicit integration dependency logically mapped across your application boundaries.
+
+## The API Request
+
+To retrieve all global parameters available to configured generic extensions:
+
+**`GET /variables`**
+
+```bash
+curl -X GET https://app.hasmcp.com/api/v1/variables \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Understanding the Response
+
+The array returns JSON object nodes strictly defining variable IDs, names, and timestamp metrics. 
+
+### Secrets Scrubbing
+
+If an instantiated object historically possessed the type classification `SECRET` inside the HasMCP cluster, the output payload intentionally destroys the physical string format for safe terminal polling:
+
+```json
+{
+  "variables": [
+    {
+      "id": "m9K2p7v4L1x",
+      "createdAt": "2026-02-15T18:32:00Z",
+      "updatedAt": "2026-02-15T18:32:00Z",
+      "type": "SECRET",
+      "name": "PINECONE_DB_KEY",
+      "value": "***"
+    }
+  ]
+}
+```
+
+The `"***"` mask ensures that scripts logging HTTP responses do not inadvertently leak cryptography definitions structurally.

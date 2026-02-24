@@ -1,0 +1,24 @@
+---
+title: Can I bind multiple prompts to the same MCP server?
+description: Strategies for enriching a single agent's execution capability using myriad contextual templates.
+---
+
+# Aggregating Multi-Prompt Routing
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+**Yes**. Similar to how HasMCP handles capability stacking for standard executable Tools and static data Resources, the configuration engine inherently supports massive N-to-N aggregation for Prompts.
+
+## The Theory of Context Accumulation
+
+When managing complex workflows (for instance, an onboarding orchestrator testing new employees), you frequently need different system prompts or instruction templates for disparate sub-tasks.
+
+You do not need to boot five individual MCP servers.
+
+Instead, you can utilize the `POST /servers/{serverId}/prompts` endpoint to serially bind multiple instruction sets (originating from an array of disparate custom integrations or isolated providers) directly down onto a single `Server ID` execution context block.
+
+1. **Prompt 1**: "Code Review Base Instructions"
+2. **Prompt 2**: "Database Schema Sanity Checks"
+3. **Prompt 3**: "Git Commit Formatting"
+
+When the downstream localized LLM (calling via the standard MCP connection buffer) hits the native `prompts/list` network interaction loop over the websocket or SSE link, HasMCP dynamically unifies all three configured server templates on the fly and presents them comprehensively to the conversational matrix as if they existed organically within the same runtime.

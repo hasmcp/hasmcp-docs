@@ -1,0 +1,35 @@
+---
+title: How do I disassociate a resource from my MCP server?
+description: Process mapping for securely revoking a server's read-authorization for a statically linked provider resource.
+---
+
+# Disassociating a Resource from an MCP Server
+
+## Using HasMCP UI
+
+If a specific set of data is no longer pertinent to a server's underlying function (or represents a security leak for that specific agent prompt), remove it utilizing the dashboard interface:
+
+1. Click into the deployed server via the **MCP Servers** layout.
+2. Select the **Resources** tab to view your active bindings.
+3. Locate the row mapping the resource you want to deny.
+4. Click the associated **Remove** (or Delete) icon.
+5. Accept the destructive confirmation module to definitively unbind the association.
+
+## Using REST API
+
+For pipeline automations enforcing dynamic access permissions depending on the time of day or trigger type, you can revoke access surgically utilizing the `DELETE` verb.
+
+### The API Endpoint
+
+**`DELETE /servers/{serverId}/resources/{resourceId}`**
+
+You must pinpoint the exact `serverId` housing the agent connection, specifically targeting the explicit 11-character hash dictating the `resourceId` you wish to sever.
+
+### Example Rejection Request
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources/rA9BdO1kZ5T \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+The HasMCP routing engine processes this instruction instantly, replying with an empty `204 No Content` response block. Any persistent LLM connections previously caching this resource will error out natively if they blindly request its URI path moving forward.

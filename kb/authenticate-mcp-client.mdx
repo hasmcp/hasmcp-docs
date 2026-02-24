@@ -1,0 +1,36 @@
+---
+title: How do I authenticate an MCP client against a server?
+description: Understand how Bearer tokens generated via the HasMCP API integrate seamlessly with SSE and stdio architectures securely.
+---
+
+# Authenticating an MCP Client
+
+Because the Model Context Protocol inherently dictates connecting an artificial intelligence agent locally to external resource orchestrators dynamically via specialized websockets, SSE, or secure stdio pipes—securing that boundary relies entirely upon passing credential headers logically.
+
+## Implementing the Server Token
+
+Once you successfully generate a `ServerToken` via the HasMCP dashboard logically or utilizing the `POST /servers/{serverId}/tokens` configuration, you possess an unencrypted cryptography `value` string.
+
+This string must be explicitly loaded into your connecting AI Client (such as the Claude Desktop app or a custom Python script).
+
+### Architecture Example: Claude Desktop
+
+If you are deploying Claude Desktop connecting to your HasMCP orchestrator natively over standard HTTP SSE protocol mapping:
+
+You would inject the `value` into your local `claude_desktop_config.json` defining the execution header implicitly:
+
+```json
+{
+  "mcpServers": {
+    "my-hasmcp-production-server": {
+      "command": "mcp-proxy",
+      "args": ["connect", "https://app.hasmcp.com/api/v1/mcp/sE8vKd2qLp9/sse"],
+      "env": {
+        "AUTHORIZATION": "Bearer mcp_rt_81K..." 
+      }
+    }
+  }
+}
+```
+
+Whenever the Claude binary spins up intrinsically, it organically injects the `Bearer` token structure into the SSE instantiation request implicitly. HasMCP interprets the header organically, calculates the hash logically, verifies the `{serverId}` mapped routing layer intuitively, and establishes the bi-directional tool proxy automatically.

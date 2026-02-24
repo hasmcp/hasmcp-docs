@@ -1,0 +1,29 @@
+---
+title: How are prompts exposed through an MCP server?
+description: An architectural overview explaining the translation layer from dynamic relational data to standard Model logic structures. 
+---
+
+# Orchestrating Prompt Translation Layers
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+How exactly does mapping a `promptID` onto a `serverID` interact organically with a running Claude instance or custom generative agent utilizing the standardized Model Context Protocol specification natively?
+
+## Abstract Mapping translated to Raw Protocol Natively
+
+HasMCP operates as a universal broker architecture, obscuring the HTTP complexity behind the simple unified local SSE/stdio endpoints inherently.
+
+### Invoking 'prompts/list'
+
+When an agent initializes and interrogates the host connection via the `prompts/list` standard RPC action block:
+1. The HasMCP mapping engine intercepts the request actively.
+2. It dynamically parses the assigned `ServerPrompts` relational nodes defined specifically configured for the assigned agent via API `POST` instructions natively.
+3. It recursively reaches into the target root Providers intuitively, pulling the full declarative structures (the `name`, `description`, and parameter `arguments` logic).
+4. It compiles an optimized array and translates the array smoothly alongside native JSON-RPC formatting protocols.
+
+### Triggering Execution using 'prompts/get'
+
+When an agent needs context and executes `prompts/get` natively with populated arguments intuitively:
+1. HasMCP identifies the referenced provider architecture organically to extract the associated structural variable template mappings seamlessly.
+2. The orchestrator natively interpolates provided arguments against the `messages` array payload physically configured on the parent Provider platform layer logically.
+3. HasMCP fires back the deeply instantiated messages object payload back natively down through the Server execution channel seamlessly without ever exposing the Provider architecture to the target agent loop directly.

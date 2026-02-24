@@ -1,0 +1,49 @@
+---
+title: How do I make updates to an existing provider prompt?
+description: API Endpoint reference detailing how to recursively patch and modify the instructions or definitions of a provider prompt.
+---
+
+# Updating a Provider Prompt
+
+When you identify edge cases in the LLM's adherence to a prompt, or when you need to introduce a new required parameter (argument) to a workflow programmatically, you can patch the prompt directly.
+
+## Using REST API
+
+### The API Endpoint
+
+**`PATCH /providers/{providerId}/prompts/{id}`**
+
+### Structuring the Patch Request
+
+Generate a JSON object conforming to the `UpdateProviderPromptRequest` payload. Due to HasMCP's patch methodology, you only map the internal top-level keys inside the `prompt` object that demand modification. 
+
+#### Example Request
+
+```bash
+curl -X PATCH https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts/pT9XyM1qL2b \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": {
+      "description": "UPDATED: Now includes more rigid security validation rules.",
+      "messages": [
+        {
+          "role": "system",
+          "content": {
+            "type": "text",
+            "text": "CRITICAL: You are a strict security reviewer. Reject any PR code containing hardcoded secrets."
+          }
+        },
+        {
+          "role": "user",
+          "content": {
+            "type": "text",
+            "text": "Review PR #{pull_request_number}."
+          }
+        }
+      ]
+    }
+  }'
+```
+
+If the payload merges cleanly against the original schema, the endpoint yields a `200 OK`. All active server associations traversing to this provider prompt instantly consume the updated instruction set without requiring restarts.

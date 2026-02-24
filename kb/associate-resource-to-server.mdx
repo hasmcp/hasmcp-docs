@@ -1,0 +1,44 @@
+---
+title: How do I associate a resource to my MCP server?
+description: Step-by-step guide mapping provider data endpoints (Resources) directly to an executable MCP Server agent.
+---
+
+# Associating a Resource to an MCP Server
+
+## Using HasMCP UI
+
+While tools execute actions, **Resources** expose static or dynamic read-only data blobs (like log files, system statuses, or raw configuration data) to your AI Agents. 
+
+To authorize a server to read a specific resource:
+1. Navigate to the **MCP Servers** layout in your HasMCP dashboard.
+2. Click into your target server.
+3. Select the **Resources** tab.
+4. Click **Add Resource**.
+5. Select the Provider that houses the data, and pick the specific Resource you want to expose.
+6. Click **Confirm** to lock the association. The server will immediately index the new URI in its routing table.
+
+## Using REST API
+
+To programmatically map an active data resource to a running container execution environment, utilize the server's routed `POST` resource endpoint.
+
+### The API Endpoint
+
+**`POST /servers/{serverId}/resources`**
+
+### Building the Request
+
+Unlike Tools (which require identifying the Provider directly in the payload), the `CreateServerResourceRequest` object is streamlined. You only need to declare the Server receiving access, and the unique ID of the specific Resource.
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "resource": {
+      "serverID": "sE8vKd2qLp9",
+      "resourceID": "rA9BdO1kZ5T"
+    }
+  }'
+```
+
+The system will synchronously grant cross-boundary access and reply with a `200 OK` housing the successfully validated `resource` JSON object.

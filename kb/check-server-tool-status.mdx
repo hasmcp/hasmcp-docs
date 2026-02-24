@@ -1,0 +1,49 @@
+---
+title: Can an MCP server use multiple tools from different providers?
+description: Understand how HasMCP Server orchestration supports composite AI systems leveraging multiple distributed providers.
+---
+
+# Multi-Provider Tool Composition
+
+## Building Composite AI Systems
+
+**Yes, absolutely.** The core architectural value proposition of HasMCP's routing engine lies in its ability to **composite tools across disparate API Providers** and unify them into a single, cohesive Model Context Protocol server block.
+
+### Unifying Capabilities 
+
+In standard Model Context Protocol setups, managing connections to disparate domain tools (e.g., GitHub, Jira, and internal custom databases) requires instantiating separate servers for every isolated environment.
+
+**With HasMCP, you only need one Server.**
+
+When configuring an MCP server in the HasMCP dashboard (or programmatically via API), you can selectively bind Tools originating from completely unrelated Providers into a single agent topology.
+
+1. **Jira Provider**: Pull down the `Search_Tickets` tool and map it to `Server A`.
+2. **GitHub Provider**: Pull down the `List_PRs` tool and map it to `Server A`.
+
+`Server A` securely brokers authentication dynamically in the background for both tools.
+
+## The API Mechanism
+
+Because the `CreateServerToolRequest` specifically mandates explicitly defining independent `{providerID}` fields alongside `{serverID}` mappings, a single server handles heterogeneous routing inherently. 
+
+```json
+{
+  "tool": {
+    "serverID": "sE8vKd2qLp9",
+    "providerID": "kSuB9Gf6aD4", // E.g., The GitHub Provider
+    "toolID": "tH4mZw9xV2n" 
+  }
+}
+```
+
+```json
+{
+  "tool": {
+    "serverID": "sE8vKd2qLp9",
+    "providerID": "pZ1xQw3eR4t", // E.g., The Jira Provider
+    "toolID": "aB8cV5nXm0q"
+  }
+}
+```
+
+When an LLM prompts `Server A` with `tools/list`, HasMCP aggressively compiles both `Search_Tickets` and `List_PRs` into a single homogenous instruction block, abstracting the complexities of discrete integrations away from your context window entirely.

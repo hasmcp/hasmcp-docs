@@ -1,0 +1,34 @@
+---
+title: What is the API endpoint to link a prompt to an MCP server?
+description: Raw endpoint structures for configuring generic Server-to-Prompt mapping associations. 
+---
+
+# The Server Prompt Association Endpoint
+
+*Note: Visual UI management for Provider Prompts is currently under active development. Utilizing Prompts currently requires the HasMCP REST API.*
+
+To orchestrate the binding of abstract Provider Prompts to independent MCP Server execution rings, you utilize the targeted sub-routing association structure via an HTTP `POST`.
+
+## The API Endpoint
+
+**`POST /servers/{serverId}/prompts`**
+
+In this pattern, `{serverId}` serves as the immutable base context for the orchestration logic.
+
+### Structural Requirements
+
+You must provide a `CreateServerPromptRequest` payload in order to instantiate the linkage mapping. The schema demands exactly two parameters grouped within a `prompt` block:
+
+```json
+{
+  "prompt": {
+    "serverID": "sE8vKd2qLp9",
+    "promptID": "mX5vTr9pK2w"
+  }
+}
+```
+
+- **`serverID`**: The exact same 11-char hash provided in the URL directory `[{serverId}]`.
+- **`promptID`**: The specific Provider Prompt structure that the LLM connecting to the server should be allowed to interact with. You do not need to identify the origin provider, as the manager resolves the `promptID` globally.
+
+A successful assignment yields a `200 OK` housing a `CreateServerPromptResponse` with a copy of the saved mapping schema.

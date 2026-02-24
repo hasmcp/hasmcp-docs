@@ -1,0 +1,42 @@
+---
+title: How do I query the resources available to an MCP server?
+description: Procedural runbooks and HTTP logic for verifying resource exposure across multi-agent environments.
+---
+
+# Querying Available MCP Server Resources
+
+In complex setups where multiple external tool integration patterns merge into a single agent, verifying what static and dynamic data blobs they currently perceive requires checking the primary associative engine.
+
+## The Proxy Relationship
+
+You query the HasMCP platform, and it aggregates the response dynamically by checking its relation tables.
+
+### The GET Request
+
+**`GET /servers/{serverId}/resources`** 
+
+By identifying the server, you bypass having to manually audit each individual Provider connected to the application ecosystem.
+
+```bash
+curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+The system returns the standardized array `resources`:
+
+```json
+{
+  "resources": [
+    {
+      "serverID": "sE8vKd2qLp9",
+      "resourceID": "rA9BdO1kZ5T"
+    },
+    {
+      "serverID": "sE8vKd2qLp9",
+      "resourceID": "pZ7LmW9eX2C"
+    }
+  ]
+}
+```
+
+By querying the server explicitly instead of relying purely on downstream MCP logs, you identify configuration discrepancies proactively (e.g., matching the server's mapped rulesets against the physical Provider schemas to ensure the origin endpoints haven't been deleted independently).

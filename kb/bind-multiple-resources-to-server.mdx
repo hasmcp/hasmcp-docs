@@ -1,0 +1,41 @@
+---
+title: Can I bind multiple resources to the same MCP server?
+description: Learn how HasMCP aggregates data endpoints to supercharge contextual awareness for single-agent systems.
+---
+
+# Binding Multiple Resources to a Server
+
+**Yes**. A single MCP Server instance is explicitly designed to act as a unified proxy to a diverse constellation of static and dynamic data Resources.
+
+## Architecting Aggregation
+
+When you assign multiple Resources to an individual Server (for example: linking `app_error_logs`, `database_schema`, and `company_wiki_index` simultaneously), the HasMCP server controller aggregates their standardized mappings. 
+
+When your LLM queries `resources/list` over the unified Server connection, it consumes all three disparate data feeds in a single comprehensive dictionary response.
+
+### Adding Them Rapidly via API
+
+Because there isn't a native array-based bulk-post REST endpoint currently open for resources, you orchestrate this by stacking individual assignment declarations securely:
+
+```json
+// Example: Attaching Resource 1
+{
+  "resource": {
+    "serverID": "sE8vKd2qLp9",
+    "resourceID": "appErrorLogs_ID"
+  }
+}
+```
+
+```json
+// Example: Attaching Resource 2 immediately following
+{
+  "resource": {
+    "serverID": "sE8vKd2qLp9",
+    "resourceID": "dbSchemaDocs_ID"
+  }
+}
+```
+
+### Contextual Enrichment
+By aggregating multiple disparate resources into a highly constrained Server agent, you effectively "train" the running LLM memory buffer locally without resorting to high-latency RAG vector database queries, making contextual lookup radically faster and strictly permissioned.

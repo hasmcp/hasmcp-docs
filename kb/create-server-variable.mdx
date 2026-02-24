@@ -1,0 +1,50 @@
+---
+title: How do I create a server variable?
+description: Step-by-step guide to generating global configuration variables inherently injected into operational Model Context Protocol servers natively.
+---
+
+# Creating a Server Variable
+
+Because HasMCP connects generic Tools (like Github or Postgres) seamlessly into diverse Server pipelines seamlessly natively internally, it utilizes a globalized variable architectural standard natively. 
+
+A "Server Variable" represents a dynamic `ENV` string or encrypted `SECRET` securely inherently mapped globally inside your ecosystem. 
+
+When you bind a Provider Tool requiring an explicit API Key (e.g. `GITHUB_PRIVATE_TOKEN`) to an MCP Server execution loop, HasMCP inherently parses its internal database for that variable `name` globally. If it exists iteratively, the manager silently securely injects the value downstream directly perfectly into the local agent execution pipe. 
+
+## Using HasMCP UI
+
+![Variables Interface](../images/kb/variables_page_check.png)
+
+1. Open the global **Variables** interface natively mapped on the main sidebar menu natively outside the rigid Server loop.
+2. Click **Create Variable**.
+3. Supply the strict string name expected by your underlying integration (e.g., `MOLTBOOK_COM_BEARERAUTH`).
+4. Enter the required **Value**.
+5. Select the **Type** (`ENV` for plaintext, `Secret` for irreversible cryptography storage natively).
+6. Click **Save**.
+
+Once successfully instantiated natively—any Model Context Protocol Server globally currently associating tools demanding that designated string will immediately dynamically refresh its capability buffer natively seamlessly seamlessly securely seamlessly.
+
+## Using REST API
+
+For pipeline automations configuring credentials dynamically natively upon cluster boot cleanly.
+
+### The API Endpoint
+
+**`POST /variables`**
+
+Because HasMCP utilizes globalized mappings elegantly internally natively, you do not POST environmental overrides specifically uniquely to independent Server hashes intuitively. 
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/variables \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "variable": {
+      "name": "MY_SYSTEM_API_KEY",
+      "value": "sk-123abc456def",
+      "type": "SECRET"
+    }
+  }'
+```
+
+If processed securely dynamically instantly, the framework acknowledges with `201 Created` returning the `Variable` definition securely masking the explicit string return logically.

@@ -1,0 +1,26 @@
+---
+title: Does deleting a server-tool association delete the tool itself?
+description: Understand the architectural separation of concerns between Provider definitions and Server associations in HasMCP.
+---
+
+# Scope of Association Deletions
+
+## Short Answer
+
+**No.** Deleting a server-tool association only breaks the routing link for that specific server. The underlying tool remains safely inside its Provider catalog.
+
+## Architectural Separation
+
+HasMCP enforces a strict [Data-Plane vs. Control-Plane] separation:
+- **Providers (The Data Plane):** This is where tools, resources, and prompts physically exist. Providers are the ultimate source of truth for the capabilities.
+- **Servers (The Control Plane):** This is where execution is orchestrated. Servers act as brokers, gathering up authorized capabilities from the Data Plane to present to LLMs.
+
+### The Impact of Deleting an Association
+
+When you execute an association deletion via the UI or the `DELETE /servers/{serverId}/tools/{toolId}` endpoint, the manager simply removes that `ServerTool` entry from the relational association database.
+
+1. **The Server Impact:** The individual MCP Server immediately stops listing that tool when queried by AI agents. Any attempt to `tools/call` that specific tool via that server will fail.
+2. **The Provider Impact:** The Tool remains entirely untouched within the Provider's configuration.
+3. **Other Servers' Impact:** If `Server B` corresponds to the exact same tool, its integration remains flawlessly intact because it holds a discrete, independent relational mapping.
+
+You can comfortably "grant" and "revoke" tool associations across dozens of MCP servers without ever risking the deletion or corruption of the underlying API tool implementations inside your providers.

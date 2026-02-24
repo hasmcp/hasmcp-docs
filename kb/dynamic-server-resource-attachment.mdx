@@ -1,0 +1,24 @@
+---
+title: Can I dynamically attach and detach resources from a running server API?
+description: Real-time context manipulation using the HasMCP orchestration abstraction. 
+---
+
+# Dynamic Resource Attachments
+
+**Yes**. Because you are deploying HasMCP as a central orchestration bridge rather than hard-coding tools statically into isolated `app.ts` agent scripts, you achieve true mutability.
+
+## Live Context Swapping
+
+You can arbitrarily execute `POST /servers/{serverId}/resources` or `DELETE /servers/{serverId}/resources/{resourceId}` operations via your infrastructure pipelines natively *while* an agent is actively conversing with a user or executing a system loop.
+
+### Real-world AI Feedback Loops
+
+Because connecting clients supporting the Model Context Protocol routinely process `notifications/resources/list_changed` notifications:
+
+1. An agent is analyzing a log file but throwing a generic `Permission Denied` HTTP error for a sub-service it doesn't currently possess resource access to.
+2. A secondary "Orchestration Script" catches the error loop on the terminal.
+3. The Orchestrator fires an authenticated REST API capability `POST` to HasMCP, dynamically mapping the secondary database schema resource down to the active agent.
+4. HasMCP triggers the internal Model Context Protocol invalidation logic. 
+5. The local LLM client immediately polls the updated capability set, acknowledges the new database schema resource, and self-corrects its diagnostic loop natively.
+
+This decoupled, remote management fundamentally enables complex self-healing operational infrastructures.

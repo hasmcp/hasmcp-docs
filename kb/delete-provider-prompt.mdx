@@ -1,0 +1,27 @@
+---
+title: How do I delete a prompt from a provider?
+description: Instructions on executing a hard deletion of a localized provider prompt via the HasMCP API interface.
+---
+
+# Deleting a Provider Prompt
+
+When a prompt template becomes fundamentally obsolete, or when you consolidate logic down into generic tooling abstractions, you should aggressively wipe out the old prompt mappings.
+
+## Using REST API
+
+### The API Endpoint
+
+**`DELETE /providers/{providerId}/prompts/{id}`**
+
+### Actioning the Deletion
+
+Using the 11-character hash IDs delineating the explicit path down to the object, run the authenticated delete command.
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts/pT9XyM1qL2b \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+The system will respond immediately with a `204 No Content` representing success.
+
+> **Execution Impact:** Purging a root `ProviderPrompt` initiates a destructive, cascading ripple effect removing every `ServerPrompt` link mapped sequentially to it. Ensure no active AI agents implicitly rely on this specific prompt ID in their initialization routines before deletion.
