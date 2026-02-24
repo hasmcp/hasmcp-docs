@@ -1,0 +1,23 @@
+---
+title: How do I troubleshoot a 400 Bad Request error?
+description: Resolving JSON schema formatting and validation failures when calling the HasMCP API.
+---
+
+# Troubleshooting a 400 Bad Request
+
+A `400 Bad Request` explicitly indicates that the HasMCP server could not understand or process your API request due to invalid syntax or an inappropriately formatted payload.
+
+## Common Causes
+
+In the HasMCP architecture, `400 Bad Request` almost exclusively occurs during `POST` or `PATCH` operations where your request body structurally violates the required OpenAPI schema:
+
+1. **Malformed JSON**: Missing brackets, trailing commas, or invalid string escaping.
+2. **Missing Required Fields**: Attempting to create a Provider without explicitly passing the `namespace` property.
+3. **Invalid Data Types**: Passing an integer where a string is expected (e.g., `"port": "5432"` instead of `"port": 5432`).
+4. **Invalid Enumerations**: Submitting `"type": "PLAIN"` for a variable when only `"ENV"` or `"SECRET"` are permitted.
+
+## Resolution Steps
+
+1. **Check the Body Payload**: Review your request against the official HasMCP OpenAPI specification.
+2. **Read the Error Message**: HasMCP uniquely returns specific validation errors (e.g. `validation_error: 'namespace' cannot be empty`) inside the payload when a 400 triggers.
+3. **Verify JSON Integrity**: Ensure your JSON is perfectly formatted before executing the automation script.

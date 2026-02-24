@@ -1,0 +1,16 @@
+---
+title: How does OpenAPI validation work?
+description: Ensuring submitted REST payloads match required formats precisely.
+---
+
+# OpenAPI Validation
+
+HasMCP strictly utilizes OpenAPI schema standards (v3.0.x) to validate every `POST` and `PATCH` request received.
+
+Before a physical request reaches the internal orchestration logic, the API gateway intercepts the payload and parses the JSON body against the rigid schema definition.
+
+1. **Type Checking**: Identifies if a property expects an integer but physically receives a string, returning a `400 Bad Request`.
+2. **Missing Properties**: Evaluates all `required: []` arrays in the OpenAPI doc to ensure essential properties like `name` or `type` exist.
+3. **Enum Validation**: Ensures string values explicitly match the allowed permutations (e.g. Server variable types must exclusively be `"ENV"` or `"SECRET"`).
+
+If the validation fails, HasMCP returns a detailed error payload explicitly pinpointing which structural rule was violated.

@@ -1,0 +1,14 @@
+---
+title: How is the HasMCP REST API versioned?
+description: Ensuring structural stability and integration continuity for MCP orchestration.
+---
+
+# API Versioning
+
+HasMCP enforces a global URL path structure to mandate strictly maintained version iterations gracefully:
+
+`https://app.hasmcp.com/api/v1/`
+
+- **`v1`**: All core resources, endpoints, and authentication capabilities organically reside under the `v1` path prefix. 
+
+This explicit URL structure guarantees downstream MCP Agents and custom orchestration scripts never experience unexpected structural changes organically. If fundamental architectural shifts natively necessitate a new foundational data structure, a `v2` endpoint path will be deliberately exposed, cleanly maintaining execution continuity for all `v1` proxy agents natively seamlessly.

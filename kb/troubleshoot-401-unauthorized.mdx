@@ -1,0 +1,21 @@
+---
+title: How do I troubleshoot a 401 Unauthorized error?
+description: Fixing broken bearer authentication layers securely.
+---
+
+# Troubleshooting a 401 Unauthorized
+
+A `401 Unauthorized` clearly indicates that your API request completely lacks valid authentication credentials. HasMCP physically rejects the request before it even reaches the core execution engine.
+
+## Common Causes
+
+1. **Missing Bearer Header**: You fired an API request without including the standard `Authorization: Bearer <token>` HTTP header.
+2. **Invalid Token**: The token string you provided is structurally flawed, explicitly copy-pasted incorrectly, or fundamentally does not exist.
+3. **Expired Token**: The Server Token was previously valid but has explicitly expired based on your organization's security lifecycle policies.
+4. **Revoked Token**: An administrator explicitly revoked the Server Token you are actively using from the HasMCP Dashboard.
+
+## Resolution Steps
+
+1. **Log in to HasMCP**: Navigate to the exact Server Dashboard associated with your capability pipeline.
+2. **Generate a New Token**: Click "Create Token" to systematically instantiate a fresh cryptographic key.
+3. **Update Your Script**: Inject the newly copied token seamlessly into your testing script or local MCP Client configuration. Ensure the `Bearer ` string prefixes the token in your headers.

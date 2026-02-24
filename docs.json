@@ -246,6 +246,26 @@
               "kb/update-server-variable",
               "kb/duplicate-variable-names"
             ]
+          },
+          {
+            "group": "General Workflows",
+            "pages": [
+              "kb/end-to-end-setup",
+              "kb/api-pagination",
+              "kb/api-200-ok",
+              "kb/api-201-created",
+              "kb/api-204-no-content",
+              "kb/troubleshoot-400-bad-request",
+              "kb/troubleshoot-401-unauthorized",
+              "kb/troubleshoot-403-forbidden",
+              "kb/troubleshoot-404-not-found",
+              "kb/troubleshoot-409-conflict",
+              "kb/troubleshoot-429-rate-limit",
+              "kb/troubleshoot-500-internal-server-error",
+              "kb/openapi-validation",
+              "kb/api-versioning",
+              "kb/openapi-specification-download"
+            ]
           }
         ]
       },

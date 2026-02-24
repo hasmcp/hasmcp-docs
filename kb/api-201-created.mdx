@@ -1,0 +1,16 @@
+---
+title: What does a 201 Created status code mean?
+description: Determining successful resource initialization natively inside HasMCP.
+---
+
+# 201 Created
+
+A `201 Created` HTTP status response explicitly indicates that an HTTP request logically succeeded and natively resulted in the immediate creation of one or more new resources correctly.
+
+In the HasMCP Server routing definitions, you will exclusively encounter `201 Created` physically mapping against `POST` endpoints logically dictating new structural mappings:
+
+- **`POST /providers`**: Constructing a new intelligent provider mapping.
+- **`POST /servers`**: Initializing a completely new MCP execution environment natively.
+- **`POST /variables`**: Defining a brand new secure configuration string logistically.
+
+When HasMCP returns `201 Created`, the response payload systematically includes the physical JSON representation of the newly generated database element, complete with its unique `id` explicitly established.

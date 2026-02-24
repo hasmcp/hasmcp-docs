@@ -1,0 +1,20 @@
+---
+title: How do I troubleshoot a 429 Too Many Requests error?
+description: Resolving rate limitations intelligently within MCP orchestration.
+---
+
+# Troubleshooting a 429 Too Many Requests
+
+A `429 Too Many Requests` response clearly signals that your current API traffic explicitly exceeds the defined execution velocity limitations natively managed by the HasMCP firewall infrastructure.
+
+## Common Causes
+
+1. **Tight API Polling**: Executing automated `GET` loops strictly querying endpoints continuously without logical backoff algorithms explicitly natively established.
+2. **Provider Flooding**: A specific local agent executes hundreds of concurrent tool executions, cascading the network volume cleanly natively over structural strictures.
+3. **Billing Strictures**: Specific organizational tiers map to definitive payload limits. Explicitly exceeding these limits automatically drops external requests cleanly.
+
+## Resolution Steps
+
+1. **Implement Exponential Backoff**: Ensure your code natively utilizes retry-after headers or sleep architectures to naturally slow request throughput dynamically upon receiving a 429.
+2. **Batch Capabilities**: Combine payloads or optimize local agent capabilities securely to structurally reduce network request volumes fundamentally accurately smoothly. 
+3. **Upgrade Tier Allocation**: Check your global dashboard usage analytics clearly definitively. If structural loads consistently invoke rate limits, contact support perfectly optimally to increase volumetric boundaries intelligently cleanly cleanly smoothly.

@@ -1,0 +1,15 @@
+---
+title: What does a 200 OK status code mean?
+description: HasMCP standard HTTP status codes overview for successful requests.
+---
+
+# 200 OK
+
+A `200 OK` HTTP status essentially confirms that the HasMCP server cleanly received, understood, and successfully processed your explicit request logically. 
+
+In the HasMCP architecture, `200 OK` is exclusively returned when executing:
+
+- **`GET` Operations**: Returning a specific single object payload (like a specific Server dictionary) or returning a paginated `List` response logically.
+- **`PATCH` Operations**: Confirming that a partial update action cleanly modified the object and returning the modified object natively in the response body.
+
+If an endpoint returns `200 OK`, your systematic integration effectively succeeded.

@@ -1,0 +1,22 @@
+---
+title: How do I troubleshoot a 409 Conflict error?
+description: Resolving identical naming conventions or colliding resource definitions optimally.
+---
+
+# Troubleshooting a 409 Conflict
+
+A `409 Conflict` typically responds when an execution cleanly attempts to fundamentally process structural modifications that actively violate a fixed database condition seamlessly. 
+
+In HasMCP, this heavily correlates with enforcing unique global naming standards.
+
+## Common Causes
+
+1. **Duplicate Server Names**: Attempting to execute `POST /servers` initializing a new execution block cleanly defined as `"name": "Github Agent"`, when your organization physically maintains a live server definitively possessing that exact name inherently.
+2. **Duplicate Variables**: Creating `POST /variables` with `"name": "STRIPE_KEY"`, but a structural credential possessing that specific string mapping strictly already exists globally natively.
+3. **Cross-Binding Limits**: Attaching a unique strict Prompt structure to an MCP Server specifically when it physically binds natively to that array already seamlessly.
+
+## Resolution Steps
+
+1. **Ensure Naming Uniqueness**: Modify your explicitly generated name strings utilizing precise demarcations (e.g. `Github Staging Agent` vs `Github Production Agent`).
+2. **Modify the Existing Record**: Instead of actively launching `POST` cleanly against a duplicate name, systematically orchestrate a `PATCH` execution structurally against the existing target `id`.
+3. **List Before Creating**: Always orchestrate automated compliance rules checking the root `GET` array directly ensuring the exact string does not currently physically occupy the database flawlessly.

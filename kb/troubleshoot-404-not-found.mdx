@@ -1,0 +1,22 @@
+---
+title: How do I troubleshoot a 404 Not Found error?
+description: Fixing broken resource paths and severed logical associations gracefully.
+---
+
+# Troubleshooting a 404 Not Found
+
+A `404 Not Found` explicitly dictates that the specific structural resource you requested entirely does not exist inside the HasMCP database.
+
+## Common Causes
+
+This typically occurs when targeting explicit entity definitions:
+
+1. **Deleted Resources**: Attempting `GET /providers/w3D5t8` after another administrator successfully executed `DELETE /providers/w3D5t8`.
+2. **Typographical Hashes**: Hand-typing an 11-character target ID (e.g. `PATCH /variables/x7T4...`) and transposing explicit characters.
+3. **Misconfigured Routing**: Posting structurally to `POST /server` (invalid definition) instead of `POST /servers` correctly.
+
+## Resolution Steps
+
+1. **List Endpoints First**: Before querying a targeted ID, explicitly execute `GET /providers` or `GET /variables` to confirm the required ID definitively returns in the live array.
+2. **Verify Base Routing**: Double-check the core HasMCP OpenAPI schema ensuring the specific namespace correctly includes an `s` organically if mapping an array (e.g. `/servers/{id}`).
+3. **Dashboard Audits**: If a previously functioning execution suddenly returns a `404`, check the organizational dashboard to confirm if the configuration was historically purged by another engineer.

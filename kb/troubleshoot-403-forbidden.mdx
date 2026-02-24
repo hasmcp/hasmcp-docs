@@ -1,0 +1,22 @@
+---
+title: How do I troubleshoot a 403 Forbidden error?
+description: Resolving permission and ACL restrictions effectively.
+---
+
+# Troubleshooting a 403 Forbidden
+
+Unlike a `401 Unauthorized` (where your identity is completely unknown), a `403 Forbidden` confirms that HasMCP understands exactly who you are, but you definitively lack the internal permissions to execute the specific action.
+
+## Common Causes
+
+This response strictly maps to structural permission violations inside your organization's Role-Based Access Control (RBAC) definitions:
+
+1. **Scope Violations**: Modifying a specific Provider schema you only have "Read" access to.
+2. **Organizational Strictures**: Attempting to delete a Global Server Variable explicitly managed by an Organization Owner while you act as a Standard Member.
+3. **Restricted Server Executions**: Utilizing a Server Token specifically bound to "Server A" to attempt a deletion action on a resource attached strictly to "Server B".
+
+## Resolution Steps
+
+1. **Verify Role Scopes**: Check with your Organization Owner to confirm whether your specific user profile actively possesses Write or Delete privileges for the target item.
+2. **Validate Bound Tokens**: Ensure the exact Server Token driving the integration fundamentally belongs to the Server environment you are interacting with.
+3. **Review Audit Logs**: The HasMCP dashboard cleanly logs all `403 Forbidden` blocks. Filtering these logs explicitly determines the required privilege scope you are currently lacking.
