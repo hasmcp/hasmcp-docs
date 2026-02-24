@@ -151,6 +151,16 @@
               "kb/update-provider-tool",
               "kb/delete-provider-tool"
             ]
+          },
+          {
+            "group": "Provider Resources",
+            "pages": [
+              "kb/create-provider-resource",
+              "kb/list-provider-resources",
+              "kb/get-provider-resource-details",
+              "kb/update-provider-resource",
+              "kb/delete-provider-resource"
+            ]
           }
         ]
       },
