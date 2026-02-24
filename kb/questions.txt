@@ -1,0 +1,165 @@
+1. How do I create a new MCP server using the HasMCP manager?
+2. What is the endpoint for creating an MCP server?
+3. What is the required JSON payload to create an MCP server?
+4. How can I list all the MCP servers I have created?
+5. How do I retrieve a list of available MCP servers?
+6. What information is returned when I list my MCP servers?
+7. Is there a way to filter or paginate the list of MCP servers?
+8. How can I get the details of a specific MCP server by its ID?
+9. What is the API route for fetching an MCP server's full details?
+10. How do I check the current status and configuration of my MCP server?
+11. How do I update the properties of an existing MCP server?
+12. Can I rename my MCP server after creating it?
+13. What is the endpoint to patch or update an MCP server?
+14. How can I delete an MCP server via the API?
+15. What happens when I send a DELETE request to an MCP server endpoint?
+16. How do I create a new provider in HasMCP?
+17. What information do I need to register a provider?
+18. How do I list all available providers?
+19. Can I search for providers by name or base URL?
+20. How do I filter the providers list by API type?
+21. Is it possible to filter providers by visibility?
+22. How do I get the details of a specific provider?
+23. What is the endpoint to update a provider's configuration?
+24. How do I delete a provider from HasMCP?
+25. Can I manage multiple providers for my MCP servers?
+26. How do I add a new tool to a specific provider?
+27. What is the API call to list all tools for a provider?
+28. How can I view the details of a specific provider tool?
+29. How do I update or modify a provider tool?
+30. How do I delete a tool from a provider?
+31. How do I create a new resource for a provider?
+32. What is the endpoint for listing all resources of a provider?
+33. How can I fetch the details of a specific provider resource?
+34. How do I update a provider resource's metadata?
+35. How do I delete a resource from a provider?
+36. How do I add a prompt to a provider?
+37. What is the API route to list a provider's prompts?
+38. How do I get the details of a specific provider prompt?
+39. How do I make updates to an existing provider prompt?
+40. How do I delete a prompt from a provider?
+41. How do I associate a tool with my MCP server?
+42. What is the endpoint to add a tool to an MCP server?
+43. How do I list all the tools currently associated with an MCP server?
+44. Can an MCP server use multiple tools from different providers?
+45. How do I remove a tool association from an MCP server?
+46. What payload is needed to create an MCP server tool association?
+47. Does deleting a server-tool association delete the tool itself?
+48. How do I check which tools are active on a given MCP server?
+49. Can I associate a single provider's tool to multiple MCP servers?
+50. How do I manage tool permissions and associations for my MCP server?
+51. How do I associate a resource to my MCP server?
+52. What is the API endpoint to link a resource to an MCP server?
+53. How do I see a list of all resources attached to an MCP server?
+54. Can I bind multiple resources to the same MCP server?
+55. How do I disassociate a resource from my MCP server?
+56. What happens to the resource when I delete its association with an MCP server?
+57. How do I query the resources available to an MCP server?
+58. What data is required to map a resource to a server?
+59. How are resources exposed through an MCP server?
+60. Can I dynamically attach and detach resources from a running server API?
+61. How do I associate a prompt with an MCP server?
+62. What is the API route to link a prompt to my server?
+63. How do I retrieve all prompts configured for an MCP server?
+64. Can an MCP server have multiple prompts associated with it?
+65. How do I remove a prompt association from my MCP server?
+66. Is the underlying prompt deleted completely when unlinked from a server?
+67. How do I verify which prompts are currently active on a server?
+68. What request body is required to establish a server-prompt association?
+69. Can different MCP servers share the same prompt from a provider?
+70. How do I manage prompts for a specific MCP server?
+71. How do I generate an authentication token for my MCP server?
+72. What is the API endpoint to create a server token?
+73. Why do I need a token for my MCP server?
+74. How do I authenticate requests to the HasMCP Manager API?
+75. Is bearer authentication required to manage MCP servers?
+76. How do I revoke or manage my MCP server tokens?
+77. Can an MCP server have multiple active tokens?
+78. What is the lifecycle and expiration of an MCP server token?
+79. How do I securely pass variables and tokens to my server environment?
+80. What security measures are implemented for MCP servers?
+81. How do I define variables for my MCP components?
+82. What is the endpoint to create a new variable?
+83. How do I list all the variables configured in the HasMCP Manager?
+84. How do I retrieve details of a specific variable?
+85. Can I update the value of an existing variable?
+86. What is the API route to patch a variable?
+87. How do I delete a variable via the API?
+88. Are variables used to configure providers, MCP servers, or both?
+89. How do user-defined variables map to MCP configuration?
+90. Can I securely store configuration secrets using HasMCP variables?
+91. What is the typical end-to-end workflow for setting up an MCP server from scratch?
+92. Do I need to create a provider before associating tools with my MCP server?
+93. What is the difference between a provider tool and a server tool association?
+94. If I delete a provider, what happens to the MCP servers using its tools?
+95. How do I resolve a 404 error when accessing a server or tool endpoint?
+96. What does a 201 response mean when creating a server, token, or association?
+97. How do I handle pagination when listing servers or providers with the limit query parameter?
+98. What format is used for the request body when creating components? Is it always JSON?
+99. Can I manage my MCP server strictly through the REST API without the UI?
+100. How does the HasMCP Manager orchestrate providers, tools, resources, and servers?
+101. Is it possible to clone an existing MCP server configuration using the API?
+102. Where can I find the OpenAPI specification for the HasMCP Manager API?
+103. What version of the OpenAPI specification is the HasMCP Manager using?
+104. How do I integrate my own custom API as a provider for an MCP server?
+105. Can I write automation scripts (e.g., in Python or bash) to deploy MCP servers using this API?
+106. What are Audit Logs in HasMCP Enterprise?
+107. How do I track changes to users, groups, and permissions using Audit Logs?
+108. Can I see a history of tool executions and who initiated them?
+109. Are the audit logs in HasMCP immutable and tamper-proof?
+110. How can I filter audit logs by user, date range, or event type?
+111. Is it possible to export audit logs to CSV or JSON formats?
+112. Can I integrate HasMCP audit logs with external SIEM systems?
+113. How do audit logs help with SOC 2 or ISO 27001 compliance?
+114. How does HasMCP automate the mapping of OpenAPI and Swagger files?
+115. What versions of OpenAPI specifications does HasMCP support for automatic mapping?
+116. How does the automated mapping transform API endpoints into LLM-usable MCP tools?
+117. Do I need to write custom integration code to connect my OpenAPI definitions to HasMCP?
+118. How does Automated OpenAPI Mapping reduce integration errors?
+119. What is Context Window Optimization and why is it important for LLMs?
+120. How does HasMCP help reduce LLM API costs through context window optimization?
+121. Can reducing the context size improve LLM response times?
+122. What are the two primary methods HasMCP provides for context optimization?
+123. How does HasMCP use JMESPath Pruning to reshape JSON responses?
+124. What is the difference between JMESPath pruning and Goja JS logic?
+125. How can I use JMESPath to filter out irrelevant fields from an API response?
+126. Can I use JMESPath to selectively allowlist fields to prevent PII exposure?
+127. How do I use JMESPath to filter lists of objects in an API response?
+128. What is Goja (JS) Logic in HasMCP?
+129. How can I write JavaScript Interceptors to modify API responses before sending them to the LLM?
+130. Does Goja logic allow stateful transformations on API responses?
+131. How can I use JavaScript to calculate totals or format dates within an API response?
+132. Is Goja better than JMESPath for complex PII redaction?
+133. Can I entirely remove or replace sensitive PII fields using JavaScript interceptors?
+134. How does Role-Based Access Control (RBAC) work in HasMCP?
+135. What are the predefined roles available in HasMCP Pro/Enterprise?
+136. Can developers manage billing information in HasMCP?
+137. How can I grant a specific user "edit access" to a single MCP server?
+138. Is it possible to share read-only access to specific tools without granting modification rights?
+139. Does HasMCP support gRPC for communication?
+140. Why is gRPC faster than traditional REST APIs in the context of HasMCP?
+141. Will HasMCP use gRPC as the underlying communication protocol for MCP servers?
+142. What is MCP Composition in HasMCP?
+143. How does MCP composition help in building modular AI systems?
+144. Can I chain multiple MCP servers together to create a single complex tool?
+145. How does composing MCP servers improve system flexibility and maintainability?
+146. What is "Native MCP Elicitation Auth"?
+147. How does HasMCP handle OAuth2 authentication when an LLM needs to use an API?
+148. What is the user experience when an LLM tries to access an authenticated endpoint via HasMCP?
+149. Does the LLM ever gain direct access to my credentials or passwords during elicitation?
+150. How does HasMCP pause the execution flow to prompt the user for authentication?
+151. What visibility does HasMCP provide into AI agent data flow?
+152. How can I view Tool Call Analytics to see my most frequently used tools?
+153. Does HasMCP allow tracking tool usage on a per-user basis for governance?
+154. How can I monitor the "token economics" and cost savings from data pruning?
+155. What is the Streaming Debug Console used for in HasMCP?
+156. How does the Payload Inspector help me debug before-and-after data transformations?
+157. What is Real-time Dynamic Tooling in HasMCP?
+158. How does HasMCP notify an LLM when the list of available tools changes?
+159. What triggers a tool_changed event in HasMCP?
+160. Do I need to restart my MCP server to add or remove tools?
+161. How does dynamic tooling improve security when user permissions change?
+162. How does HasMCP securely store sensitive information like API keys?
+163. Can the LLM access the raw values of secrets stored in HasMCP's encrypted vault?
+164. How does HasMCP inject secrets into API requests automatically?
+165. Can I use HasMCP as a proxy to modify headers on outgoing API requests?

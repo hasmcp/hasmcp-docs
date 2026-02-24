@@ -99,6 +99,47 @@
         ]
       },
       {
+        "tab": "Kb",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "kb/index"
+            ]
+          },
+          {
+            "group": "Servers",
+            "pages": [
+              "kb/create-mcp-server",
+              "kb/list-mcp-servers",
+              "kb/get-mcp-server-details",
+              "kb/mcp-server-creation-endpoint",
+              "kb/mcp-server-creation-payload",
+              "kb/retrieve-available-mcp-servers",
+              "kb/list-mcp-servers-response",
+              "kb/filter-paginate-mcp-servers",
+              "kb/mcp-server-details-endpoint",
+              "kb/check-mcp-server-status",
+              "kb/update-mcp-server-properties",
+              "kb/rename-mcp-server",
+              "kb/mcp-server-update-endpoint",
+              "kb/delete-mcp-server",
+              "kb/delete-mcp-server-consequences"
+            ]
+          },
+          {
+            "group": "Providers",
+            "pages": [
+              "kb/create-mcp-provider",
+              "kb/mcp-provider-registration-requirements",
+              "kb/list-mcp-providers",
+              "kb/search-mcp-providers-name-url",
+              "kb/filter-mcp-providers-type"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API reference",
         "groups": [
           {

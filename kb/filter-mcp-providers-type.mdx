@@ -1,0 +1,31 @@
+---
+title: How do I filter the providers list by API type?
+description: Documentation on utilizing the `apiType` query parameter to filter registered providers within HasMCP Manager.
+---
+
+# Filtering Providers by API Type
+
+## Using HasMCP UI
+
+![Providers List Page](../images/kb/providers-list.png)
+
+While the dashboard provides search capabilities, filtering strictly by API architecture (`REST` vs native integrations) is primarily handled at the data API level if you are building external integrations.
+
+## Using REST API
+
+If you need to retrieve a list of providers conforming only to a specific architecture (e.g., separating REST APIs from other future API types), you can pass an exact match query parameter to the `/providers` endpoint.
+
+### The `apiType` Filter
+
+By appending the `apiType` URL query parameter to your `GET` request, HasMCP will filter the response array to only include providers whose `apiType` string matches exactly.
+
+#### Execution Example
+
+To find all REST-based API providers:
+
+```bash
+curl -X GET 'https://app.hasmcp.com/api/v1/providers?apiType=REST' \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+*Note: Currently, HasMCP strongly focuses on the `REST` API type, but this parameter allows structural querying in mixed API environments.*

@@ -1,0 +1,47 @@
+---
+title: How do I update the properties of an existing MCP server?
+description: Step-by-step documentation on updating the configuration, providers, and settings of an existing MCP server using HasMCP Manager.
+---
+
+# Updating an Existing MCP Server
+
+## Using HasMCP UI
+
+![Server Edit Page](../images/kb/server-edit.png)
+
+To modify an existing MCP server through the dashboard:
+1. Navigate to the **Servers** page from the sidebar.
+2. Click on the server you want to update to open its details.
+3. Click the **Edit** button in the top right corner.
+4. Modify properties like the name or instructions, and hit **Save** to apply your changes.
+
+## Using REST API
+
+To modify the properties, instructions, or associated components of an existing MCP server programmatically, use the `PATCH` method against the server's specific API endpoint.
+
+### Update Endpoint Route
+
+**`PATCH /servers/{id}`**
+
+### The Update Process
+
+1. **Identify the Server ID**: Find the 11-character identifier of your target server (e.g., `kSuB9Gf6aD4`).
+2. **Construct the Update Payload**: The JSON body should conform to the `UpdateServerRequest` schema.
+   - Update string fields such as `name` or `instructions`.
+   - Update associations by passing lists containing the desired `providers`, `resources`, or `prompts`.
+
+#### Example cURL Update
+
+```bash
+curl -X PATCH https://app.hasmcp.com/api/v1/servers/kSuB9Gf6aD4 \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "server": {
+      "name": "Updated Server Name",
+      "instructions": "New and varied instructions."
+    }
+  }'
+```
+
+If successful, the API returns a `200 OK` response with the newly updated `Server` object.

@@ -1,0 +1,38 @@
+---
+title: How can I delete an MCP server via the API?
+description: Detailed guide explaining how to permanently delete an MCP server using the HasMCP manager REST API.
+---
+
+# Deleting an MCP Server
+
+## Using HasMCP UI
+
+![Delete MCP Server Confirmation Modal](../images/kb/server-delete-confirm.png)
+
+To delete an MCP server through the dashboard:
+1. Open the specific server's detail view from the **Servers** page.
+2. Click the red **Delete** button in the top right.
+3. Review the confirmation modal to understand the consequences.
+4. Confirm the deletion. This action is irreversible.
+
+## Using REST API
+
+When an MCP server is no longer needed, you can cleanly tear it down via the API. Doing this will remove the server's configuration and disassociate it from any existing providers or prompts.
+
+### The Deletion Route
+
+**`DELETE /servers/{id}`**
+
+### How to Delete a Server
+
+1. Identify the 11-character `id` of the server you wish to remove.
+2. Make an authenticated `DELETE` request targeting that specific server.
+
+#### Example Request
+
+```bash
+curl -X DELETE https://app.hasmcp.com/api/v1/servers/kSuB9Gf6aD4 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+If the deletion goes through successfully, the system returns a `204 No Content` response, indicating that the server no longer exists.

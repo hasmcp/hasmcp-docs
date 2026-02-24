@@ -1,0 +1,47 @@
+---
+title: What information is returned when I list my MCP servers?
+description: Discover the detailed fields and metadata returned by the HasMCP API when listing your MCP servers.
+---
+
+# Information Returned When Listing MCP Servers
+
+## Using HasMCP UI
+
+![Server List Page](../images/kb/server-list.png)
+
+The dashboard abstracts the raw metadata, displaying the server's name, description, assigned providers, and current status clearly on individual server cards or items.
+
+## Using REST API
+
+When you call the `GET /servers` endpoint, the HasMCP Manager returns a `ListServersResponse` containing an array of `Server` objects. 
+
+### Server Object Schema
+
+For each MCP server in the list, you will receive the following metadata and configuration properties:
+
+- `id` (string): The unique 11-character alphanumeric identifier for the server (e.g., `kSuB9Gf6aD4`).
+- `createdAt` (string, date-time): The timestamp when the server was created.
+- `updatedAt` (string, date-time): The timestamp when the server was last updated.
+- `name` (string): The human-readable name of the server.
+- `description` (string): An optional description explaining the server's purpose.
+- `requestHeadersProxyEnabled` (boolean): Indicates if header proxying is enabled.
+- `version` (integer): The configuration version number.
+- `providers` (array): A detailed list of associated providers and their specific OAuth/API configurations.
+- `resources` (array): A list of resources linked to this server.
+- `prompts` (array): A list of static or dynamic prompts attached to this server.
+
+#### Example Response Snippet
+
+```json
+{
+  "servers": [
+    {
+      "id": "kSuB9Gf6aD4",
+      "name": "Production Server",
+      "createdAt": "2023-11-20T10:00:00Z",
+      "version": 1
+      // ...providers, resources, and prompts
+    }
+  ]
+}
+```

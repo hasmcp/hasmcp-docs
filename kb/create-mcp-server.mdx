@@ -1,0 +1,44 @@
+---
+title: How do I create a new MCP server using the HasMCP manager?
+description: Step-by-step guide on creating a new MCP server in the HasMCP manager using the REST API.
+---
+
+# Creating a New MCP Server in HasMCP
+
+## Using HasMCP UI
+
+![New Server Creation Page](../images/kb/create-server.png)
+
+To create a new MCP server through the dashboard:
+1. Navigate to the **Servers** section from the sidebar.
+2. Click the **Create Server** or **New Server** button.
+3. Fill in the required fields such as the server's name and its behavioral instructions.
+4. Save your configuration to instantly provision the server.
+
+## Using REST API
+
+To create a new MCP server programmatically, you need to make a `POST` request to the `/servers` endpoint with a JSON payload containing your server's configuration.
+
+### Step-by-Step Guide
+
+1. **Prepare Authentication**: Ensure you have your HasMCP Manager API token. You will need to pass this in the `Authorization` header as a Bearer token (`Bearer ${HASMCP_ACCESS_TOKEN}`).
+2. **Define Server Configuration**: Create a JSON payload that specifies the `name`, `instructions`, `version`, and any associated `providers`, `resources`, or `prompts`.
+3. **Send the Request**: Make a `POST` request to `https://app.hasmcp.com/api/v1/servers` (or your specific HasMCP Manager base URL) with the compiled JSON body.
+
+### Example cURL Request
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/servers \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "server": {
+      "name": "My Custom MCP Server",
+      "instructions": "You are a helpful AI assistant.",
+      "version": 1,
+      "providers": []
+    }
+  }'
+```
+
+A successful request will return a `201 Created` status code along with the newly created server's details.

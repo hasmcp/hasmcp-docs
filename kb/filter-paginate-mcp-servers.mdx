@@ -1,0 +1,22 @@
+---
+title: Is there a way to filter or paginate the list of MCP servers?
+description: Information on pagination and filtering capabilities for the MCP servers list endpoint in the HasMCP API.
+---
+
+# Filtering and Paginating MCP Servers
+
+## Using HasMCP UI
+
+![Server List Page](../images/kb/server-list.png)
+
+When utilizing the HasMCP dashboard, the servers list allows for text-based filtering and visual pagination controls directly within your browser, making it easy to sort through large numbers of servers.
+
+## Using REST API
+
+Currently, according to the standard OpenAPI specification for the HasMCP Manager, the `GET /servers` endpoint returns the complete list of available MCP servers associated with your account in a single response array.
+
+### Details on Parameters
+
+Unlike the `/providers` endpoint (which accepts queries like `limit`, `token`, and `nameContains`), the `/servers` endpoint does not define built-in pagination limits (`limit` or `nextToken`) or filtering query parameters in its schema.
+
+**Note:** The system is designed to return the full array in the `servers` property of the `ListServersResponse`. If you build automation or UI components on top of this API, it is recommended to implement client-side filtering and pagination of the returned JSON array.

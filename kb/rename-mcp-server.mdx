@@ -1,0 +1,37 @@
+---
+title: Can I rename my MCP server after creating it?
+description: Confirmation and instructions on how to rename an MCP server securely via the HasMCP Manager API.
+---
+
+# Renaming Your MCP Server
+
+## Using HasMCP UI
+
+![Server Edit Page](../images/kb/server-edit.png)
+
+To rename a server directly in the browser:
+1. From the Server Details page, click **Edit**.
+2. Update the **Name** text field.
+3. Click **Save** to confirm the new name.
+
+## Using REST API
+
+Yes, you can rename an MCP server at any time after it is created. Renaming a server does not break its underlying ID or token credentials.
+
+### How to Rename a Server
+
+To rename a server programmatically, you send a `PATCH` request to the specific server's endpoint:
+
+`PATCH /servers/{id}`
+
+In the JSON payload, simply provide the new `name` property within the `server` object. The HasMCP Manager will update the visual name of your server on the dashboard and in API listings, while keeping the internal configurations and bindings intact.
+
+#### Example Payload
+
+```json
+{
+  "server": {
+    "name": "My New Descriptive App Name"
+  }
+}
+```

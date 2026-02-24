@@ -1,0 +1,26 @@
+---
+title: How do I check the current status and configuration of my MCP server?
+description: Guide on checking the live status, configuration, and version properties of an MCP server using the HasMCP API.
+---
+
+# Checking MCP Server Status and Configuration
+
+## Using HasMCP UI
+
+![Specific Server Details Page](../images/kb/server-details.png)
+
+The easiest way to check a server's configuration is to open its details page in the HasMCP dashboard. The UI will show you the configured name, instructions, and list all active provider and tool mappings.
+
+## Using REST API
+
+To check the current configuration and inferred status of an MCP server programmatically, you should utilize the `GET /servers/{id}` endpoint.
+
+### Reading the Configuration
+
+When you retrieve the server details, you receive a comprehensive JSON object representing its current state in the HasMCP platform:
+
+- **Configuration Verification**: Inspect the `providers`, `tools`, `resources`, and `prompts` arrays to guarantee that the server has all the capabilities you expect.
+- **Version Checking**: Look at the `version` integer and the `updatedAt` timestamp to confirm if your most recent updates (`PATCH` requests) have been successfully applied.
+- **Proxy Status**: Check the `requestHeadersProxyEnabled` boolean to verify your proxy security configuration.
+
+By polling `GET /servers/{id}`, developers can confirm deployment workflows are successful and assure their agent pipelines are connected to the most up-to-date environments.

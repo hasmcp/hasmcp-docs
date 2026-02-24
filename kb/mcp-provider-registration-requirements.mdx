@@ -1,0 +1,53 @@
+---
+title: What information do I need to register a provider?
+description: An overview of the required and optional schema information necessary to register a new API Provider in the HasMCP Manager.
+---
+
+# Information Required to Register a Provider
+
+## Using HasMCP UI
+
+![New Provider Creation Page](../images/kb/create-provider.png)
+
+When creating a provider from the visual dashboard, you fill in intuitive form fields. This form maps directly to the required structure needed for the API.
+
+## Using REST API
+
+Registering a new API provider in HasMCP via the `POST /providers` endpoint requires a JSON object conforming to the `ProviderCreate` schema.
+
+### Core Provider Fields
+
+To ensure HasMCP accurately routes, displays, and connects your API to an MCP Server, the following primary information should be configured in your `provider` object payload:
+
+#### Essential Information
+- **`name`** (string): A legible name identifying your external service (e.g., "GitHub v3" or "Internal Slack").
+- **`baseURL`** (uri string): The fully qualified root path of your REST API where HasMCP will target underlying tool endpoints.
+- **`apiType`** (string): Denotes the schema of your external API. Currently, you should specify `"REST"`.
+- **`visibilityType`** (string): Defines your tenant-level architecture separation, generally accepting `"INTERNAL"` or `"PUBLIC"`.
+
+#### Optional but Recommended Information
+- **`description`** (string): Detailed documentation outlining the scope of operations this provider allows.
+- **`documentURL`** (uri string): A link out to the external API's official documentation landing page.
+- **`iconURL`** (uri string): A direct link to an SVG or PNG icon representing the provider in the dashboard UI.
+- **`oauth2Config`** (object): If the API uses OAuth2 for native elicitation auth, you provide the `clientID`, `clientSecret`, `authURL`, and `tokenURL` parameters here.
+
+#### Example JSON Payload Structure
+
+```json
+{
+  "provider": {
+    "name": "My Custom Billing API",
+    "baseURL": "https://billing.mycompany.internal/api/v2",
+    "apiType": "REST",
+    "visibilityType": "INTERNAL",
+    "description": "Internal billing routes for CRM synchronization.",
+    "documentURL": "https://wiki.mycompany.internal/billing-api",
+    "oauth2Config": {
+       "clientID": "your_client_id",
+       "clientSecret": "your_client_secret_or_variable",
+       "authURL": "https://billing.mycompany.internal/oauth/authorize",
+       "tokenURL": "https://billing.mycompany.internal/oauth/token"
+    }
+  }
+}
+```

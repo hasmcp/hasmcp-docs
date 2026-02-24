@@ -1,0 +1,43 @@
+---
+title: Can I search for providers by name or base URL?
+description: Learn how to effectively query and search for specific API providers in HasMCP using text-matching query parameters.
+---
+
+# Searching Providers by Name or URL
+
+## Using HasMCP UI
+
+![Providers List Page](../images/kb/providers-list.png)
+
+You can easily search through your active API integrations by using the search bar located at the top of the **Providers** list page in the dashboard.
+
+## Using REST API
+
+Yes, when making a `GET` request to the `/providers` endpoint, HasMCP allows you to append query parameters to search for subsets of providers matching specific text strings. This is extremely helpful when managing a large catalog of APIs.
+
+### Available Search Parameters
+
+The `/providers` endpoint supports the following two query string parameters for text-based searches:
+
+1. **`nameContains`** (string): Filters the returned array of providers to only those where the `name` field contains the specified substring (case-insensitive depending on database collation).
+2. **`baseURLContains`** (string): Filters the returned array to only providers where the `baseURL` incorporates the specified substring.
+
+### Example Queries
+
+#### Searching by Name
+To find all providers that have "Google" in their name:
+
+```bash
+curl -G -X GET https://app.hasmcp.com/api/v1/providers \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  --data-urlencode "nameContains=Google"
+```
+
+#### Searching by Base URL
+To locate any provider mapping to a subdomain of `internal.mycompany.com`:
+
+```bash
+curl -G -X GET https://app.hasmcp.com/api/v1/providers \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  --data-urlencode "baseURLContains=internal.mycompany.com"
+```
