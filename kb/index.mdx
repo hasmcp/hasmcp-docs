@@ -1,190 +1,46 @@
 ---
-title: Knowledge Base Overview
-description: A comprehensive list of answers to common questions about using HasMCP, creating servers, and registering API providers.
+title: Knowledge Base Directory
+description: Navigation hub for HasMCP functional endpoints, orchestrations, and deployment tutorials.
 ---
 
 # HasMCP Knowledge Base
 
-Welcome to the HasMCP Knowledge Base! Here, you will find direct answers to commonly asked questions regarding the management of MCP servers and API providers, utilizing both the HasMCP visual dashboard and the REST API.
+Welcome to the HasMCP Knowledge Base. Select a specific domain below to find direct answers to commonly asked questions utilizing both the HasMCP visual dashboard and the REST API.
 
 ---
 
-## Servers
-
-Everything you need to know about provisioning, managing, and deleting MCP servers.
-
-* [How do I create a new MCP server?](/kb/create-mcp-server)
-* [What is the endpoint for creating an MCP server?](/kb/mcp-server-creation-endpoint)
-* [What is the required JSON payload to create an MCP server?](/kb/mcp-server-creation-payload)
-* [How can I list all the MCP servers I have created?](/kb/list-mcp-servers)
-* [How do I retrieve a list of available MCP servers?](/kb/retrieve-available-mcp-servers)
-* [What information is returned when I list my MCP servers?](/kb/list-mcp-servers-response)
-* [Is there a way to filter or paginate the list of MCP servers?](/kb/filter-paginate-mcp-servers)
-* [How can I get the details of a specific MCP server by its ID?](/kb/get-mcp-server-details)
-* [What is the API route for fetching an MCP server's full details?](/kb/mcp-server-details-endpoint)
-* [How do I check the current status and configuration of my MCP server?](/kb/check-mcp-server-status)
-* [How do I update the properties of an existing MCP server?](/kb/update-mcp-server-properties)
-* [What is the endpoint to patch or update an MCP server?](/kb/mcp-server-update-endpoint)
-* [Can I rename my MCP server after creating it?](/kb/rename-mcp-server)
-* [How can I delete an MCP server via the API?](/kb/delete-mcp-server)
-* [What happens when I send a DELETE request to an MCP server endpoint?](/kb/delete-mcp-server-consequences)
-
----
-
-## API Providers
-
-Guides on integrating external APIs and associating tools with your servers.
-
-* [How do I create a new API provider in HasMCP?](/kb/create-mcp-provider)
-* [What information do I need to register a provider?](/kb/mcp-provider-registration-requirements)
-* [How do I list all available registered providers?](/kb/list-mcp-providers)
-* [Can I search for active providers by name or base URL?](/kb/search-mcp-providers-name-url)
-* [How do I filter the providers list by API type?](/kb/filter-mcp-providers-type)
-* [Is it possible to filter providers by visibility?](/kb/filter-mcp-providers-visibility)
-* [How do I get the details of a specific provider?](/kb/get-mcp-provider-details)
-* [What is the endpoint to update a provider's configuration?](/kb/mcp-provider-update-endpoint)
-* [How do I delete a provider from HasMCP?](/kb/delete-mcp-provider)
-* [Can I manage multiple providers for my MCP servers?](/kb/manage-multiple-providers)
-
----
-
-## Provider Tools
-
-Connect actionable external API endpoints inside your providers so that LLMs can invoke them.
-
-* [How do I add a new tool to a specific provider?](/kb/add-tool-to-provider)
-* [What is the API call to list all tools for a provider?](/kb/list-provider-tools-api)
-* [How can I view the details of a specific provider tool?](/kb/get-provider-tool-details)
-* [How do I update or modify a provider tool?](/kb/update-provider-tool)
-* [How do I delete a tool from a provider?](/kb/delete-provider-tool)
-
----
-
-## Provider Resources
-
-Map static or dynamic data API endpoints inside your providers so that MCP servers can access them.
-
-* [How do I create a new resource for a provider?](/kb/create-provider-resource)
-* [What is the endpoint for listing all resources of a provider?](/kb/list-provider-resources)
-* [How can I fetch the details of a specific provider resource?](/kb/get-provider-resource-details)
-* [How do I update a provider resource's metadata?](/kb/update-provider-resource)
-* [How do I delete a resource from a provider?](/kb/delete-provider-resource)
-
----
-
-## Provider Prompts
-
-Build centralized, reusable prompt templates and instructions to standardize LLM interactions across your provider catalog.
-
-* [How do I add a prompt to a provider?](/kb/add-prompt-to-provider)
-* [What is the API route to list a provider's prompts?](/kb/list-provider-prompts)
-* [How do I get the details of a specific provider prompt?](/kb/get-provider-prompt-details)
-* [How do I make updates to an existing provider prompt?](/kb/update-provider-prompt)
-* [How do I delete a prompt from a provider?](/kb/delete-provider-prompt)
-
----
-
-## Server Tools
-
-Manage which provider tool functionalities are exposed to your individual MCP Server agents.
-
-* [How do I associate a tool with my MCP server?](/kb/assign-tool-to-server)
-* [What is the endpoint to add a tool to an MCP server?](/kb/server-tool-association-endpoints)
-* [How do I list all the tools currently associated with an MCP server?](/kb/list-server-tools-api)
-* [Can an MCP server use multiple tools from different providers?](/kb/check-server-tool-status)
-* [How do I remove a tool association from an MCP server?](/kb/remove-tool-from-server)
-* [What payload is needed to create an MCP server tool association?](/kb/server-tool-execution-logs)
-* [Does deleting a server-tool association delete the tool itself?](/kb/server-tool-permissions)
-* [Can I associate a single provider's tool to multiple MCP servers?](/kb/restrict-server-tool-access)
-* [Is there a way to bulk-assign tools to an MCP server?](/kb/bulk-assign-server-tools)
-* [How do I troubleshoot failing server-tool execution associations?](/kb/troubleshoot-server-tool-execution)
-
----
-
-## Server Resources
-
-Expose static files, logs, and dynamic data blobs from your providers directly to your MCP servers.
-
-* [How do I associate a resource to my MCP server?](/kb/associate-resource-to-server)
-* [What is the API endpoint to link a resource to an MCP server?](/kb/server-resource-association-endpoint)
-* [How do I see a list of all resources attached to an MCP server?](/kb/list-server-resources-api)
-* [Can I bind multiple resources to the same MCP server?](/kb/bind-multiple-resources-to-server)
-* [How do I disassociate a resource from my MCP server?](/kb/disassociate-server-resource)
-* [What happens to the resource when I delete its association with an MCP server?](/kb/server-resource-deletion-behavior)
-* [How do I query the resources available to an MCP server?](/kb/query-server-resources)
-* [What data is required to map a resource to a server?](/kb/payload-server-resource-mapping)
-* [How are resources exposed through an MCP server?](/kb/expose-resources-through-server)
-* [Can I dynamically attach and detach resources from a running server API?](/kb/dynamic-server-resource-attachment)
-
----
-
-## Server Prompts
-
-Bind instructional frameworks and context templates natively to an active agent execution space.
-
-* [How do I associate a prompt to my MCP server?](/kb/associate-prompt-to-server)
-* [What is the API endpoint to link a prompt to an MCP server?](/kb/server-prompt-association-endpoint)
-* [How do I list all the prompts currently associated with an MCP server?](/kb/list-server-prompts-api)
-* [Can I bind multiple prompts to the same MCP server?](/kb/bind-multiple-prompts-to-server)
-* [How do I disassociate a prompt from my MCP server?](/kb/disassociate-server-prompt)
-* [What happens to the prompt when I delete its association with an MCP server?](/kb/server-prompt-deletion-behavior)
-* [How do I query the prompts available to an MCP server?](/kb/query-server-prompts)
-* [What data is required to map a prompt to a server?](/kb/payload-server-prompt-mapping)
-* [How are prompts exposed through an MCP server?](/kb/expose-prompts-through-server)
-* [Can I dynamically attach and detach prompts from a running server API?](/kb/dynamic-server-prompt-attachment)
-
----
-
-## Tokens & Authentication
-
-Secure agent integrations by mapping cryptography schemas inherently to execution variables.
-
-* [How do I generate a new token for my MCP server?](/kb/generate-server-token)
-* [What endpoint is used to create a server token?](/kb/create-server-token-endpoint)
-* [How do I get a list of active tokens for a given MCP server?](/kb/list-server-tokens-api)
-* [Are there limits on the number of tokens a server can have?](/kb/server-token-limitations)
-* [How do I securely revoke a breached or redundant server token?](/kb/revoke-server-token)
-* [How do I authenticate an MCP client against a server?](/kb/authenticate-mcp-client)
-* [What is the structure of a server token payload?](/kb/token-payload-structure)
-* [How do I handle server token expiration?](/kb/server-token-expiration)
-* [What happens if an MCP client connects without a token?](/kb/missing-token-errors)
-* [Should I store my server token securely?](/kb/securely-store-server-token)
-
----
-
-## Server Variables
-
-Map programmatic secrets and contextual constants seamlessly injecting down exactly when explicit dependencies necessitate runtime configurations.
-
-* [How do I create a server variable?](/kb/create-server-variable)
-* [What is the API endpoint to create a server variable?](/kb/create-server-variable-endpoint)
-* [How do I get a list of server variables via the API?](/kb/list-server-variables-api)
-* [Are Server Variables encrypted?](/kb/server-variable-encryption)
-* [How do I delete a server variable?](/kb/delete-server-variable)
-* [Can a variable be shared among different providers?](/kb/variable-provider-sharing)
-* [What is the payload structure of a server variable?](/kb/variable-payload-structure)
-* [What happens if a tool requires a variable that is missing?](/kb/missing-variable-handling)
-* [How do I update a server variable?](/kb/update-server-variable)
-* [Can two server variables have the same name?](/kb/duplicate-variable-names)
-
----
-
-## General Workflows
-
-Core architectural logic covering platform setups, pagination formatting, structured schema validation dependencies, and standard HTTP error troubleshooting.
-
-* [How do I set up HasMCP end-to-end?](/kb/end-to-end-setup)
-* [How are API requests paginated?](/kb/api-pagination)
-* [What does a 200 OK status code mean?](/kb/api-200-ok)
-* [What does a 201 Created status code mean?](/kb/api-201-created)
-* [What does a 204 No Content status code mean?](/kb/api-204-no-content)
-* [How do I troubleshoot a 400 Bad Request error?](/kb/troubleshoot-400-bad-request)
-* [How do I troubleshoot a 401 Unauthorized error?](/kb/troubleshoot-401-unauthorized)
-* [How do I troubleshoot a 403 Forbidden error?](/kb/troubleshoot-403-forbidden)
-* [How do I troubleshoot a 404 Not Found error?](/kb/troubleshoot-404-not-found)
-* [How do I troubleshoot a 409 Conflict error?](/kb/troubleshoot-409-conflict)
-* [How do I troubleshoot a 429 Too Many Requests error?](/kb/troubleshoot-429-rate-limit)
-* [How do I troubleshoot a 500 Internal Server error?](/kb/troubleshoot-500-internal-server-error)
-* [How does OpenAPI validation work?](/kb/openapi-validation)
-* [How is the HasMCP REST API versioned?](/kb/api-versioning)
-* [Where can I find the official OpenAPI specification?](/kb/openapi-specification-download)
+<CardGroup cols={2}>
+ <Card title="MCP Servers" icon="server" href="/kb/servers">
+ Provisioning, managing, and destroying autonomous MCP server agent interfaces natively.
+ </Card>
+ <Card title="API Providers" icon="plug" href="/kb/api-providers">
+ Integrating external APIs and governing their core structural configurations.
+ </Card>
+ <Card title="Provider Tools" icon="wrench" href="/kb/provider-tools">
+ Mapping explicit execution verbs and actions to global API definitions flawlessly.
+ </Card>
+ <Card title="Provider Resources" icon="database" href="/kb/provider-resources">
+ Connecting static or dynamic data readouts (like logs) inherently.
+ </Card>
+ <Card title="Provider Prompts" icon="message" href="/kb/provider-prompts">
+ Creating system constraints, context injections, and reusable templates.
+ </Card>
+ <Card title="Server Tools" icon="microchip" href="/kb/server-tools">
+ Exposing subsets of execution verb combinations conditionally to your active agents.
+ </Card>
+ <Card title="Server Resources" icon="folder-open" href="/kb/server-resources">
+ Assigning explicit endpoint logs properly to designated MCP execution spaces.
+ </Card>
+ <Card title="Server Prompts" icon="comment-dots" href="/kb/server-prompts">
+ Mapping structural instructional constraints to custom servers.
+ </Card>
+ <Card title="Tokens & Authentication" icon="key" href="/kb/tokens-and-authentication">
+ Generating Bearer tokens and managing cryptographic lifecycles securely.
+ </Card>
+ <Card title="Server Variables" icon="lock" href="/kb/server-variables">
+ Defining and injecting ENV strings or encrypted secrets into runtime configurations.
+ </Card>
+ <Card title="General Workflows" icon="diagram-project" href="/kb/general-workflows">
+ Investigating standard API behaviors, troubleshooting code failures, and deploying agents.
+ </Card>
+</CardGroup>

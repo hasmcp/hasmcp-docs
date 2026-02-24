@@ -1,0 +1,20 @@
+---
+title: Does HasMCP allow tracking tool usage on a per-user basis for governance?
+description: Implementing individual developer accounting and strict access auditing.
+---
+
+# Per-User Usage Tracking
+
+Yes. HasMCP implements explicit identity assignment for every single SSE (MCP Streamable HTTP) or REST execution routed through its central proxy architecture.
+
+If you invite fifty developers to your Workspace and provide them all with Viewer access to your internal Postgres database, HasMCP meticulously fragments tool analytics so you can track precisely who is doing what.
+
+### Utilizing Identity Metrics
+
+Inside the Analytics console, navigate to the **Users** taxonomy. 
+
+1. **Execution Leaders**: The platform ranks Workspace members by total tool executions. This quickly identifies "Power Users" generating the most automated LLM traffic.
+2. **Specific Queries**: By clicking into a specific user profile (e.g., `developer@yourcompany.com`), administrators can view an isolated feed of their executed tool parameters. 
+3. **Anomaly Detection**: If a junior developer, who historically executes 10 tools per day, suddenly triggers 5,000 distinct `searchPostgres` requests in two hours, security teams can instantly identify the behavioral anomaly and revoke the user's Workspace access to prevent data exfiltration.
+
+By attaching human identities to every AI action, HasMCP guarantees regulatory compliance and enterprise security governance.

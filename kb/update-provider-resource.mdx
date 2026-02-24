@@ -31,14 +31,14 @@ Send a JSON structure formatted against the `UpdateProviderResourceRequest` sche
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/resources/rA9BdO1kZ5T \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resource": {
-      "description": "An updated context describing the log file mapping more coherently.",
-      "uri": "https://api.example.com/v2/system/logs/error-new"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "resource": {
+ "description": "An updated context describing the log file mapping more coherently.",
+ "uri": "https://api.example.com/v2/system/logs/error-new"
+ }
+ }'
 ```
 
 An immediate `200 OK` confirms that any MCP server actively attached to this provider resource will instantly adapt to proxied data through the updated routes.

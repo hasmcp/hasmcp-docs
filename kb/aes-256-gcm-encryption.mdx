@@ -1,0 +1,22 @@
+---
+title: What is AES-256-GCM encryption, and why does HasMCP use it?
+description: Reviewing the military-grade standard chosen for internal secret vaults.
+---
+
+# AES-256-GCM Encryption
+
+HasMCP exclusively utilizes **AES-256-GCM** to secure all internal Environment Variables, Server Tokens, and Provider Authentication strings.
+
+### What is AES-256?
+
+AES (Advanced Encryption Standard) with a 256-bit key length is the premier cryptographic standard globally. It is the exact same encryption implementation required by the NSA for handling "Top Secret" government intelligence.
+
+A 256-bit key means there are $2^{256}$ possible combinations. With current classical computing infrastructure, it would take billions of years to brute force a single secret variable stored within the HasMCP database.
+
+### Why GCM?
+
+GCM stands for **Galois/Counter Mode**.
+
+While standard AES encryption prevents someone from *reading* your secret, it does not necessarily prevent them from *tampering* with it. GCM solves this by explicitly incorporating authentication into the encryption pass natively.
+
+Whenever HasMCP encrypts your API key, GCM simultaneously generates a cryptographic tag. During decryption, the proxy server verifies this tag. If the encrypted string was altered by even a single bit in the database, the tag fails validation, and the system securely permanently drops the request instead of transmitting a corrupted payload.

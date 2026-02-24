@@ -1,0 +1,23 @@
+---
+title: What is MCP Composition in HasMCP?
+description: Grouping isolated servers into master node configurations.
+---
+
+# MCP Server Composition
+
+Composition is the architectural ability to intelligently bundle multiple distinct Model Context Protocol (MCP) servers into a single unified routing endpoint securely.
+
+In a mature enterprise, a useful AI Agent often requires simultaneous access to multiple systems: Github, Jira, Postgres, and internal REST endpoints.
+
+If you attempt this without HasMCP, you must transmit four distinct URLs and four completely different API authentication tokens to every single engineer on your team. Every time a connection string rotates, twenty developers have to manually update their `claude_desktop_config.json`.
+
+**MCP Server Composition** explicitly solves this configuration bottleneck by generating a single unified Master Endpoint.
+
+### How it Works
+
+1. You securely connect your upstream databases and APIs entirely inside the HasMCP Dashboard.
+2. You create an **Interface** called `Core_Engineering_Suite`.
+3. You drag-and-drop the specific Provider Tools you want into that Interface.
+4. HasMCP outputs a single, immutable streaming URL.
+
+Your engineers plug exactly **one** endpoint into their IDEs. The HasMCP proxy receives their prompts and efficiently distributes the underlying tool calls out to the proper databases in parallel.

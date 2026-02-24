@@ -35,19 +35,19 @@ To ensure HasMCP accurately routes, displays, and connects your API to an MCP Se
 
 ```json
 {
-  "provider": {
-    "name": "My Custom Billing API",
-    "baseURL": "https://billing.mycompany.internal/api/v2",
-    "apiType": "REST",
-    "visibilityType": "INTERNAL",
-    "description": "Internal billing routes for CRM synchronization.",
-    "documentURL": "https://wiki.mycompany.internal/billing-api",
-    "oauth2Config": {
-       "clientID": "your_client_id",
-       "clientSecret": "your_client_secret_or_variable",
-       "authURL": "https://billing.mycompany.internal/oauth/authorize",
-       "tokenURL": "https://billing.mycompany.internal/oauth/token"
-    }
-  }
+ "provider": {
+ "name": "myCustomBillingApi",
+ "baseURL": "https://billing.mycompany.internal/api/v2",
+ "apiType": "REST",
+ "visibilityType": "INTERNAL",
+ "description": "Internal billing routes for CRM synchronization.",
+ "documentURL": "https://wiki.mycompany.internal/billing-api",
+ "oauth2Config": {
+ "clientID": "your_client_id",
+ "clientSecret": "your_client_secret_or_variable",
+ "authURL": "https://billing.mycompany.internal/oauth/authorize",
+ "tokenURL": "https://billing.mycompany.internal/oauth/token"
+ }
+ }
 }
 ```

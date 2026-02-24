@@ -1,0 +1,17 @@
+---
+title: Can I share Provider Tools with read-only access for certain team members?
+description: Securing sensitive API configuration nodes without impacting downstream prompt generation elegantly.
+---
+
+# Sharing Tools via Read-Only Access
+
+Yes. If you manage an engineering team that inherently needs to interact with your central Provider Tools (such as triggering an internal Salesforce query or a Jira ticket update) directly via their local IDEs or Desktop LLM Agents smoothly, you can securely configure Read-Only access.
+
+If you want a user to execute tools locally via API but critically block them from viewing the raw upstream connection strings, secret variables, and Javascript Interceptors:
+
+### Configure the Viewer Role
+
+1. Navigate to 'Settings > Members'.
+2. Send an email invite to the target user explicitly set as a **Viewer**.
+3. The guest generates a Personal Server API Token under their own account.
+4. The local LLM exclusively fetches the public JSON schemas (`Name`, `Description`, `Parameters`). The raw REST API logic is natively stripped from their request, guaranteeing perfect isolation.

@@ -1,0 +1,29 @@
+---
+title: What is Goja (JS) Logic in HasMCP?
+description: Structuring complex data transformations natively via embedded JavaScript execution flexibly logically.
+---
+
+# What is Goja (JS) Interceptor Logic?
+
+If JMESPath is considered the "Fast Slicer" for generic structural pruning, **Goja (JavaScript) Interceptors** are the full programmable processors internally deployed into the HasMCP orchestration proxy.
+
+Goja is a pure Go implementation of ECMAScript 5.1(+). It allows API administrators to write explicit JavaScript functions that dynamically intercept and rewrite upstream payloads *before* they are returned to the final LLM Context Window.
+
+### Why Use JavaScript?
+
+While JMESPath is fantastic for extracting fields (`users[0].name`), it is entirely declarative. It **cannot**:
+1. Mask or RegEx replace sensitive string formats safely (like wiping out the first 5 digits of an SSN).
+2. Compute mathematical sums natively (looping an array to return a final `total_price`).
+3. Conditionally mutate variables dynamically (`if account.balance < 0, inject boolean "is_bankrupt": true`).
+4. Perform complex un-nesting natively, such as executing `Base64` decodes on internal payload rings.
+
+### How It Connects to Tools
+Inside the visual dashboard natively, you simply define the Javascript snippet inside the **Data Transformation** block of your specific Provider Tool explicitly.
+
+Example formatting:
+```javascript
+input.status = "Interpreted by HasMCP";
+return input;
+```
+
+The string returned by the generic JS `intercept` function completely replaces the raw REST API buffer exclusively. Your LLM agent instantly receives the procedurally mapped outputs without recognizing the physical complexity seamlessly.

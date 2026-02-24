@@ -24,4 +24,4 @@ When the LLM explicitly decides it needs the data indicated by the URI route (e.
 1. **HasMCP** intercepts the request.
 2. It verifies the mapping association exists and the active Token has authorization.
 3. It maps the URI back internally, triggering the original API HTTP target hosted inside the **Provider** abstraction layer.
-4. It streams the binary or plaintext blob back down the Server websocket/stdio buffer natively into the LLM context window wrapper. 
+4. It streams the binary or plaintext blob back down the Server SSE (MCP Streamable HTTP) stream/stdio buffer natively into the LLM context window wrapper. 

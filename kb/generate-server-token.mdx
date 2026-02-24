@@ -37,14 +37,14 @@ The generation sequence requires passing a `token` object that optionally define
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tokens \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "token": {
-      "name": "Production Bot Key",
-      "expiresAt": "2026-12-31T23:59:59Z"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "token": {
+ "name": "productionBotKey",
+ "expiresAt": "2026-12-31T23:59:59Z"
+ }
+ }'
 ```
 
 If successful, the manager responds with a `CreateServerTokenResponse` payload that contains the unencrypted, raw bearer token string in the `value` property that you must immediately securely inject into your deployment pipeline.

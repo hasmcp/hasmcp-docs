@@ -1,0 +1,48 @@
+---
+title: How do I use JMESPath to filter lists of objects in an API response?
+description: Condition-matching specific value thresholds before dispatching data payloads.
+---
+
+# Filtering Objects with JMESPath
+
+If a provider API returns 500 items, but the Agent only explicitly requested items matching a specific criteria—such as "Status is Active" or "Price > 100"—you can use JMESPath syntax to structurally filter the array directly at the HasMCP Proxy level before the LLM uses tokens to ingest it.
+
+### Example: Condition Matching Arrays
+
+**Raw Output Array:**
+```json
+{
+ "stock": [
+ { "ticker": "AMD", "price": 105.00 },
+ { "ticker": "INTC", "price": 30.50 },
+ { "ticker": "NVDA", "price": 850.25 }
+ ]
+}
+```
+
+Instead of sending the LLM all three items when it only explicitly asked to "show me stocks over $100 natively", use a JMESPath filter expression (`[?expression]`):
+
+**The JMESPath Input Filter:**
+`stock[?price > \`100\`]`
+*(Note the backticks around numbers for explicit evaluation)*
+
+**The Filtered Output Delivered to the LLM:**
+```json
+[
+ { "ticker": "AMD", "price": 105.00 },
+ { "ticker": "NVDA", "price": 850.25 }
+]
+```
+
+### Combining Filters and Allowlisting
+You can dynamically pipe `|` the filter into a projection to both strip the array length AND remove specific strings dynamically natively:
+
+`stock[?price > \`100\`] | [*].{symbol: ticker}`
+
+This reduces the context exclusively to: 
+```json
+[
+ {"symbol": "AMD"}, 
+ {"symbol": "NVDA"}
+]
+```

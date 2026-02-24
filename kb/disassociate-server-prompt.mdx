@@ -19,7 +19,7 @@ You must explicitly map both the target orchestrator (`serverId`) and the target
 
 ```bash
 curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/prompts/mX5vTr9pK2w \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 Executing this logic against the proxy causes the HasMCP routing engine to scrub the specific `ServerPrompt` dependency mapping from its relational architecture instantly. Mapped responses return an empty `204 No Content`.

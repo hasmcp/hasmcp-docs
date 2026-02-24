@@ -29,7 +29,7 @@ You must pinpoint the exact `serverId` housing the agent connection, specificall
 
 ```bash
 curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources/rA9BdO1kZ5T \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 The HasMCP routing engine processes this instruction instantly, replying with an empty `204 No Content` response block. Any persistent LLM connections previously caching this resource will error out natively if they blindly request its URI path moving forward.

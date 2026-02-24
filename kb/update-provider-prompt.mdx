@@ -21,29 +21,29 @@ Generate a JSON object conforming to the `UpdateProviderPromptRequest` payload. 
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts/pT9XyM1qL2b \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": {
-      "description": "UPDATED: Now includes more rigid security validation rules.",
-      "messages": [
-        {
-          "role": "system",
-          "content": {
-            "type": "text",
-            "text": "CRITICAL: You are a strict security reviewer. Reject any PR code containing hardcoded secrets."
-          }
-        },
-        {
-          "role": "user",
-          "content": {
-            "type": "text",
-            "text": "Review PR #{pull_request_number}."
-          }
-        }
-      ]
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "prompt": {
+ "description": "UPDATED: Now includes more rigid security validation rules.",
+ "messages": [
+ {
+ "role": "system",
+ "content": {
+ "type": "text",
+ "text": "CRITICAL: You are a strict security reviewer. Reject any PR code containing hardcoded secrets."
+ }
+ },
+ {
+ "role": "user",
+ "content": {
+ "type": "text",
+ "text": "Review PR #{pull_request_number}."
+ }
+ }
+ ]
+ }
+ }'
 ```
 
 If the payload merges cleanly against the original schema, the endpoint yields a `200 OK`. All active server associations traversing to this provider prompt instantly consume the updated instruction set without requiring restarts.

@@ -1,0 +1,16 @@
+---
+title: What is the user experience when an LLM tries to access an authenticated endpoint?
+description: Visualizing the native Claude Desktop and Cursor interruption flow.
+---
+
+# User Experience for Authentication
+
+The user experience natively orchestrated by HasMCP guarantees complete immersion. A human communicating with Claude or Cursor does not need to open external tabs, navigate complicated developer portals, or generate manual API keys.
+
+### The Flow
+1. **The Prompt**: The user asks Claude natively: "Review recent Jira bug tickets."
+2. **The Execution**: Claude decides to use the configured Jira Provider Tool.
+3. **The Pause**: HasMCP detects missing authentication for that specific session.
+4. **The Interruption**: Claude visually pauses text generation natively. An authorization button appears directly inside the chat interface.
+5. **The Login**: The user clicks the button seamlessly. A secure, fully managed HasMCP graphical prompt appears allowing them to correctly input their API key, or transparently complete the required OAuth sequence.
+6. **The Continuation**: Claude receives the success payload and instantly resumes the conversational workflow.

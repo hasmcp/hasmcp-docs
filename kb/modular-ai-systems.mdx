@@ -1,0 +1,20 @@
+---
+title: How does MCP composition help in building modular AI systems?
+description: Achieving absolute decoupled infrastructure with centralized auth.
+---
+
+# Building Modular AI Systems
+
+Traditional AI engineering architectures frequently combine data extraction logic, API authentication keys, and business rules directly into single Python monoliths. This tight coupling makes the system incredibly fragile; updating a Jira API key requires a full deployment of the entire Python orchestration script.
+
+**MCP Composition** shatters this monolithic design.
+
+### Decoupled Microservices
+
+With HasMCP Composition, you effectively treat external APIs as isolated microservices. 
+
+1. **Isolation**: Your GitHub MCP server runs independently of your Postgres MCP server.
+2. **Modular Interfaces**: In the HasMCP dashboard, you construct a generic "Engineering_Tools" Interface.
+3. **Dynamic Hot-Swapping**: If your organization migrates from Postgres to MySQL, you simply disconnect the Postgres server inside the Interface and connect the new MySQL server.
+
+Because your local Desktop LLM only connects to the generic `Engineering_Tools` interface endpoint, the transition happens instantaneously. The developer never has to update their local `claude_desktop_config.json`, rebuild their Docker image, or restart their desktop client.

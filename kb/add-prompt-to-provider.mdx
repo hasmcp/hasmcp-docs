@@ -25,25 +25,25 @@ Your payload requires a `prompt` object composed of exactly 4 fields:
 
 ```json
 {
-  "prompt": {
-    "name": "code_review_assistant",
-    "description": "A system prompt instructing the LLM to aggressively review incoming PR code for security vulnerabilities.",
-    "arguments": [
-        {
-            "name": "pull_request_number",
-            "description": "The PR number to query via the underlying tool.",
-            "required": true
-        }
-    ],
-    "messages": [
-        {
-            "role": "user",
-            "content": {
-                "type": "text",
-                "text": "Review PR #{pull_request_number} and return only critical security alerts."
-            }
-        }
-    ]
-  }
+ "prompt": {
+ "name": "codeReviewAssistant",
+ "description": "A system prompt instructing the LLM to aggressively review incoming PR code for security vulnerabilities.",
+ "arguments": [
+ {
+ "name": "pullRequestNumber",
+ "description": "The PR number to query via the underlying tool.",
+ "required": true
+ }
+ ],
+ "messages": [
+ {
+ "role": "user",
+ "content": {
+ "type": "text",
+ "text": "Review PR #{pull_request_number} and return only critical security alerts."
+ }
+ }
+ ]
+ }
 }
 ```

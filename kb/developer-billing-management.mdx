@@ -1,0 +1,20 @@
+---
+title: Can developers access billing information in a Shared Workspace?
+description: Understanding permission boundaries around central financial management cleanly.
+---
+
+# Developer Access to Billing
+
+No. By default, **Developers**, **Viewers**, and **Admins** have absolutely zero access to the centralized HasMCP Billing Portal nested within your active Workspace securely.
+
+HasMCP strictly segregates financial governance from functional engineering gracefully.
+
+### Why is Billing Segregated?
+
+When building Enterprise AI integrations, you will likely invite external contractors or junior developers to test your Provider APIs. These developers inherently do not need to view your corporate credit cards, review monthly infrastructure invoices, or manipulate active subscriptions natively.
+
+Only accounts explicitly tagged with the exact **Owner** role exclusively have physical access to the `Billing & Usage` tab.
+
+### Promoting Users
+
+If you explicitly require a Trusted Partner to manage enterprise invoice billing, the current Workspace Owner must navigate to the `Settings > Members` panel. From there securely, they can selectively elevate the user's role to **Owner** structurally.

@@ -1,0 +1,27 @@
+---
+title: What is the difference between JMESPath pruning and Goja JS logic?
+description: Comparing structural declarative extractors versus stateful JavaScript execution natively.
+---
+
+# JMESPath vs. Goja JS
+
+Both engines reside inside the HasMCP **Data Transformation** pipeline to compress and reshape upstream API inputs before they arrive at the LLM. However, they are used for completely different scenarios.
+
+### JMESPath (The Fast Slicer)
+**JMESPath** is a declarative standard for querying JSON. It is exceptionally fast, structurally deterministic, and cannot fall into infinite loops or memory leaks.
+
+* **Use Case:** "Drop everything in this 5MB object except the `users` array, and only keep the `name` and `email` properties from that array."
+* **Capabilities:** Filtering, projection, mapping, and extraction natively.
+* **Limitations:** It cannot perform math, manipulate strings (like RegEx masking), or run "If/Else" stateful logic based on runtime variables.
+
+### Goja JS (The Stateful Processor)
+**Goja** is an actual JavaScript environment deployed directly into the HasMCP execution proxy. It allows you to write explicit `ES6` JavaScript functions that manipulate the payload procedurally.
+
+* **Use Case:** "Loop through the `users` array. If the `balance` is > $1000, add a new nested field `is_vip: true`. Also, use RegEx to definitively replace the first 5 digits of the `ssn` field with asterisks."
+* **Capabilities:** Math, RegEx, string parsing, conditional stateful mapping, and array reduction.
+* **Limitations:** Marginally slower than JMESPath due to standard JavaScript execution overhead.
+
+**Summary**: Use JMESPath for 90% of basic pruning. Use Goja JS when you must compute mathematical logic or execute string replacements (like encrypting PII) before giving the data to an LLM.
+
+> [!IMPORTANT]
+> **Execution Timeouts**: Both GoJA and JMESPath interceptors have a strict **100ms execution timeout** on HasMCP Cloud versions to prevent runaway queries and infinite loops. Enterprise on-prem versions can define custom timeout values on their own hosted infrastructure.

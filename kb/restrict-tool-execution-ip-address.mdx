@@ -1,0 +1,24 @@
+---
+title: How do I restrict tool execution to a strict IP address?
+description: Setting up IP allowlisting on individual Provider Tools.
+---
+
+# Restricting Execution via IP Allowlist
+
+In high-security enterprise environments, organizations often mandate that internal infrastructure can only be accessed from known, trusted networks.
+
+HasMCP provides an aggressive **IP Allowlist** feature attached directly to individual Provider Tools.
+
+### Setting Up the Allowlist
+
+When creating or modifying a specific Provider Tool (such as `Execute_Postgres_Query`), navigate to the **Security** block.
+
+1. Locate the **Allowed IPs** array.
+2. Provide a single static IPv4 address (`192.168.1.100`) or a CIDR subnet block (`10.0.0.0/24`).
+3. Save the Provider Tool.
+
+### Execution Blocking
+
+Once the allowlist is configured, the HasMCP Proxy Server explicitly inspects the originating IP of the incoming MCP Client request. If the developer's Desktop LLM or production Agent is executing from an unauthorized external IP, the proxy drops the tool call completely with a `403 Forbidden` response.
+
+The execution never reaches the external provider logic, completely preventing unauthorized lateral network traversal.

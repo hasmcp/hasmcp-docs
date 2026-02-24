@@ -29,8 +29,8 @@ To find all providers that have "Google" in their name:
 
 ```bash
 curl -G -X GET https://app.hasmcp.com/api/v1/providers \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  --data-urlencode "nameContains=Google"
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ --data-urlencode "nameContains=Google"
 ```
 
 #### Searching by Base URL
@@ -38,6 +38,6 @@ To locate any provider mapping to a subdomain of `internal.mycompany.com`:
 
 ```bash
 curl -G -X GET https://app.hasmcp.com/api/v1/providers \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  --data-urlencode "baseURLContains=internal.mycompany.com"
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ --data-urlencode "baseURLContains=internal.mycompany.com"
 ```

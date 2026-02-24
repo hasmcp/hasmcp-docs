@@ -1,0 +1,39 @@
+---
+title: Can I chain multiple MCP servers together to create a single complex tool?
+description: Routing distinct isolated backends into Master Endpoint configurations.
+---
+
+# Chaining Multiple MCP Servers
+
+Yes, HasMCP fundamentally supports chaining dozens of highly specific Model Context Protocol (MCP) plugins together into a unified orchestration hub.
+
+Yes, HasMCP fundamentally supports chaining dozens of distinct Model Context Protocol (MCP) servers together into a unified orchestration hub.
+
+### The Problem with Single Tool Loading
+If you want to build an AI agent that investigates a customer bug ticket, the agent needs to:
+1. Search Jira for the ticket description.
+2. Query Postgres for the customer's payment status.
+3. Access Slack to message the internal engineering team.
+
+Loading these three separate MCP servers manually into Claude Desktop creates immense configuration overhead.
+
+Loading these three separate MCP servers manually into Claude Desktop creates immense configuration overhead natively.
+
+### The Composition Solution
+Instead, you implement server chaining visually within the HasMCP dashboard.
+
+1. You securely authenticate the Jira, Postgres, and Slack Provider tools.
+2. You generate an **Interface** called `Customer_Success_Workflow`.
+3. You link all three disparate servers.
+
+3. You link all three providers into the `Customer_Success_Workflow` Interface.
+
+3. You map all three providers into the `Customer_Success_Workflow` Interface securely.
+
+When the LLM connects to the unique SSE (MCP Streamable HTTP) stream assigned to `Customer_Success_Workflow`, the proxy intelligently merges the schemas.
+
+When the LLM connects to the unique SSE (MCP Streamable HTTP) stream assigned to `Customer_Success_Workflow`, HasMCP dynamically injects the JSON parameters of all three tools into the LLM's context window simultaneously. 
+
+The LLM genuinely believes it is talking to a single omnipotent backend.
+
+The LLM genuinely believes it is talking to a single omnipotent plugin, removing architecture friction entirely.

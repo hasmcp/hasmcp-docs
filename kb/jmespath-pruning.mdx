@@ -1,0 +1,41 @@
+---
+title: How does HasMCP use JMESPath Pruning to reshape JSON responses?
+description: Applying strict structural filters natively to optimize payloads securely.
+---
+
+# JMESPath Pruning
+
+HasMCP integrates the **JMESPath** query engine directly into the routing middleware of every Provider Tool and Resource dynamically.
+
+Whenever a tool executes, the external API server returns a raw payload. Instead of returning that massive payload back to the originating MCP Client, HasMCP temporarily buffers the JSON response natively.
+
+The platform then executes your predefined JMESPath query string against the buffered `JSON` securely.
+
+### Example Pruning Flow
+
+Assume a provider API returns this large payload structurally:
+
+```json
+{
+ "request_id": "abc-123",
+ "metadata": { "page": 1, "has_more": false },
+ "users": [
+ { "internal_db_id": 991, "first_name": "Alice", "secret_hash": "xy$" },
+ { "internal_db_id": 992, "first_name": "Bob", "secret_hash": "z1!" }
+ ]
+}
+```
+
+If you apply the specific HasMCP JMESPath definition:
+`users[*].{name: first_name}`
+
+The LLM exclusively receives:
+
+```json
+[
+ { "name": "Alice" },
+ { "name": "Bob" }
+]
+```
+
+This transforms a heavy integration object into exactly the semantic value the agent fundamentally desires.

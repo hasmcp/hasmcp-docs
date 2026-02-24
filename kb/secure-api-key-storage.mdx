@@ -1,0 +1,17 @@
+---
+title: How does HasMCP securely store sensitive information like API keys?
+description: Auditing the envelope encryption architecture within the proxy tier.
+---
+
+# Secure API Key Storage
+
+When bridging advanced AI models into corporate data environments, authentication credentials are the absolute highest value targets. Hardcoding secrets directly into Javascript interceptors or leaving them in open environment variables compromises the entire infrastructure.
+
+HasMCP strictly enforces **Symmetric Cryptography** at rest.
+
+### The Storage Architecture
+1. **The Vault**: When an administrator saves a sensitive token (like a Stripe Secret Key or a Postgres Password) into the HasMCP dashboard, the raw plaintext value is instantly encrypted in memory before ever hitting the database.
+2. **The Key Architecture**: HasMCP utilizes AES-256-GCM authenticated encryption heavily backed by a locally securely defined 256-bit `EncryptionKey`.
+
+### Separation of Concerns
+Because the storage is cryptographically sealed, neither frontend web developers editing JavaScript rules nor prompt engineers tuning the LLM can accidentally view or extract the raw secret strings. The Execution Proxy only decrypts the specific API key in ephemeral memory at the exact microsecond an authorized HTTP request is fired.

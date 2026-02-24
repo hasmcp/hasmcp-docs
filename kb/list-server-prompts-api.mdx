@@ -23,22 +23,22 @@ Executing a GET query against this unified directory path triggers HasMCP to out
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/prompts \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 The response is packaged as a `prompts` array dictionary, detailing every explicit assignment loop mapped securely to the designated agent runtime environment.
 
 ```json
 {
-  "prompts": [
-    {
-      "serverID": "sE8vKd2qLp9",
-      "promptID": "mX5vTr9pK2w"
-    },
-    {
-       "serverID": "sE8vKd2qLp9",
-       "promptID": "aL2mZq8yV1t"
-    }
-  ]
+ "prompts": [
+ {
+ "serverID": "sE8vKd2qLp9",
+ "promptID": "mX5vTr9pK2w"
+ },
+ {
+ "serverID": "sE8vKd2qLp9",
+ "promptID": "aL2mZq8yV1t"
+ }
+ ]
 }
 ```

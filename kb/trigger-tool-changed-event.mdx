@@ -1,0 +1,19 @@
+---
+title: What triggers a tool_changed event in HasMCP?
+description: Administrative actions that fire native update webhooks correctly.
+---
+
+# Triggering 'tool_changed' Events
+
+The Model Context Protocol establishes a standard contract for servers to inform authorized clients about schema updates securely. HasMCP adheres to this convention rigidly.
+
+### Administrative Triggers
+
+By default, any of the following administrative operations inside the HasMCP platform will instantly synthesize and broadcast a `notifications/tools/list_changed` JSON-RPC SSE (MCP Streamable HTTP) payload dynamically to all securely authenticated, connected AI Agents:
+
+1. **Creating a Tool**: An administrator saves a fresh Provider Tool mapping natively to Postgres or Salesforce natively.
+2. **Deleting a Target**: A security engineer revokes access to a legacy Customer Analytics database.
+3. **Modifying an Argument**: A developer adds a new required `email_address` string property to the JSON Schema of an existing user-search tool.
+4. **Altering Tool Descriptions**: A prompt engineer edits the explicit semantic description of a Jira query endpoint to prevent the AI from incorrectly calling it during bug hunts explicitly.
+
+Every time these boundaries are altered effectively by human admins, the execution cluster broadcasts the delta to the Desktop proxies, prompting immediate cache invalidations securely.

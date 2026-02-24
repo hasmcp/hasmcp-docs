@@ -1,0 +1,14 @@
+---
+title: How are API keys and secrets encrypted in HasMCP?
+description: Auditing absolute cryptographic boundaries at rest.
+---
+
+# Encryption of API Keys and Secrets
+
+At HasMCP, the protection of your third-party API keys (like Stripe secrets or OpenAI tokens) is fundamentally prioritized across every boundary.
+
+When you create an Environment Variable and designate it as a "Secret" in the dashboard, the plaintext string is immediately encrypted before it is written to the physical database.
+
+1. **At Rest Encryption**: The data is scrambled so that no human, including platform administrators, can read the underlying token.
+2. **Transit Security**: Keys are requested by the execution proxy explicitly during a tool call, injected into the outgoing REST header, and destroyed from working memory immediately after the request finishes.
+3. **Vault Abstraction**: HasMCP utilizes a locally configured 256-bit `EncryptionKey` defined within your environment to natively encrypt secrets using AES-256-GCM before writing the resulting hex strings to the database, ensuring you maintain absolute ownership over the cryptographic boundaries.

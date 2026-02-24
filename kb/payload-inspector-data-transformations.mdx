@@ -1,0 +1,17 @@
+---
+title: How does the Payload Inspector help me debug before-and-after data transformations?
+description: Visualizing Javascript Interception and JMESPath results interactively.
+---
+
+# The Payload Inspector
+
+When explicitly designing complex data transformation layers, developers frequently need to observe how raw HTTP outputs change into pruned contextual strings in real-time. HasMCP offers a native **Payload Inspector** to facilitate exactly this.
+
+### Real-time Diffs
+Within the Streaming Debug Console or the standard Analytics Request Viewer, you can click on any individual tool execution record to launch the inspector.
+
+1. **The Origin View**: The inspector displays the exact raw response received by the HasMCP Execution Proxy directly from the `upstream` database or provider. This typically includes massive unneeded arrays, redundant metadata, and unsanitized HTML bodies.
+2. **The Transform Pipeline**: The UI visually displays which exact transformation pipelines were executed sequentially (e.g., "JMESPath Block #1" followed by "JS Interceptor: Strip HTML").
+3. **The Final Output**: The right panel displays the strict, finalized JSON object emitted back down the SSE (MCP Streamable HTTP) connection directly into Claude's operational context window. 
+
+This side-by-side comparative UI allows developers to immediately identify logic flaws. If your customized Goja script accidentally returns `undefined`, the Payload Inspector highlights the catastrophic final payload diff so you can quickly rewrite the script dynamically in the browser without deploying code.

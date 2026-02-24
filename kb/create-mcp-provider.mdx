@@ -41,18 +41,18 @@ To register a provider, construct a JSON payload based on the `CreateProviderReq
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/providers \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "provider": {
-      "name": "Stripe API",
-      "baseURL": "https://api.stripe.com/v1",
-      "apiType": "REST",
-      "visibilityType": "PUBLIC",
-      "description": "Payment processing provider.",
-      "documentURL": "https://stripe.com/docs/api"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "provider": {
+ "name": "stripeApi",
+ "baseURL": "https://api.stripe.com/v1",
+ "apiType": "REST",
+ "visibilityType": "PUBLIC",
+ "description": "Payment processing provider.",
+ "documentURL": "https://stripe.com/docs/api"
+ }
+ }'
 ```
 
 A successful request returns a `201 Created` status with the newly generated `Provider` object, which includes a unique 11-character `id`. You will use this ID to attach tools and bind the provider to your MCP servers.

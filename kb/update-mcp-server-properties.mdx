@@ -27,21 +27,21 @@ To modify the properties, instructions, or associated components of an existing 
 
 1. **Identify the Server ID**: Find the 11-character identifier of your target server (e.g., `kSuB9Gf6aD4`).
 2. **Construct the Update Payload**: The JSON body should conform to the `UpdateServerRequest` schema.
-   - Update string fields such as `name` or `instructions`.
-   - Update associations by passing lists containing the desired `providers`, `resources`, or `prompts`.
+ - Update string fields such as `name` or `instructions`.
+ - Update associations by passing lists containing the desired `providers`, `resources`, or `prompts`.
 
 #### Example cURL Update
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/servers/kSuB9Gf6aD4 \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "server": {
-      "name": "Updated Server Name",
-      "instructions": "New and varied instructions."
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "server": {
+ "name": "updatedServerName",
+ "instructions": "New and varied instructions."
+ }
+ }'
 ```
 
 If successful, the API returns a `200 OK` response with the newly updated `Server` object.

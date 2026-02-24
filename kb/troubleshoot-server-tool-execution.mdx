@@ -33,4 +33,4 @@ Because HasMCP supports dynamic composition, it is possible for an administrator
 
 The Model Context Protocol actively transmits updated tool lists recursively based on internal events. However, if your specific conversational LLM client heavily caches the initial `tools/list` transaction without parsing server notifications, it might be blind to newly `POST`ed tools.
 
-**Action:** Radically force a reconnect of the SSE/stdio transport layer on your local client (e.g., restart Claude Desktop) to enforce a fresh capability handshake.
+**Action:** Radically force a reconnect of the SSE (MCP Streamable HTTP)/stdio transport layer on your local client (e.g., restart Claude Desktop) to enforce a fresh capability handshake.

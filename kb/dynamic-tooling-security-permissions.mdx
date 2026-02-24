@@ -1,0 +1,19 @@
+---
+title: How does dynamic tooling improve security when user permissions change?
+description: Achieving instantaneous off-boarding and permission revocations.
+---
+
+# Dynamic Tooling vs Security
+
+In classic organizational architecture, when an employee transitions to a new department or leaves the company entirely, their access to downstream systems is typically revoked via an Identity Provider like Okta. However, if that employee has an active local development environment with hardcoded Database URLs manually loaded into Claude Desktop, ghost sessions can persist.
+
+By routing everything through HasMCP, security revocations become mathematically concrete and truly real-time.
+
+### The Revocation Flow
+1. An administrator detects a rogue user (or simply transfers a user to a different internal team).
+2. The admin opens the HasMCP dashboard and revokes the user's explicit Role-Based Access to the `coreEngineering` Workspace.
+3. HasMCP instantly triggers a dynamic `notifications/tools/list_changed` payload precisely down that specific user's open SSE (MCP Streamable HTTP) connection.
+4. The user's Claude Desktop silently queries HasMCP for its updated execution taxonomy.
+5. Because the user is now unauthorized, HasMCP returns an empty array `[]`.
+
+Within milliseconds of the administrator clicking "Revoke", every single sensitive database query and API operation vanishes from the user's Claude interface. Attempting to force the LLM to query the database using raw prompt injection fails immediately, because the Execution Proxy physically rejects the unauthorized HTTP payload.

@@ -1,0 +1,16 @@
+---
+title: What is Context Window Optimization and why is it important for LLMs?
+description: Ensuring providers only deliver statistically actionable payloads to Language Models.
+---
+
+# Context Window Optimization
+
+**Context Window Optimization** is the process of deliberately truncating, shaping, and transforming raw API outputs into highly dense, semantic payloads specifically tailored for Large Language Model consumption.
+
+Given that all LLMs (like Claude 3.5, GPT-4, and Gemini 1.5) inherently operate under strict token limitations and incur billing charges calculated explicitly via ingested token volume, blindly routing raw `JSON` from enterprise APIs leads directly to:
+
+1. **Context Exhaustion**: Returning a 10,000-line JSON array can immediately exceed the LLM's maximum prompt limits, causing catastrophic orchestration failures.
+2. **"Needle in a Haystack" Degradation**: An LLM structurally struggles to find the exact variable it requires when the context is convoluted with useless metadata, null links, and pagination strings.
+3. **Explosive Token Costs**: You pay for every byte transmitted to the LLM. 
+
+HasMCP solves this exclusively through its embedded **Data Transformation** pipeline, applying deterministic pruning logic (JMESPath or JS Goja) directly at the gateway before the payload reaches the LLM.

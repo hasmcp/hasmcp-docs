@@ -1,0 +1,36 @@
+---
+title: Does Goja logic allow stateful transformations on API responses?
+description: Executing deep object procedural iterations.
+---
+
+# Stateful Transformations with Goja
+
+Yes. Unlike JMESPath (which executes single-pass declarative extractions), Goja allows you to natively deploy deep stateful transformations and loop procedures explicitly locally.
+
+You can explicitly deploy code paths that evaluate the runtime variable context of nested arrays, map temporary internal execution states locally, and restructure external API outputs based on condition bounds natively.
+
+### Example: Stateful Reduction
+
+**Raw API Target**:
+An API returns an array of outstanding invoice transactions. You exclusively want to inform the LLM of a specific boolean status: has the user accumulated more than 5 unpaid debts seamlessly?
+
+```javascript
+var state = { debt_count: 0, highest_bill: 0 };
+ 
+input.invoices.forEach(function(invoice) {
+  if (invoice.status === "unpaid") {
+    state.debt_count++;
+    if (invoice.amount > state.highest_bill) {
+      state.highest_bill = invoice.amount;
+    }
+  }
+});
+ 
+// Return the evaluation object directly
+return {
+  warning: state.debt_count > 5, 
+  highest_overdue_threat: state.highest_bill
+};
+```
+
+This physically guarantees that the LLM is not processing random invoice metadata. It allows you to build sophisticated deterministic logic directly into the proxy.

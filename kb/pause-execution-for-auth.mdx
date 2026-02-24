@@ -1,0 +1,22 @@
+---
+title: How does HasMCP pause the execution flow to prompt the user for authentication?
+description: Understanding the asynchronous architecture behind MCP execution states.
+---
+
+# Pausing Execution for Authentication
+
+When an AI Agent is aggressively executing a complex multi-step reasoning loop (such as researching an entity across 5 different databases), a missing authentication error typically crashes the entire script, forcing the human to fix the token and manually restart the prompt.
+
+HasMCP uniquely solves this by implementing native **Asynchronous Elicitation Pausing**.
+
+### The Technical Mechanism
+
+HasMCP utilizes bidirectional asynchronous SSE (Server-Sent Events) natively via MCP Streamable HTTP.
+
+1. **State Preservation**: When HasMCP detects a missing Provider token, it actively suspends the specific tool execution thread horizontally in memory.
+2. **Reverse Call**: HasMCP triggers a JSON-RPC callback down the open SSE connection. This explicitly instructs the client (e.g., Claude Desktop) to invoke its internal `auth_required` visual modal.
+3. **Indefinite Hold**: The thread enters an asynchronous blocked state, preserving the exact LLM orchestrator loop natively.
+4. **The Resume Payload**: Once the human finishes typing or authenticating via Google OAuth, the desktop client fires an internal `auth_complete` JSON payload back up the pipe.
+5. **Reawakening**: The proxy intercepts this completion event, instantly validates the newly ingested token against the target API, and seamlessly reawakens the sleeping execution thread.
+
+The LLM logic engine never crashes, never drops its current operational context, and gracefully finishes parsing exactly what the user initially requested.

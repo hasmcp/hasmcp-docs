@@ -19,23 +19,23 @@ By identifying the server, you bypass having to manually audit each individual P
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 The system returns the standardized array `resources`:
 
 ```json
 {
-  "resources": [
-    {
-      "serverID": "sE8vKd2qLp9",
-      "resourceID": "rA9BdO1kZ5T"
-    },
-    {
-      "serverID": "sE8vKd2qLp9",
-      "resourceID": "pZ7LmW9eX2C"
-    }
-  ]
+ "resources": [
+ {
+ "serverID": "sE8vKd2qLp9",
+ "resourceID": "rA9BdO1kZ5T"
+ },
+ {
+ "serverID": "sE8vKd2qLp9",
+ "resourceID": "pZ7LmW9eX2C"
+ }
+ ]
 }
 ```
 

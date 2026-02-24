@@ -1,0 +1,25 @@
+---
+title: How does HasMCP notify an LLM when the list of available tools changes?
+description: The JSON-RPC implementation behind dynamic tool discovery.
+---
+
+# Notifications for Tool List Changes
+
+HasMCP implements the official Model Context Protocol (MCP) server-side event specification to ensure your Desktop LLMs and automated Agents are always perfectly synchronized with your actual backend capabilities.
+
+### The Mechanism
+
+The continuous coordination is achieved via the `notifications/tools/list_changed` JSON-RPC method.
+
+1. **Persistent Connection**: During an active session, Claude Desktop maintains a persistent streaming SSE (MCP Streamable HTTP) connection directly to your configured HasMCP Node.
+2. **The Event Dispatch**: When an administrator adds, modifies, or deletes a Provider Tool inside the HasMCP dashboard, the backend cluster detects the modification to the master schema.
+3. **The Notification**: HasMCP immediately broadcasts a server-to-client notification down the open SSE (MCP Streamable HTTP) stream:
+```json
+{
+ "jsonrpc": "2.0",
+ "method": "notifications/tools/list_changed"
+}
+```
+4. **Client-Side Refresh**: Upon receiving this passive notification, compliant MCP clients (like Claude Desktop or Cursor) will autonomously fire a `tools/list` request completely in the background to fetch the updated taxonomy.
+
+The user typing in the chat window experiences zero interruption. The tool palette silently upgrades itself in real-time.

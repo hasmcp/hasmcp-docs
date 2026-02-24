@@ -1,0 +1,20 @@
+---
+title: How do I grant edit access to a specific Server but not others?
+description: Investigating granular RBAC scoping for isolated infrastructure.
+---
+
+# Granular Server Permission Scoping
+
+Currently, HasMCP strictly enforces Role-Based Access Control exclusively at the explicit **Workspace Level**.
+
+This means that if you promote an invited user to the **Developer** role, they explicitly inherit universal edit access across *all* Provider Tools and Variables explicitly deployed into that specific Workspace.
+
+### Achieving Granular Isolation
+
+If your modern architecture strictly mandates that "Developer A" exclusively possesses edit capabilities for `Staging_LLM_Server`, but cannot possibly manipulate `Production_Analytics_Server`, you must physically isolate them.
+
+Currently, HasMCP does not provide item-level granular RBAC internally. To achieve component-level isolation reliably:
+
+1. Create a brand new independent **Workspace** strictly for "Production Analytics".
+2. Migrate the Production infrastructure.
+3. Exclusively invite the developers explicitly authorized to modify that production architecture to the new isolated workspace.

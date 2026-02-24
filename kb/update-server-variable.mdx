@@ -5,7 +5,7 @@ description: Rotating security credentials confidently logically without severin
 
 # Updating Server Variables
 
-When you need to globally rotate an aging or compromised password string effectively natively efficiently, executing an in-place configuration modification fundamentally updates the environment smoothly organically perfectly explicitly preventing system downtime intrinsically reliably intuitively successfully gracefully.
+When you need to globally rotate an aging or compromised password string , executing an in-place configuration modification fundamentally updates the environment preventing system downtime.
 
 ## The API Endpoint
 
@@ -15,13 +15,16 @@ To cleanly rewrite a global configuration organically, target the existing varia
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/variables/m7G4v2kL9Q \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "variable": {
-      "value": "new_secret_token_123"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "variable": {
+ "id": "m7G4v2kL9Q",
+ "value": "new_secret_token_123"
+ }
+ }'
 ```
+
+If successful, the API returns `204 No Content`.
 
 Every HasMCP instance utilizing this configuration variable effectively pulls the new value immediately.

@@ -33,14 +33,14 @@ This action is crucial when an underlying external API changes its versioned `ba
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4 \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "provider": {
-      "baseURL": "https://api.updated.example.com/v3",
-      "visibilityType": "PUBLIC"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "provider": {
+ "baseURL": "https://api.updated.example.com/v3",
+ "visibilityType": "PUBLIC"
+ }
+ }'
 ```
 
 If the modification is processed correctly, the HasMCP Manager responds with `200 OK` and the returned `UpdateProviderResponse` details the changes.

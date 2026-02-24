@@ -32,11 +32,11 @@ You must provide a `tool` object that maps all three fundamental relationships (
 
 ```json
 {
-  "tool": {
-    "serverID": "sE8vKd2qLp9",
-    "providerID": "kSuB9Gf6aD4",
-    "toolID": "tH4mZw9xV2n"
-  }
+ "tool": {
+ "serverID": "sE8vKd2qLp9",
+ "providerID": "kSuB9Gf6aD4",
+ "toolID": "tH4mZw9xV2n"
+ }
 }
 ```
 
@@ -44,15 +44,15 @@ You must provide a `tool` object that maps all three fundamental relationships (
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tools \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": {
-      "serverID": "sE8vKd2qLp9",
-      "providerID": "kSuB9Gf6aD4",
-      "toolID": "tH4mZw9xV2n"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "tool": {
+ "serverID": "sE8vKd2qLp9",
+ "providerID": "kSuB9Gf6aD4",
+ "toolID": "tH4mZw9xV2n"
+ }
+ }'
 ```
 
-If successful, the API returns a `CreateServerToolResponse` with a `200 OK` status, confirming the mapped execution permissions.
+If successful, the API returns a `CreateServerToolResponse` with a `201 Created` status, confirming the mapped execution permissions.

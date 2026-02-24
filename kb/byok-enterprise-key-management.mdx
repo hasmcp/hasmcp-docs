@@ -1,0 +1,18 @@
+---
+title: Is Bring Your Own Key (BYOK) supported for Enterprise plans?
+description: Discovering custom key management architectures.
+---
+
+# Bring Your Own Key (BYOK)
+
+Yes. For Enterprise deployments on the Dedicated tier, you can strictly govern your cryptographic boundaries using **Bring Your Own Key (BYOK)**.
+
+While standard HasMCP clustered infrastructure utilizes a secure, randomly generated local AES-256-GCM configuration natively, Enterprise clients often have rigid compliance mandates requiring custom key ingestion.
+
+### How BYOK Integration Works
+When deploying your Enterprise instance, you can provide an independent, 256-bit (32-byte) hex-encoded cryptography string directly to the proxy engine via your configuration management pipeline.
+
+1. HasMCP securely ingests your provided `EncryptionKey` string into isolated vault memory.
+2. Every external Provider Secret, API Token, and Database Connection String you save into HasMCP is now explicitly encrypted using your specific ingestion key.
+3. If your organization detects a critical security breach internally, your administrators can instantly rotate or drop the custom string directly from your infrastructure orchestration.
+4. The moment the key is revoked, the HasMCP execution proxy permanently loses the structural decryption capability, instantly terminating all automated LLM connections immediately across your entire organization.

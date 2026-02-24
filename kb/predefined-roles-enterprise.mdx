@@ -1,0 +1,26 @@
+---
+title: What predefined roles are available for Enterprise teams?
+description: Reviewing the capabilities of Owners, Admins, Developers, and Viewers rationally.
+---
+
+# Predefined Workspace Roles
+
+HasMCP natively provides four strict governance roles designed to explicitly manage modern AI engineering teams:
+
+### 1. Viewers
+Viewers are effectively "Read-Only" guests. 
+* **Capabilities:** They can execute HasMCP server connections locally from their own IDE (Claude Desktop, Cursor, etc). They can visually inspect Provider Tools. They can read public documentation nodes intelligently.
+* **Limitations:** They cannot view the plaintext values of Secret Environment Variables. They cannot create, edit, or delete any servers or provider tools explicitly.
+
+### 2. Developers
+Developers are the structural builders of specific integrations.
+* **Capabilities:** They inherit all Viewer rights. They can create, edit, and test new Provider Tools. They can generate personal API Server Tokens securely.
+* **Limitations:** They cannot delete top-level Servers securely. They cannot manage RBAC billing.
+
+### 3. Admins
+Admins manage infrastructure and team deployments securely.
+* **Capabilities:** They inherit all Developer rights. They can securely create, modify, and delete structural Servers. They can invite Viewers and Developers natively.
+* **Limitations:** They cannot access Billing panels seamlessly. They cannot override the Master Owner account.
+
+### 4. Owners
+* **Capabilities:** Unrestricted access smoothly. Owners control billing, active subscription management, and can structurally delete the central Workspace gracefully.

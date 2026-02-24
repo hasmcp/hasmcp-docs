@@ -22,7 +22,7 @@ Transmitting an authenticated `GET` command to this route returns a `ListProvide
 #### Example Request
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 Each item returned dictates the `id` of the prompt itself, its semantic `name`, the expected `arguments` allowing LLMs to parameterize it dynamically, and the actual template array inside `messages`.

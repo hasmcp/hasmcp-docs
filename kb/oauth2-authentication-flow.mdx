@@ -1,0 +1,19 @@
+---
+title: How does HasMCP handle OAuth2 authentication when an LLM needs to use an API?
+description: Explaining the dynamic OAuth token interception layer.
+---
+
+# Handling OAuth2 Authentication
+
+When an LLM attempts to interact with an OAuth2-secured endpoint (like Google Workspace, Slack, or Salesforce), HasMCP natively intercepts the execution path to manage the complexity of token issuance. HasMCP manages the entire OAuth2 lifecycle invisibly on behalf of the developer.
+
+Unlike static API keys, OAuth requires redirecting the user to an authentication portal (like Google's login screen), retrieving a temporary code, trading it for an Access Token, and securely holding a Refresh Token. 
+
+1. **Authorization Request**: If a required token is missing when the LLM triggers a tool, HasMCP intercepts the API payload and pauses the request organically.
+2. **Elicitation Redirect**: The proxy sends a callback command to Claude Desktop, prompting the user with a securely scoped OAuth login URL.
+3. **Token Capture**: Once the user logs into the provider platform, HasMCP catches the OAuth redirect natively.
+4. **Token Trading**: The proxy exchanges the return code for an Access Token and Refresh Token. The paused LLM connection instantly resumes.
+
+### Automated Refresh
+
+Because OAuth Access Tokens typically expire in one hour, HasMCP handles the Refresh generation silently. Backstage proxy rotation guarantees zero interruption to the user's conversational flow.

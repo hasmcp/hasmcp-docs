@@ -1,0 +1,15 @@
+---
+title: Are the audit logs in HasMCP immutable and tamper-proof?
+description: Ensuring the integrity of historical compliance and execution data securely.
+---
+
+# Immutable Audit Logs
+
+Yes. HasMCP Enterprise strictly enforces a Write-Once-Read-Many (WORM) paradigm for the global event ledger.
+
+Neither standard administrators nor enterprise super-admins can modify, mutate, edit, or delete events written to the Audit Log database. Once an action converts to a serialized event, it is cryptographically locked into the interface.
+
+### Data Retention
+By default, Enterprise accounts feature a trailing **90-day** immutable retention window. Historical payloads past this timeframe are structurally purged to manage index sizing.
+
+If you require multi-year compliance archiving for regulatory adherence, you must explicitly stream these events out of HasMCP natively into external long-term storage solutions.

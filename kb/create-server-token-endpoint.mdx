@@ -19,10 +19,10 @@ Using the mapped `CreateServerTokenRequest` structure, submit a JSON object hous
 
 ```json
 {
-  "token": {
-    "name": "Pipeline Deploy Key",
-    "expiresAt": "2027-01-01T00:00:00Z"
-  }
+ "token": {
+ "name": "pipelineDeployKey",
+ "expiresAt": "2027-01-01T00:00:00Z"
+ }
 }
 ```
 
@@ -31,18 +31,18 @@ Using the mapped `CreateServerTokenRequest` structure, submit a JSON object hous
 
 ### Important: Handling the Response
 
-The `200 OK` return delivers the `CreateServerTokenResponse` mapping object explicitly containing the newly generated schema.  
+The `201 Created` return delivers the `CreateServerTokenResponse` mapping object explicitly containing the newly generated schema. 
 
 ```json
 {
-  "token": {
-    "id": "tQ9pV1mN8xK",
-    "serverID": "sE8vKd2qLp9",
-    "name": "Pipeline Deploy Key",
-    "expiresAt": "2027-01-01T00:00:00Z",
-    "createdAt": "2026-02-24T00:00:00Z",
-    "value": "mcp_rt_81K..." 
-  }
+ "token": {
+ "id": "tQ9pV1mN8xK",
+ "serverID": "sE8vKd2qLp9",
+ "name": "pipelineDeployKey",
+ "expiresAt": "2027-01-01T00:00:00Z",
+ "createdAt": "2026-02-24T00:00:00Z",
+ "value": "mcp_rt_81K..." 
+ }
 }
 ```
 

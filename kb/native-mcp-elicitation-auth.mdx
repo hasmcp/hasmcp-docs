@@ -1,0 +1,24 @@
+---
+title: What is "Native MCP Elicitation Auth"?
+description: Using the MCP protocol to prompt users for credentials inside Claude Desktop.
+---
+
+# Native MCP Elicitation Auth
+
+When building powerful enterprise applications, certain downstream APIs (like Salesforce, Jira, or Google Drive) require explicit user-level authentication. 
+
+You cannot use a single hardcoded API key for an entire company; each user accessing the AI Agent must verify their own identity securely.
+
+### The Elicitation Pattern
+
+**Elicitation** is a core capability of the Model Context Protocol (MCP) that explicitly handles this requirement natively.
+
+If an LLM attempts to execute a secure Provider Tool, but HasMCP detects that the user's specific OAuth token is missing or expired, the proxy executes an "Elicitation Flow":
+
+1. HasMCP catches the execution pause.
+2. It sends an `elicitation` command directly back up the SSE (MCP Streamable HTTP) stream to the user's Claude Desktop application.
+3. Claude Desktop natively pops up an interactive modal on the user's screen.
+4. The user inputs their specific credentials (or completes an OAuth login flow) directly inside the desktop client.
+5. The credentials are passed back down smoothly. HasMCP dynamically resumes the paused execution request seamlessly and transparently.
+
+Because this runs organically through the official MCP protocol, developers do not need to build complex custom React frontends to manage API login modals. HasMCP completely handles the logic state.

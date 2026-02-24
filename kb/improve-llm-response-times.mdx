@@ -1,0 +1,16 @@
+---
+title: Can reducing the context size improve LLM response times?
+description: Ensuring latency drops dramatically when context ingestion loads shrink efficiently.
+---
+
+# Improving LLM Response Times
+
+**Yes, significantly.** While most developers exclusively associate payload pruning with cost reduction, decreasing the volume of characters routed to an LLM explicitly reduces integration latency.
+
+### The Physics of Time-to-First-Token (TTFT)
+
+When an MCP client relays an external provider's payload to an LLM, the entire prompt must securely pass through the LLM's **attention mechanism**.
+
+In modern transformer architectures, attention processing speed dictates latency. If you execute a tool that returns a 3MB `JSON` dump, the LLM takes multiple explicit seconds simply to "read" and ingest the context before generating its first reasoning word. 
+
+By applying a simple JMESPath transformation (`users[0].{id: id, name: name}`) in HasMCP, you reduce the ingestion payload dynamically from 3MB down to a mere 300 Bytes. The agent receives the payload almost instantly, drastically reducing overall execution latency.

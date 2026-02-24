@@ -21,7 +21,7 @@ You must provide two specific hash identifiers to form the endpoint:
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/prompts/pT9XyM1qL2b \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 If successful, the API serves a `GetProviderPromptResponse` with a `200 OK` status. This payload yields the complete `prompt` dictionary mapping its parameterized `arguments` and the nested array structuring its formatted `messages`.

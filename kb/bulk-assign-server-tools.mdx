@@ -28,25 +28,25 @@ PROVIDER_ID="kSuB9Gf6aD4"
 
 # Array of Tools to Link
 declare -a TARGET_TOOLS=(
-  "tH4mZw9xV2n" 
-  "aB8cV5nXm0q"
-  "zP3lKj7yR1w"
+ "tH4mZw9xV2n" 
+ "aB8cV5nXm0q"
+ "zP3lKj7yR1w"
 )
 
 # Loop and Post
 for tool in "${TARGET_TOOLS[@]}"
 do
-   # Executing the individual POST request
-   curl -X POST "https://app.hasmcp.com/api/v1/servers/${SERVER_ID}/tools" \
-     -H "Authorization: Bearer YOUR_TOKEN" \
-     -H "Content-Type: application/json" \
-     -d "{
-           \"tool\": {
-             \"serverID\": \"${SERVER_ID}\",
-             \"providerID\": \"${PROVIDER_ID}\",
-             \"toolID\": \"${tool}\"
-           }
-         }"
+ # Executing the individual POST request
+ curl -X POST "https://app.hasmcp.com/api/v1/servers/${SERVER_ID}/tools" \
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d "{
+ \"tool\": {
+ \"serverID\": \"${SERVER_ID}\",
+ \"providerID\": \"${PROVIDER_ID}\",
+ \"toolID\": \"${tool}\"
+ }
+ }"
 done
 ```
 

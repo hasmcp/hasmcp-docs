@@ -33,7 +33,7 @@ You must map both the 11-character `{serverId}` housing the capability and the e
 
 ```bash
 curl -X DELETE https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tools/tH4mZw9xV2n \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 Because deletion implies state modification without data return, the system triggers a `204 No Content` code. The server's MCP clients will immediately cease returning the tool in standardized `tools/list` interactions.

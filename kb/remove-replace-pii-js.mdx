@@ -1,0 +1,37 @@
+---
+title: Can I entirely remove or replace sensitive PII fields using JavaScript interceptors?
+description: Ensuring absolute data privacy.
+---
+
+# Removing and Replacing PII Fields with Goja
+
+Yes. Because Goja provides a complete functional JavaScript execution context organically, you can iterate deep into nested structural properties to selectively trigger `delete` mechanisms or rewrite strings securely.
+
+### Completely Deleting Fields
+If you need to destroy a node outright inside JS :
+
+```javascript
+if (input.medical_records) {
+  // This physically removes the object perfectly
+  delete input.medical_records;
+}
+
+return input;
+```
+
+### Advanced Conditional Masking
+
+Sometimes, an LLM orchestration prompt depends on a specific key existing in the JSON payload, so deleting it outright will break the agent. In these cases, you can inject explicit synthetic mock values functionally:
+
+```javascript
+for(var i=0; i<input.length; i++) {
+  if(input[i].email) {
+    // Replace real email with a deterministic synthetic string
+    input[i].email = "user_" + input[i].id + "@redacted.local";
+  }
+}
+
+return input;
+```
+
+This procedure flawlessly transforms the outbound REST payload.

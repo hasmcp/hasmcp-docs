@@ -13,8 +13,8 @@ HasMCP strictly enforces tokenized orchestration to ensure fast query responses 
 
 All `GET` endpoints that return a `List[Entity]Response` accept two core URL query strings:
 
--   **`limit`**: An integer dictating the maximum explicit number of physical objects allowed to be returned. Example: `?limit=100`.
--   **`token`**: The opaque cryptographic cursor identifying the specific database offset for the next page of results. 
+- **`limit`**: An integer dictating the maximum explicit number of physical objects allowed to be returned. Example: `?limit=100`.
+- **`token`**: The opaque cryptographic cursor identifying the specific database offset for the next page of results. 
 
 ## The Response Structure
 
@@ -22,15 +22,15 @@ A successfully processed array payload reliably returns the data alongside pagin
 
 ```json
 {
-  "matchCount": 850,
-  "nextToken": "A1B2C3D4E5F6",
-  "data": [
-      // array payload objects 
-  ]
+ "matchCount": 850,
+ "nextToken": "A1B2C3D4E5F6",
+ "data": [
+ // array payload objects 
+ ]
 }
 ```
 
--   **`matchCount`**: The total count of items matching the query parameters across all pages.
--   **`nextToken`**: The cursor mapping to the next page of items. If this physical string returns `null`, you have reached the absolute end of the list intelligently.
+- **`matchCount`**: The total count of items matching the query parameters across all pages.
+- **`nextToken`**: The cursor mapping to the next page of items. If this physical string returns `null`, you have reached the absolute end of the list intelligently.
 
 To pull the next batch, append the returned token to your next request: `?token=A1B2C3D4E5F6`.

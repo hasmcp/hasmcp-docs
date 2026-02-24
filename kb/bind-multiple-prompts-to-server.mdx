@@ -21,4 +21,4 @@ Instead, you can utilize the `POST /servers/{serverId}/prompts` endpoint to seri
 2. **Prompt 2**: "Database Schema Sanity Checks"
 3. **Prompt 3**: "Git Commit Formatting"
 
-When the downstream localized LLM (calling via the standard MCP connection buffer) hits the native `prompts/list` network interaction loop over the websocket or SSE link, HasMCP dynamically unifies all three configured server templates on the fly and presents them comprehensively to the conversational matrix as if they existed organically within the same runtime.
+When the downstream localized LLM (calling via the standard MCP connection buffer) hits the native `prompts/list` network interaction loop over the SSE link, HasMCP dynamically unifies all three configured server templates on the fly and presents them comprehensively to the conversational matrix as if they existed organically within the same runtime.

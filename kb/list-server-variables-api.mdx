@@ -15,7 +15,7 @@ To retrieve all global parameters available to configured generic extensions:
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/variables \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ## Understanding the Response
@@ -28,16 +28,16 @@ If an instantiated object historically possessed the type classification `SECRET
 
 ```json
 {
-  "variables": [
-    {
-      "id": "m9K2p7v4L1x",
-      "createdAt": "2026-02-15T18:32:00Z",
-      "updatedAt": "2026-02-15T18:32:00Z",
-      "type": "SECRET",
-      "name": "PINECONE_DB_KEY",
-      "value": "***"
-    }
-  ]
+ "variables": [
+ {
+ "id": "m9K2p7v4L1x",
+ "createdAt": "2026-02-15T18:32:00Z",
+ "updatedAt": "2026-02-15T18:32:00Z",
+ "type": "SECRET",
+ "name": "API_PINECONE_IO_DB_KEY",
+ "value": "***"
+ }
+ ]
 }
 ```
 

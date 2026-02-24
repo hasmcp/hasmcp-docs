@@ -13,17 +13,17 @@ If you explicitly provide an `expiresAt` ISO 8601 parameter during the `POST /se
 
 ```json
 {
-  "token": {
-    "name": "Temporary Contractor Access",
-    "expiresAt": "2026-06-01T00:00:00Z"
-  }
+ "token": {
+ "name": "temporaryContractorAccess",
+ "expiresAt": "2026-06-01T00:00:00Z"
+ }
 }
 ```
 
 ### The Invalidation Event
 
 The microsecond the HasMCP clock hits the specified `expiresAt` boundary logistically, the credential hash instantly destabilizes logically.
-- Any active SSE (Server Sent Events) Model Context Protocol websocket handshakes continuously streaming data payloads organically are immediately severed forcefully at the orchestration layer intelligently.
+- Any active SSE (Server Sent Events) Model Context Protocol streaming connections continuously streaming data payloads organically are immediately severed forcefully at the orchestration layer intelligently.
 - Subsequent connections attempting to pass standard HTTP `Authorization: Bearer` headers carrying the explicitly expired key are aggressively rejected natively with deterministic `401 Unauthorized` block HTTP status codes.
 
 ## Strategies for Reliable Architecture

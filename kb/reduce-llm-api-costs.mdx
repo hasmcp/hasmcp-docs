@@ -1,0 +1,19 @@
+---
+title: How does HasMCP help reduce LLM API costs through context window optimization?
+description: Truncating raw `JSON` payloads explicitly reduces downstream inference billing.
+---
+
+# Reducing LLM API Costs
+
+LLM inference engines—whether accessed via Anthropic, OpenAI, or Google—base their billing architecture strictly on **Token Usage** (measured in `$X per 1M Input Tokens`). 
+
+Standard REST API responses natively return immense amounts of "noise" implicitly useful to frontend developers but completely irrelevant to an autonomous AI agent. Examples include:
+
+- Pagination cursors (`next_url`, `has_more`)
+- Internal routing UUIDs and hypermedia links (`_links`, `self`)
+- Null variables resulting from incomplete external forms
+- Styling or UI rendering flags (`is_hidden`, `color_hex`)
+
+By utilizing HasMCP's **JMESPath Pruning** or **Goja JS Interceptors** on your Provider Tools, you structurally drop these useless structural arrays natively at the proxy level.
+
+**The result:** HasMCP transforms a standard 50,000-token raw dump into a surgically precise 1,500-token semantic object. You directly save an average of **92%** on incoming orchestration token costs inherently, predictably multiplying savings across millions of agent interactions natively.

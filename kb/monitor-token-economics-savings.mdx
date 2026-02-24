@@ -1,0 +1,19 @@
+---
+title: How can I monitor the "token economics" and cost savings from data pruning?
+description: Auditing payload reduction metrics accurately and visualizing cost savings.
+---
+
+# Monitoring Token Economics
+
+Large AI architectures require massive context windows, frequently pumping gigantic database records directly into an LLM's prompt. This process radically inflates your per-token API costs from Anthropic or OpenAI. 
+
+Because HasMCP intercepts the data returning from downstream tools, you can actively optimize these payloads using Goja JavaScript Interceptors or JMESPath. 
+
+### The Token Savings Dashboard
+HasMCP explicitly tracks the exact byte-count of every downstream JSON response it receives, alongside the byte-count of the *pruned* JSON payload it finally sends to the AI Agent. By doing this, the system dynamically calculates your organization's "Token Economics".
+
+1. Navigate to the **Cost Savings** tab in the HasMCP Administration UI.
+2. The dashboard visualizes the total volume of data (measured in Megabytes or Gigabytes) effectively blocked from entering your LLM connections over a 30-day window.
+3. You can review savings on a tool-by-tool basis. If the `searchElasticsearch` tool typically returns 2.5MB payloads, but your JavaScript Interceptor aggressively truncates arrays and deletes raw HTML bodies, the dashboard will highlight that specific Node as your primary cost-saver.
+
+By quantifying Data Pruning, engineering managers can mathematically justify the ROI of building complex JavaScript payload transformations.

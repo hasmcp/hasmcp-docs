@@ -28,7 +28,7 @@ By submitting a `GET` command, the HasMCP manager proxies a query resolving all 
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tools \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 A successful transaction delivers a `ListServerToolsResponse` containing a `tools` array. Each object maps back to the precise `serverID`, `providerID`, and `toolID` relationship, guaranteeing cross-system auditability.

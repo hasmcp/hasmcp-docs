@@ -1,0 +1,21 @@
+---
+title: How do I track changes to users, groups, and permissions using Audit Logs?
+description: Monitoring Role-Based Access Control (RBAC) modifications securely.
+---
+
+# Tracking RBAC Changes
+
+HasMCP Enterprise automatically records all identity and access management operations directly into the immutable Audit Logs.
+
+Whenever an administrator alters the RBAC structure, a new high-fidelity event is generated. 
+
+### Observable RBAC Events
+You can filter the audit trail for the following event types to isolate permission changes:
+
+* `user.invited`: When a new user is invited to the organization.
+* `user.role_changed`: When a user is promoted (e.g. from `Viewer` to `Editor`).
+* `user.removed`: When an identity is revoked from the workspace.
+* `group.created`: When a new RBAC permissions group is established.
+* `group.policy_attached`: When specific read/write policies are bound to a group.
+
+If an orchestrator suddenly loses access to a provider, searching these event types allows you to definitively and historically prove who changed the underlying permissions and exactly when.

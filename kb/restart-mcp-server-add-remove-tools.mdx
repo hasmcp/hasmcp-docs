@@ -1,0 +1,18 @@
+---
+title: Do I need to restart my MCP server to add or remove tools?
+description: Achieving zero-downtime architecture synchronization explicitly.
+---
+
+# Restarting MCP Servers
+
+No. With HasMCP natively acting as the central management proxy securely, you absolutely never have to restart the server to deploy new capabilities to your team.
+
+### The Traditional Problem
+
+In typical MCP builds, adding tools requires you to redeploy your node server natively. After deploying the code, users must completely restart Claude so the initial HTTP request can map the new schema. 
+
+### The HasMCP Advantage
+
+Because HasMCP broadcasts the `notifications/tools/list_changed` JSON-RPC notification directly over SSE (MCP Streamable HTTP) natively explicitly, Claude automatically refetches the active tool payloads.
+
+Claude automatically fetches the updated schema natively in the background. Your LLM never drops context, and developers experience authentic zero-downtime functional upgrades.

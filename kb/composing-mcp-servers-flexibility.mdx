@@ -1,0 +1,14 @@
+---
+title: How does composing MCP servers improve system flexibility?
+description: Extracting state connection logic out of application wrappers cleanly.
+---
+
+# Improving Flexibility through Composition
+
+HasMCP Composition physically divorces the definition of your tools from the physical execution layer by strictly abstracting the direct network connections away from the requesting LLM client.
+
+### The Benefit of Abstracted Interfaces
+Because HasMCP operates as an intermediate proxy between your prompt engine and the eventual Provider API:
+
+1. **You can rotate credentials invisibly**. Update an OpenAI token entirely inside the web dashboard. The agents executing against your Composite Node do not need to be restarted.
+2. **You can phase out legacy systems gracefully**. You can plug a new Salesforce Integration directly into your active Composition Interface. The LLM connects to the exact same SSE (MCP Streamable HTTP) connection it used yesterday, but instantly possesses the new integration capabilities.

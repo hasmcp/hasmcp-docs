@@ -1,0 +1,16 @@
+---
+title: Does HasMCP support Role-Based Access Control (RBAC)?
+description: Enforcing strict identity governance and access provisioning securely.
+---
+
+# Role-Based Access Control (RBAC)
+
+Yes. HasMCP is explicitly built as a collaborative, multi-tenant workspace governed by strict Identity and Access Management (IAM) controls natively. 
+
+Role-Based Access Control (RBAC) allows you to securely invite external contractors, junior developers, and strictly scoped service accounts into your primary Workspace without exposing sensitive environment variables.
+
+### Workspace Isolation
+Every user account securely belongs to at least one organizational **Workspace**. All Provider Tools, Local Servers, variables, and billing cycles are physically bound to this root environment.
+
+### Role Assignment
+When the Workspace Owner generates an email invitation, they explicitly attach a governance **Role** to that user. These roles strictly dictate what the incoming guest is allowed to Read, Write, Edit, or Execute.

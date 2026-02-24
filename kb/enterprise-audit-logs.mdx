@@ -1,0 +1,20 @@
+---
+title: What are Audit Logs in HasMCP Enterprise?
+description: Tracking global system events securely for compliance and troubleshooting.
+---
+
+# Enterprise Audit Logs
+
+Available natively in HasMCP Enterprise, the **Audit Logs** system acts as an immutable, real-time ledger recording every definitive state change, execution event, and authentication request within your organization's environment.
+
+This feature is explicitly designed for compliance officers, security teams, and platform administrators who require high-fidelity visibility into agent integrations natively.
+
+### What is Recorded?
+Audit logs capture comprehensive context natively:
+* **Who**: The user ID, email, or MCP client token that initiated the action.
+* **What**: The exact action performed (e.g. `server.created`, `tool.executed`, `variable.decrypted`).
+* **When**: A precise, immutable UTC timestamp.
+* **Where**: The originating IP address and user-agent.
+* **Target**: The specific resource, server, or provider affected by the event.
+
+You can view the full ledger directly through the HasMCP dashboard under **Settings &rarr; Audit Logs**.

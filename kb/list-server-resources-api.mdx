@@ -24,7 +24,7 @@ Automated orchestration frameworks or observability dashboards can fetch the liv
 
 ```bash
 curl -X GET https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
-  -H "Authorization: Bearer YOUR_TOKEN"
+ -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 A properly formed, authenticated request returns the `ListServerResourcesResponse` payload. Inside, a `resources` array lists out every individual association block, definitively outlining the `serverID` and `resourceID` mappings explicitly exposing data down to the end-user Model Context Protocol client.

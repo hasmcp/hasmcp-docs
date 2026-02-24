@@ -62,7 +62,6 @@
               "features/automated-openapi-mapping",
               "features/context-window-optimization",
               "features/goja-js-logic",
-              "features/grpc",
               "features/jmespath-pruning",
               "features/mcp-composition",
               "features/native-mcp-elicitation-auth",
@@ -110,6 +109,7 @@
           {
             "group": "Servers",
             "pages": [
+              "kb/servers",
               "kb/create-mcp-server",
               "kb/list-mcp-servers",
               "kb/get-mcp-server-details",
@@ -130,6 +130,7 @@
           {
             "group": "Providers",
             "pages": [
+              "kb/api-providers",
               "kb/create-mcp-provider",
               "kb/mcp-provider-registration-requirements",
               "kb/list-mcp-providers",
@@ -145,6 +146,7 @@
           {
             "group": "Provider Tools",
             "pages": [
+              "kb/provider-tools",
               "kb/add-tool-to-provider",
               "kb/list-provider-tools-api",
               "kb/get-provider-tool-details",
@@ -155,6 +157,7 @@
           {
             "group": "Provider Resources",
             "pages": [
+              "kb/provider-resources",
               "kb/create-provider-resource",
               "kb/list-provider-resources",
               "kb/get-provider-resource-details",
@@ -165,6 +168,7 @@
           {
             "group": "Provider Prompts",
             "pages": [
+              "kb/provider-prompts",
               "kb/add-prompt-to-provider",
               "kb/list-provider-prompts",
               "kb/get-provider-prompt-details",
@@ -175,6 +179,7 @@
           {
             "group": "Server Tools",
             "pages": [
+              "kb/server-tools",
               "kb/assign-tool-to-server",
               "kb/list-server-tools-api",
               "kb/server-tool-association-endpoints",
@@ -190,6 +195,7 @@
           {
             "group": "Server Resources",
             "pages": [
+              "kb/server-resources",
               "kb/associate-resource-to-server",
               "kb/server-resource-association-endpoint",
               "kb/list-server-resources-api",
@@ -205,6 +211,7 @@
           {
             "group": "Server Prompts",
             "pages": [
+              "kb/server-prompts",
               "kb/associate-prompt-to-server",
               "kb/server-prompt-association-endpoint",
               "kb/list-server-prompts-api",
@@ -220,6 +227,7 @@
           {
             "group": "Tokens & Authentication",
             "pages": [
+              "kb/tokens-and-authentication",
               "kb/generate-server-token",
               "kb/create-server-token-endpoint",
               "kb/list-server-tokens-api",
@@ -235,6 +243,7 @@
           {
             "group": "Server Variables",
             "pages": [
+              "kb/server-variables",
               "kb/create-server-variable",
               "kb/create-server-variable-endpoint",
               "kb/list-server-variables-api",
@@ -250,6 +259,7 @@
           {
             "group": "General Workflows",
             "pages": [
+              "kb/general-workflows",
               "kb/end-to-end-setup",
               "kb/api-pagination",
               "kb/api-200-ok",
@@ -265,6 +275,105 @@
               "kb/openapi-validation",
               "kb/api-versioning",
               "kb/openapi-specification-download"
+            ]
+          },
+          {
+            "group": "Enterprise Data",
+            "pages": [
+              "kb/enterprise-audit-logs",
+              "kb/track-rbac-changes",
+              "kb/tool-execution-history",
+              "kb/immutable-audit-logs",
+              "kb/filter-audit-logs"
+            ]
+          },
+          {
+            "group": "Data Transformation",
+            "pages": [
+              "kb/context-window-optimization",
+              "kb/reduce-llm-api-costs",
+              "kb/improve-llm-response-times",
+              "kb/context-optimization-methods",
+              "kb/jmespath-pruning",
+              "kb/jmespath-vs-goja",
+              "kb/jmespath-filter-irrelevant-fields",
+              "kb/jmespath-allowlist-pii",
+              "kb/jmespath-filter-objects",
+              "kb/what-is-goja-js",
+              "kb/javascript-interceptors",
+              "kb/stateful-transformations-goja",
+              "kb/js-calculate-totals-format-dates",
+              "kb/jmespath-vs-goja-pii-redaction",
+              "kb/remove-replace-pii-js"
+            ]
+          },
+          {
+            "group": "Enterprise Role-Based Access",
+            "pages": [
+              "kb/role-based-access-control",
+              "kb/predefined-roles-enterprise",
+              "kb/developer-billing-management",
+              "kb/grant-edit-access-server",
+              "kb/share-read-only-tools"
+            ]
+          },
+          {
+            "group": "Security & Encryption",
+            "pages": [
+              "kb/how-are-api-keys-encrypted",
+              "kb/aes-256-gcm-encryption",
+              "kb/byok-enterprise-key-management",
+              "kb/restrict-tool-execution-ip-address",
+              "kb/vpn-corporate-network-access"
+            ]
+          },
+          {
+            "group": "Advanced Architecture",
+            "pages": [
+              "kb/what-is-mcp-composition",
+              "kb/modular-ai-systems",
+              "kb/chaining-multiple-mcp-servers",
+              "kb/composing-mcp-servers-flexibility"
+            ]
+          },
+          {
+            "group": "Identity & Elicitation",
+            "pages": [
+              "kb/native-mcp-elicitation-auth",
+              "kb/oauth2-authentication-flow",
+              "kb/user-experience-authenticated-endpoints",
+              "kb/llm-credential-isolation",
+              "kb/pause-execution-for-auth"
+            ]
+          },
+          {
+            "group": "Analytics & Observability",
+            "pages": [
+              "kb/ai-agent-data-flow-visibility",
+              "kb/view-tool-call-analytics",
+              "kb/per-user-tool-usage-tracking",
+              "kb/monitor-token-economics-savings",
+              "kb/streaming-debug-console"
+            ]
+          },
+          {
+            "group": "Dynamic Tooling",
+            "pages": [
+              "kb/payload-inspector-data-transformations",
+              "kb/real-time-dynamic-tooling",
+              "kb/notify-llm-tool-list-changes",
+              "kb/trigger-tool-changed-event",
+              "kb/restart-mcp-server-add-remove-tools"
+            ]
+          },
+          {
+            "group": "Secret Management",
+            "pages": [
+              "kb/dynamic-tooling-security-permissions",
+              "kb/secure-api-key-storage",
+              "kb/llm-access-raw-secrets-vault",
+              "kb/inject-secrets-api-requests-automatically",
+              "kb/proxy-modify-outgoing-api-headers"
             ]
           }
         ]

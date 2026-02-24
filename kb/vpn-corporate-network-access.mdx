@@ -1,0 +1,23 @@
+---
+title: Connecting to Tools on a Corporate VPN
+description: Configuring pathways for isolated internal DBs and legacy APIs.
+---
+
+# Connecting to Corporate VPNs
+
+Because HasMCP operates via a distributed proxy architecture, you can execute tool interactions explicitly against infrastructure locked deep inside a private corporate Intranet.
+
+### Desktop Execution
+
+If a developer is physically sitting on the corporate VPN and running Claude Desktop locally:
+
+1. They construct their HasMCP API configuration natively.
+2. The LLM agent receives the generic instruction: "Check internal HR database".
+3. The LLM executes the command through the local MCP protocol.
+4. If the downstream Provider API target resolved by HasMCP points to `http://internal-hr-db.corp.local`, the developer's machine executes the request *directly through the VPN tunnel*.
+
+Because the physical execution originates from the developer's trusted laptop connection, it naturally resolves the internal corporate DNS safely.
+
+### Dedicated Enterprise Tunnels
+
+For automated agents executing in the cloud (not on a local developer machine), HasMCP Enterprise provides dedicated **Site-to-Site VPN** and **AWS PrivateLink** integration. Our cluster physical architecture is directly bridged to your VPC, ensuring isolated data flows never traverse the open internet.

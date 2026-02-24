@@ -1,0 +1,18 @@
+---
+title: What visibility does HasMCP provide into AI agent data flow?
+description: Auditing prompts and responses across the proxy surface.
+---
+
+# AI Agent Data Flow Visibility
+
+HasMCP operates as the absolute middleman between your internal AI Agents (Claude Desktop, Cursor, Custom Agents) and your upstream infrastructure (Databases, API Providers). Because all traffic routes through the HasMCP proxy, it provides unparalleled visibility into exactly what your LLMs are executing.
+
+### Server Analytics Visualization
+While HasMCP does not permanently journal the raw JSON payloads and API responses for privacy reasons, the dashboard provides a unified view where administrators can monitor aggregated usage:
+
+1. **Top Tool Usage**: Identifying which external Provider Tools or Local Servers are most utilized by AI agents.
+2. **Aggregated Events**: Monitoring high-level events natively like request volumes and execution counts seamlessly.
+
+This visibility removes the "black box" nature of AI Agents seamlessly by offering broad aggregated metrics without compromising internal PII privacy natively.
+
+This end-to-end visibility completely removes the "black box" nature of AI Agents operating within closed corporate networks.

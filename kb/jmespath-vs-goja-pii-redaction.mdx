@@ -1,0 +1,33 @@
+---
+title: Is Goja better than JMESPath for complex PII redaction?
+description: Evaluating declarative drops versus stateful RegEx mutation.
+---
+
+# Goja vs. JMESPath for PII Redaction
+
+When securing sensitive Personally Identifiable Information (PII) before allowing it to reach an LLM, the choice between JMESPath and Goja exclusively depends on whether you want to completely **Drop** the field or **Mask** the field.
+
+### When JMESPath is Better (Complete Drop)
+
+If you simply want to ensure a `credit_card_number` or `ssn` node is unconditionally excluded from the final LLM Context, **JMESPath** is infinitely faster and safer.
+
+By writing a strict exclusive Allowlist (`users[*].{name: name, id: id}`), you guarantee that the PII fields are never dynamically forwarded securely.
+
+### When Goja JS is Better (Targeted Masking)
+
+However, sometimes an LLM inherently *needs* to know partial identity parameters to make decisions, such as verifying the last 4 digits of an account number. JMESPath cannot split a string intelligently.
+
+**Goja JS** is required when you need to run Regular Expressions (Regex) across strings to replace characters deterministically.
+
+```javascript
+input.forEach(function(u) {
+  if (u.account_number) {
+    // Assuming format XXXX-XXXX-XXXX-1234
+    u.account_number = u.account_number.replace(/\d{4}-\d{4}-\d{4}/g, "****-****-****");
+  }
+});
+
+return input;
+```
+
+This transforms the payload natively and seamlessly. This ensures the LLM receives `****-****-****-1234`.

@@ -1,0 +1,42 @@
+---
+title: How can I use JMESPath to filter out irrelevant fields from an API response?
+description: Dropping massive pagination logs and visual metadata using exact JSON matrix mapping safely.
+---
+
+# Filtering Irrelevant Fields with JMESPath
+
+When an MCP action runs successfully, external APIs invariably return metadata exclusively intended for graphical user interfaces (GUIs), such as pagination coordinates (`next_page_cursor`), styling data (`font_color`), or HTML attributes. 
+
+You can strip this structural noise instantly using JMESPath projection.
+
+### Example: Stripping Root Metadata
+
+**The Raw Upstream API Response:**
+```json
+{
+ "_metadata": {
+ "latency_ms": 142,
+ "has_more": false,
+ "theme": "dark"
+ },
+ "customers": [
+ { "id": 1, "name": "Google", "status": "active" },
+ { "id": 2, "name": "Apple", "status": "pending" }
+ ]
+}
+```
+
+Instead of sending those useless `_metadata` tokens to Claude or OpenAI through HasMCP, simply provide the following JMESPath execution string in the Provider Tool settings:
+
+**The JMESPath Input:**
+`customers`
+
+**The Final Pruned Output Delivered to the LLM:**
+```json
+[
+ { "id": 1, "name": "Google", "status": "active" },
+ { "id": 2, "name": "Apple", "status": "pending" }
+]
+```
+
+By simply addressing the root object `customers`, the engine immediately discards everything surrounding it automatically.

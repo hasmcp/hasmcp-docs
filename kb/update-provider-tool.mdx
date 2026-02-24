@@ -31,17 +31,17 @@ Send a request embedding the `UpdateProviderToolRequest` data payload. Only incl
 
 ```bash
 curl -X PATCH https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/tools/tOlM8Hr2zP1 \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": {
-      "description": "An UPDATED prompt for the LLM. Describe the query accurately.",
-      "execution": {
-        "method": "POST",
-        "path": "/api/v3/customers/query"
-      }
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "tool": {
+ "description": "An UPDATED prompt for the LLM. Describe the query accurately.",
+ "execution": {
+ "method": "POST",
+ "path": "/api/v3/customers/query"
+ }
+ }
+ }'
 ```
 
 If the syntax and schemas are valid, HasMCP responds with `200 OK` signaling that all connected servers mapped to this tool will now utilize the updated configuration in real-time.

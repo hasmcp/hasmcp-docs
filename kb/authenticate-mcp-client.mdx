@@ -5,7 +5,7 @@ description: Understand how Bearer tokens generated via the HasMCP API integrate
 
 # Authenticating an MCP Client
 
-Because the Model Context Protocol inherently dictates connecting an artificial intelligence agent locally to external resource orchestrators dynamically via specialized websockets, SSE, or secure stdio pipes—securing that boundary relies entirely upon passing credential headers logically.
+Because the Model Context Protocol inherently dictates connecting an artificial intelligence agent locally to external resource orchestrators dynamically via specialized SSE endpoints, MCP Streamable HTTP, or secure stdio pipes—securing that boundary relies entirely upon passing credential headers logically.
 
 ## Implementing the Server Token
 
@@ -21,15 +21,15 @@ You would inject the `value` into your local `claude_desktop_config.json` defini
 
 ```json
 {
-  "mcpServers": {
-    "my-hasmcp-production-server": {
-      "command": "mcp-proxy",
-      "args": ["connect", "https://app.hasmcp.com/api/v1/mcp/sE8vKd2qLp9/sse"],
-      "env": {
-        "AUTHORIZATION": "Bearer mcp_rt_81K..." 
-      }
-    }
-  }
+ "mcpServers": {
+ "my-hasmcp-production-server": {
+ "command": "mcp-proxy",
+ "args": ["connect", "https://app.hasmcp.com/api/v1/mcp/sE8vKd2qLp9/sse"],
+ "env": {
+ "AUTHORIZATION": "Bearer mcp_rt_81K..." 
+ }
+ }
+ }
 }
 ```
 

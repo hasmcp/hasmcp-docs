@@ -1,0 +1,19 @@
+---
+title: What is the Streaming Debug Console used for in HasMCP?
+description: Native real-time traffic monitoring and network instrumentation.
+---
+
+# The Streaming Debug Console
+
+When configuring dynamic Provider Tools or writing custom JavaScript interception logic, developers frequently need to understand exactly what the LLM is doing natively. Instead of blindly parsing raw HTTP execution logs or configuring a dedicated external ElasticSearch instance, HasMCP provides a real-time **Streaming Debug Console**.
+
+### Observing Live Traffic
+
+The Console operates as an interactive SSE (MCP Streamable HTTP) stream, piping live event logs straight into your browser. It instantly surfaces critical diagnostic milestones:
+
+1. **Authentication Failures**: Was the user rejected because they lacked the proper Role-Based Access Control permission, or did their Oauth Access token expire?
+2. **Provider Timeouts**: Did the target REST API take 12 seconds to respond, violating the proxy timeout rules?
+3. **LLM Connection Errors**: Did the local Claude Desktop client unexpectedly drop the TCP session midway through an active execution block?
+4. **JavaScript Runtime Errors**: Did your `onBeforeReturn` Goja interceptor crash because it attempted to parse a `null` JSON node natively?
+
+Because the stream operates in raw logical real-time, developers can test complex prompt orchestrations on Claude Desktop on one monitor, and instantly view the corresponding HasMCP network choreography lighting up on their second monitor. This practically eliminates the traditional "black box" friction of enterprise agent engineering.

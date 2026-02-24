@@ -31,14 +31,14 @@ Unlike Tools (which require identifying the Provider directly in the payload), t
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/resources \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resource": {
-      "serverID": "sE8vKd2qLp9",
-      "resourceID": "rA9BdO1kZ5T"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "resource": {
+ "serverID": "sE8vKd2qLp9",
+ "resourceID": "rA9BdO1kZ5T"
+ }
+ }'
 ```
 
-The system will synchronously grant cross-boundary access and reply with a `200 OK` housing the successfully validated `resource` JSON object.
+The system will synchronously grant cross-boundary access and reply with a `201 Created` housing the successfully validated `resource` JSON object.

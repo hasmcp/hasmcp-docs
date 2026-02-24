@@ -1,0 +1,17 @@
+---
+title: How can I filter audit logs by user, date range, or event type?
+description: Navigating the enterprise event ledger.
+---
+
+# Filtering Audit Logs
+
+When investigating complex orchestration failures or compliance violations, parsing thousands of log entries manually is impossible. HasMCP Enterprise provides a robust query interface to isolate specific events.
+
+### Available Filters
+
+Navigating to **Settings &rarr; Audit Logs**, you can leverage the following query parameters:
+
+1. **Date Ranges**: Isolate events to a specific week, month, or custom `startDate` and `endDate` boundary.
+2. **Event Type**: Filter the specific schema namespace (e.g. exclusively querying `server.created` or `token.revoked`).
+3. **Actor / Identity**: Search using the authenticated user's email address or the specific ID of the MCP Client token to trace exactly what an independent agent executed.
+4. **Resource ID**: Target investigations by inputting the explicit Provider ID or Server ID to view an isolated lifeline of all historical configuration changes.

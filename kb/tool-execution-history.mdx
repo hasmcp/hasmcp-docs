@@ -1,0 +1,22 @@
+---
+title: Can I see a history of tool executions and who initiated them?
+description: Auditing provider capabilities and correlating LLM actions to specific identies.
+---
+
+# Tool Execution History
+
+Yes, absolutely. By combining the internal orchestration layer with the Enterprise Audit Logging service, HasMCP perfectly monitors external integrations.
+
+Every time a configured MCP client initiates a request that translates into an underlying API Provider's tool execution, an `agent.tool_execution` event is meticulously recorded.
+
+### Deep Payload Logging
+
+Instead of simply logging *that* a tool was invoked, HasMCP's execution history provides comprehensive structured context:
+
+1. **The Initiating Client**: The `client_token_id` representing the specific Agent or MCP application orchestrating the request.
+2. **The Target Server**: Which underlying logical MCP server was utilized to route the traffic.
+3. **The Target Tool**: The specific Provider Tool ID invoked.
+4. **Input Arguments**: The explicit `JSON` parameters the LLM inferred and supplied to the tool locally.
+5. **Execution Results**: The terminal HTTP status code (`200 OK`, `400 Bad Request`, `500 Server Error`).
+
+This ensures total traceability, answering not just *who* made the request, but exactly *what data* was passed into the provider API.

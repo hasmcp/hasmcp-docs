@@ -31,30 +31,31 @@ To declare a new tool programmatically so that your MCP servers can leverage it,
 Your payload must include a `tool` object containing:
 - **`name`** (string): A distinct, programmatic name for the tool (e.g., `get_user_billing`).
 - **`description`** (string): Precise instructions to the LLM explaining exactly what this tool does and when to call it.
-- **`inputSchema`** (object): A valid JSON schema dictating the arguments the tool expects (what the LLM must generate).
-- **`execution`** (object): The routing logic mapping this tool to the actual API endpoint (HTTP method, path, parameter mapping).
+- **`method`** (string): The HTTP method (e.g., `GET`, `POST`).
+- **`path`** (string): The execution path routing logic.
+- **`reqBodyJSONSchema`** (object): JSON Schema for the body parameters.
+- **`queryArgsJSONSchema`** (object): JSON Schema for the query arguments.
+- **`pathArgsJSONSchema`** (object): JSON Schema for the path arguments.
 
 ### Example cURL Request
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4/tools \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tool": {
-      "name": "lookup_customer",
-      "description": "Searches the CRM for a customer by email address.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "email": { "type": "string" }
-        },
-        "required": ["email"]
-      },
-      "execution": {
-        "method": "GET",
-        "path": "/api/v2/customers/search"
-      }
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "tool": {
+ "name": "lookupCustomer",
+ "description": "Searches the CRM for a customer by email address.",
+ "queryArgsJSONSchema": {
+   "type": "object",
+   "properties": {
+     "email": { "type": "string" }
+   },
+   "required": ["email"]
+ },
+ "method": "GET",
+ "path": "/api/v2/customers/search"
+ }
+ }'
 ```

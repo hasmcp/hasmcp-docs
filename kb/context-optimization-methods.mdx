@@ -1,0 +1,23 @@
+---
+title: What are the two primary methods HasMCP provides for context optimization?
+description: Managing how API payloads are structurally pruned before executing LLM logic.
+---
+
+# Context Optimization Methods
+
+HasMCP exclusively uses two interceptor engines designed to slice, prune, and transform heavy `JSON` payloads received from external provider APIs before they impact the final LLM Context Window:
+
+### 1. JMESPath Pruning
+**JMESPath** is a declarative query language built for slicing JSON natively. It serves as a rapid structural filter mechanism.
+
+* **Ideal For:** Extracting subsets of matrices (`data.results[].{id: object_id, value: metadata}`), filtering specific nodes, isolating exact strings nested in heavy arrays.
+* **Benefit:** Very fast execution. Safe declarative syntax preventing infinite loops.
+
+### 2. Goja (JavaScript) Interceptors
+**Goja** is a pure functional JavaScript execution engine built to parse deeply complex or logical data transformations securely at the proxy edge.
+
+* **Ideal For:** Math operations (summing array values), dynamic redaction rules (detecting regex string boundaries), parsing complex non-standard encodings (`base64`).
+* **Benefit:** Absolute programmatic freedom to reconstruct the exact `JSON` object your specific Agent expects organically.
+
+> [!IMPORTANT]
+> **Execution Timeouts**: Both GoJA and JMESPath interceptors enforce a strict **100ms execution timeout** on HasMCP Cloud versions to ensure real-time proxy speed and prevent infinite loops. Enterprise on-prem versions allow administrators to define their own custom timeout values depending on their infrastructure capabilities.

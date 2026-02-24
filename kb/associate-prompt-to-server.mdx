@@ -25,14 +25,14 @@ Unlike tools, which require establishing the provider relationship explicitly, t
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/prompts \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": {
-      "serverID": "sE8vKd2qLp9",
-      "promptID": "mX5vTr9pK2w"
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "prompt": {
+ "serverID": "sE8vKd2qLp9",
+ "promptID": "mX5vTr9pK2w"
+ }
+ }'
 ```
 
-If the `promptID` mapping exists and the auth token has execution authorization on the targeted `serverID`, the orchestrator immediately saves the binding and responds with a `200 OK`.
+If the `promptID` mapping exists and the auth token has execution authorization on the targeted `serverID`, the orchestrator immediately saves the binding and responds with a `201 Created`.

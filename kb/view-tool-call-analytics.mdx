@@ -1,0 +1,18 @@
+---
+title: How can I view Tool Call Analytics to see my most frequently used tools?
+description: Discovering usage trends and optimizing high-traffic endpoints.
+---
+
+# Viewing Tool Call Analytics
+
+Understanding which infrastructure endpoints your AI Agents rely on most heavily is critical for prioritizing internal engineering resources. HasMCP provides a dedicated **Analytics Dashboard** exclusively for tracking tool consumption metrics.
+
+### Analyzing Usage Trends
+Navigate to the "Analytics" tab in your Workspace. Here, you can segment tool execution metrics by specific timeframes (24 Hours, 7 Days, 30 Days).
+
+1. **Execution Volume**: The dashboard ranks Provider Tools by sheer execution count. This allows you to identify if your LLMs are constantly polling Jira, but rarely touching Salesforce.
+2. **Success/Error Rates**: Each tool displays its execution success percentage. If a specific internal database tool drops to an 85% success rate, it typically indicates network timeouts or faulty authentication downstream that requires immediate engineering intervention.
+3. **Latency Profiling**: Analytics natively track the round-trip execution time (P95 and P99 metrics) for specific tools. If a semantic vector database tool takes 12 seconds to return context, developers can spot the bottleneck and optimize the underlying index.
+
+### Cost Attribution
+By identifying the most frequently utilized endpoints, management can accurately allocate API costs to specific Provider targets. For example, if a specific Serper API tool consumes 80% of daily executions, engineering can decide to cache those queries natively using JavaScript Interceptors to drive down corporate SaaS costs.

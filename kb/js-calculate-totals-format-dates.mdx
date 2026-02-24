@@ -1,0 +1,44 @@
+---
+title: How can I use JavaScript to calculate totals or format dates within an API response?
+description: Performing payload manipulation that declarative matchers like JMESPath cannot structurally achieve.
+---
+
+# Calculating Totals & Formatting Dates
+
+When connecting legacy or unoptimized API platforms to your AI Agents, you will frequently encounter datasets requiring mathematical computation or strict cryptographic formatting.
+
+Because LLMs inherently struggle to consistently execute deep variable math in a single prompt natively, you can explicitly offload this deterministic state processing to the HasMCP Goja backend explicitly.
+
+### Example: Calculating Inventory
+
+```javascript
+var warehouse_total_value = 0;
+ 
+// Calculate total price of all items effectively
+input.inventory.forEach(function(item) {
+  warehouse_total_value += (item.qty * item.price_per_unit);
+});
+ 
+// Return the final evaluated object directly
+return {
+  global_inventory_valuation: warehouse_total_value
+};
+```
+
+### Example: Standardizing Unix Timestamps
+
+The following example parses an archaic API returning `1694200000` and normalizes the payload to strictly readable ISO8601 strings seamlessly:
+
+```javascript
+// Iterate the events recursively 
+for (var i = 0; i < input.length; i++) {
+  var rawUnix = input[i].server_startup_time;
+ 
+  // JS evaluates unix timestamps in milliseconds 
+  input[i].server_startup_time = new Date(rawUnix * 1000).toISOString();
+}
+ 
+return input;
+```
+
+This transforms raw bytes into `2023-09-08T19:06:40.000Z`, providing the LLM agent flawless temporal reasoning proactively and securely.

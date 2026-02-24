@@ -29,16 +29,16 @@ To create a new MCP server programmatically, you need to make a `POST` request t
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/servers \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "server": {
-      "name": "My Custom MCP Server",
-      "instructions": "You are a helpful AI assistant.",
-      "version": 1,
-      "providers": []
-    }
-  }'
+ -H "Authorization: Bearer YOUR_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "server": {
+ "name": "myCustomMCPServer",
+ "instructions": "You are a helpful AI assistant.",
+ "version": 1,
+ "providers": []
+ }
+ }'
 ```
 
 A successful request will return a `201 Created` status code along with the newly created server's details.

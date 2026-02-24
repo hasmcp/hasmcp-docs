@@ -1,0 +1,21 @@
+---
+title: What is Real-time Dynamic Tooling in HasMCP?
+description: Updating tools without restarting LLM configurations naturally.
+---
+
+# Real-time Dynamic Tooling
+
+In traditional Model Context Protocol architecture, whenever you update your internal Python service to add a new `deleteCustomer` tool, every engineer in your company must completely reboot their Claude Desktop application for the LLM to fetch the `tools/list` API and discover the new function.
+
+This creates extreme friction and version skew across developer environments.
+
+HasMCP fundamentally eliminates this overhead.
+
+### The HasMCP Advantage
+1. Ten developers have Claude Desktop actively open, carrying on conversations with their agents. They are connected to a unified HasMCP `coreEngineering` Interface.
+2. A platform admin constructs a new `deleteCustomer` tool using a REST API integration in the HasMCP UI.
+3. They drag and drop that new tool onto the `coreEngineering` Interface.
+4. The HasMCP Proxy Server immediately fires a `tools/changed` notification across the 10 open SSE (MCP Streamable HTTP) streams concurrently.
+5. Behind the scenes, the 10 active Claude Desktop instances silently re-fetch the updated tool schema from HasMCP.
+
+The human developers do not have to restart anything. They can instantly prompt Claude: "Analyze the RAM on Server B" and the LLM will successfully access the tool that was deployed precisely 4 seconds prior.

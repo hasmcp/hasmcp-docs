@@ -1,0 +1,37 @@
+---
+title: How can I write JavaScript Interceptors to modify API responses before sending them to the LLM?
+description: Creating programmable mutations inside HasMCP natively dynamically.
+---
+
+# Writing JavaScript Interceptors
+
+To inject a custom Goja interceptor onto any specific Provider API Route, you utilize the **Data Transformation** UI block securely nested within the Provider Tool configuration page.
+
+### The Interceptor Interface
+
+All JavaScript logic inside HasMCP must structurally adhere to a strict interface. You must implement a single global function exactly named `intercept(response)`.
+
+```javascript
+// The HasMCP Proxy will inherently pass the Provider's raw REST Response as the 'input' object.
+ 
+// 1. Execute any arbitrary stateful logic securely on the object
+input.hasmcp_injected_timestamp = new Date().toISOString();
+ 
+if (input.status === 404) {
+  input.message = "The external API failed to find the document.";
+}
+
+// 2. Return the evaluated object directly
+return input;
+```
+
+### Execution Behavior
+
+1. The originating MCP client asks the HasMCP Server to trigger a tool.
+2. HasMCP negotiates the upstream HTTP execution accurately against the external third-party API.
+3. The target API returns an HTTP response payload.
+4. HasMCP buffers the response and inherently executes your `intercept(response)` function locally physically.
+5. The LLM exclusively receives the modified stringified response intelligently, completely unaware of the physical interception step.
+
+> [!IMPORTANT]
+> **Execution Timeouts**: Both GoJA and JMESPath interceptors have a strict **100ms execution timeout** on HasMCP Cloud versions to prevent runaway scripts. Enterprise on-prem deployments can explicitly define custom timeout limits on their own hosted infrastructure.

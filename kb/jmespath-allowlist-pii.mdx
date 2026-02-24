@@ -1,0 +1,45 @@
+---
+title: Can I use JMESPath to selectively allowlist fields to prevent PII exposure?
+description: Implicitly dropping sensitive Personally Identifiable Information using strict JSON boundary parameters gracefully.
+---
+
+# Using JMESPath as a PII Allowlist
+
+Yes. While JMESPath cannot use Regex to "partially blur" a specific string (you must use Goja Interceptors for deep masking), it is highly effective as a definitive structural **Allowlist**.
+
+By explicitly mapping *only the fields you want to keep*, you inherently guarantee that any newly introduced JSON fields sent by the API provider (such as a newly added `ssn` or `credit_score` node) are silently discarded at the proxy edge gracefully.
+
+### Allowlisting Specific Array Nodes
+
+Assume you are querying a Human Resources system and the endpoint returns highly sensitive PII structurally:
+
+**The Raw API Output:**
+```json
+{
+ "employees": [
+ { 
+ "id": 105, 
+ "name": "Sarah Connor", 
+ "ssn": "999-00-1111", 
+ "home_address": "123 Cyber St" 
+ }
+ ]
+}
+```
+
+If your LLM Agent only needs the ID and the Name, you write a JMESPath projection to construct a brand new object exclusively with permitted keys.
+
+**The JMESPath Input (Projection Mapping):**
+`employees[*].{user_id: id, full_name: name}`
+
+**The Sanitized Output Delivered to the LLM:**
+```json
+[
+ { 
+ "user_id": 105, 
+ "full_name": "Sarah Connor" 
+ }
+]
+```
+
+Notice that not only did we completely exclude the unmentioned `ssn` and `home_address` fields, but we also dynamically renamed `id` to `user_id` inside the projection explicitly.
