@@ -732,17 +732,28 @@
         }
       }
     },
-    "/resources": {
+    "/providers/{id}/resources": {
       "get": {
-        "summary": "List Resources",
-        "operationId": "listResources",
+        "summary": "List Provider Resources",
+        "operationId": "listProviderResources",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A list of resources",
+            "description": "A list of provider resources",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListResourcesResponse"
+                  "$ref": "#/components/schemas/ListProviderResourcesResponse"
                 }
               }
             }
@@ -750,25 +761,36 @@
         }
       },
       "post": {
-        "summary": "Create Resource",
-        "operationId": "createResource",
+        "summary": "Create Provider Resource",
+        "operationId": "createProviderResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateResourceRequest"
+                "$ref": "#/components/schemas/CreateProviderResourceRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Resource created",
+            "description": "Provider Resource created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateResourceResponse"
+                  "$ref": "#/components/schemas/CreateProviderResourceResponse"
                 }
               }
             }
@@ -776,13 +798,22 @@
         }
       }
     },
-    "/resources/{id}": {
+    "/providers/{id}/resources/{resourceID}": {
       "get": {
-        "summary": "Get Resource",
-        "operationId": "getResource",
+        "summary": "Get Provider Resource",
+        "operationId": "getProviderResource",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "resourceID",
             "in": "path",
             "required": true,
             "schema": {
@@ -793,11 +824,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Resource details",
+            "description": "Provider Resource details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetResourceResponse"
+                  "$ref": "#/components/schemas/GetProviderResourceResponse"
                 }
               }
             }
@@ -805,11 +836,20 @@
         }
       },
       "patch": {
-        "summary": "Update Resource",
-        "operationId": "updateResource",
+        "summary": "Update Provider Resource",
+        "operationId": "updateProviderResource",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "resourceID",
             "in": "path",
             "required": true,
             "schema": {
@@ -823,18 +863,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateResourceRequest"
+                "$ref": "#/components/schemas/UpdateProviderResourceRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Resource updated",
+            "description": "Provider Resource updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateResourceResponse"
+                  "$ref": "#/components/schemas/UpdateProviderResourceResponse"
                 }
               }
             }
@@ -842,11 +882,20 @@
         }
       },
       "delete": {
-        "summary": "Delete Resource",
-        "operationId": "deleteResource",
+        "summary": "Delete Provider Resource",
+        "operationId": "deleteProviderResource",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "resourceID",
             "in": "path",
             "required": true,
             "schema": {
@@ -857,22 +906,33 @@
         ],
         "responses": {
           "204": {
-            "description": "Resource deleted"
+            "description": "Provider Resource deleted"
           }
         }
       }
     },
-    "/prompts": {
+    "/providers/{id}/prompts": {
       "get": {
-        "summary": "List Prompts",
-        "operationId": "listPrompts",
+        "summary": "List Provider Prompts",
+        "operationId": "listProviderPrompts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A list of prompts",
+            "description": "A list of provider prompts",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListPromptsResponse"
+                  "$ref": "#/components/schemas/ListProviderPromptsResponse"
                 }
               }
             }
@@ -880,25 +940,36 @@
         }
       },
       "post": {
-        "summary": "Create Prompt",
-        "operationId": "createPrompt",
+        "summary": "Create Provider Prompt",
+        "operationId": "createProviderPrompt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePromptRequest"
+                "$ref": "#/components/schemas/CreateProviderPromptRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Prompt created",
+            "description": "Provider Prompt created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePromptResponse"
+                  "$ref": "#/components/schemas/CreateProviderPromptResponse"
                 }
               }
             }
@@ -906,13 +977,22 @@
         }
       }
     },
-    "/prompts/{id}": {
+    "/providers/{id}/prompts/{promptID}": {
       "get": {
-        "summary": "Get Prompt",
-        "operationId": "getPrompt",
+        "summary": "Get Provider Prompt",
+        "operationId": "getProviderPrompt",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "promptID",
             "in": "path",
             "required": true,
             "schema": {
@@ -923,11 +1003,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Prompt details",
+            "description": "Provider Prompt details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPromptResponse"
+                  "$ref": "#/components/schemas/GetProviderPromptResponse"
                 }
               }
             }
@@ -935,11 +1015,20 @@
         }
       },
       "patch": {
-        "summary": "Update Prompt",
-        "operationId": "updatePrompt",
+        "summary": "Update Provider Prompt",
+        "operationId": "updateProviderPrompt",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "promptID",
             "in": "path",
             "required": true,
             "schema": {
@@ -953,23 +1042,32 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePromptRequest"
+                "$ref": "#/components/schemas/UpdateProviderPromptRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Prompt updated"
+            "description": "Provider Prompt updated"
           }
         }
       },
       "delete": {
-        "summary": "Delete Prompt",
-        "operationId": "deletePrompt",
+        "summary": "Delete Provider Prompt",
+        "operationId": "deleteProviderPrompt",
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Provider ID"
+            }
+          },
+          {
+            "name": "promptID",
             "in": "path",
             "required": true,
             "schema": {
@@ -980,7 +1078,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Prompt deleted"
+            "description": "Provider Prompt deleted"
           }
         }
       }
@@ -1493,6 +1591,16 @@
             "type": "string",
             "example": "/users/{id}"
           },
+          "name": {
+            "type": "string",
+            "description": "MCP tool name (camelCase up to 20chars)",
+            "example": "makePayment"
+          },
+          "title": {
+            "type": "string",
+            "description": "MCP tool title (Free text up to 64 chars)",
+            "example": "Make Payment"
+          },
           "description": {
             "type": "string"
           },
@@ -1507,11 +1615,6 @@
             "additionalProperties": true
           },
           "reqBodyJSONSchema": {
-            "type": "object",
-            "description": "A raw JSON schema.",
-            "additionalProperties": true
-          },
-          "resBodyJSONSchema": {
             "type": "object",
             "description": "A raw JSON schema.",
             "additionalProperties": true
@@ -1547,6 +1650,16 @@
             "type": "string",
             "example": "/users/{id}"
           },
+          "name": {
+            "type": "string",
+            "description": "MCP tool name (camelCase up to 20chars)",
+            "example": "makePayment"
+          },
+          "title": {
+            "type": "string",
+            "description": "MCP tool title (Free text up to 64 chars)",
+            "example": "Make Payment"
+          },
           "description": {
             "type": "string"
           },
@@ -1561,11 +1674,6 @@
             "additionalProperties": true
           },
           "reqBodyJSONSchema": {
-            "type": "object",
-            "description": "A raw JSON schema.",
-            "additionalProperties": true
-          },
-          "resBodyJSONSchema": {
             "type": "object",
             "description": "A raw JSON schema.",
             "additionalProperties": true
@@ -1687,13 +1795,13 @@
           "resources": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Resource"
+              "$ref": "#/components/schemas/ProviderResource"
             }
           },
           "prompts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Prompt"
+              "$ref": "#/components/schemas/ProviderPrompt"
             }
           }
         }
@@ -1938,7 +2046,7 @@
           }
         }
       },
-      "Resource": {
+      "ProviderResource": {
         "type": "object",
         "properties": {
           "id": {
@@ -1982,7 +2090,7 @@
           }
         }
       },
-      "ResourceCreate": {
+      "ProviderResourceCreate": {
         "type": "object",
         "properties": {
           "name": {
@@ -2010,58 +2118,58 @@
           }
         }
       },
-      "CreateResourceRequest": {
+      "CreateProviderResourceRequest": {
         "type": "object",
         "properties": {
           "resource": {
-            "$ref": "#/components/schemas/ResourceCreate"
+            "$ref": "#/components/schemas/ProviderResourceCreate"
           }
         }
       },
-      "CreateResourceResponse": {
+      "CreateProviderResourceResponse": {
         "type": "object",
         "properties": {
           "resource": {
-            "$ref": "#/components/schemas/Resource"
+            "$ref": "#/components/schemas/ProviderResource"
           }
         }
       },
-      "GetResourceResponse": {
+      "GetProviderResourceResponse": {
         "type": "object",
         "properties": {
           "resource": {
-            "$ref": "#/components/schemas/Resource"
+            "$ref": "#/components/schemas/ProviderResource"
           }
         }
       },
-      "ListResourcesResponse": {
+      "ListProviderResourcesResponse": {
         "type": "object",
         "properties": {
           "resources": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Resource"
+              "$ref": "#/components/schemas/ProviderResource"
             }
           }
         }
       },
-      "UpdateResourceRequest": {
+      "UpdateProviderResourceRequest": {
         "type": "object",
         "properties": {
           "resource": {
-            "$ref": "#/components/schemas/ResourceCreate"
+            "$ref": "#/components/schemas/ProviderResourceCreate"
           }
         }
       },
-      "UpdateResourceResponse": {
+      "UpdateProviderResourceResponse": {
         "type": "object",
         "properties": {
           "resource": {
-            "$ref": "#/components/schemas/Resource"
+            "$ref": "#/components/schemas/ProviderResource"
           }
         }
       },
-      "Prompt": {
+      "ProviderPrompt": {
         "type": "object",
         "properties": {
           "id": {
@@ -2098,7 +2206,7 @@
           }
         }
       },
-      "PromptCreate": {
+      "ProviderPromptCreate": {
         "type": "object",
         "properties": {
           "name": {
@@ -2119,46 +2227,46 @@
           }
         }
       },
-      "CreatePromptRequest": {
+      "CreateProviderPromptRequest": {
         "type": "object",
         "properties": {
           "prompt": {
-            "$ref": "#/components/schemas/PromptCreate"
+            "$ref": "#/components/schemas/ProviderPromptCreate"
           }
         }
       },
-      "CreatePromptResponse": {
+      "CreateProviderPromptResponse": {
         "type": "object",
         "properties": {
           "prompt": {
-            "$ref": "#/components/schemas/Prompt"
+            "$ref": "#/components/schemas/ProviderPrompt"
           }
         }
       },
-      "GetPromptResponse": {
+      "GetProviderPromptResponse": {
         "type": "object",
         "properties": {
           "prompt": {
-            "$ref": "#/components/schemas/Prompt"
+            "$ref": "#/components/schemas/ProviderPrompt"
           }
         }
       },
-      "ListPromptsResponse": {
+      "ListProviderPromptsResponse": {
         "type": "object",
         "properties": {
           "prompts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Prompt"
+              "$ref": "#/components/schemas/ProviderPrompt"
             }
           }
         }
       },
-      "UpdatePromptRequest": {
+      "UpdateProviderPromptRequest": {
         "type": "object",
         "properties": {
           "prompt": {
-            "$ref": "#/components/schemas/PromptCreate"
+            "$ref": "#/components/schemas/ProviderPromptCreate"
           }
         }
       },

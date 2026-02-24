@@ -104,16 +104,6 @@
           {
             "group": "API documentation",
             "pages": [
-            {
-                "group": "Prompts",
-                "pages": [
-                  "api-reference/prompts/list-prompts",
-                  "api-reference/prompts/create-prompt",
-                  "api-reference/prompts/get-prompt",
-                  "api-reference/prompts/update-prompt",
-                  "api-reference/prompts/delete-prompt"
-                ]
-              },
               {
                 "group": "Providers",
                 "pages": [
@@ -131,17 +121,27 @@
                       "api-reference/providers/tools/update-provider-tool",
                       "api-reference/providers/tools/delete-provider-tool"
                     ]
+                  },
+                  {
+                    "group": "Provider Prompts",
+                    "pages": [
+                      "api-reference/providers/prompts/list-provider-prompts",
+                      "api-reference/providers/prompts/create-provider-prompt",
+                      "api-reference/providers/prompts/get-provider-prompt",
+                      "api-reference/providers/prompts/update-provider-prompt",
+                      "api-reference/providers/prompts/delete-provider-prompt"
+                    ]
+                  },
+                  {
+                    "group": "Provider Resources",
+                    "pages": [
+                      "api-reference/providers/resources/list-provider-resources",
+                      "api-reference/providers/resources/create-provider-resource",
+                      "api-reference/providers/resources/get-provider-resource",
+                      "api-reference/providers/resources/update-provider-resource",
+                      "api-reference/providers/resources/delete-provider-resource"
+                    ]
                   }
-                ]
-              },
-              {
-                "group": "Resources",
-                "pages": [
-                  "api-reference/resources/list-resources",
-                  "api-reference/resources/create-resource",
-                  "api-reference/resources/get-resource",
-                  "api-reference/resources/update-resource",
-                  "api-reference/resources/delete-resource"
                 ]
               },
               {
@@ -227,15 +227,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
