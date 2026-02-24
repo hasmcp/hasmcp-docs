@@ -134,7 +134,22 @@
               "kb/mcp-provider-registration-requirements",
               "kb/list-mcp-providers",
               "kb/search-mcp-providers-name-url",
-              "kb/filter-mcp-providers-type"
+              "kb/filter-mcp-providers-type",
+              "kb/filter-mcp-providers-visibility",
+              "kb/get-mcp-provider-details",
+              "kb/mcp-provider-update-endpoint",
+              "kb/delete-mcp-provider",
+              "kb/manage-multiple-providers"
+            ]
+          },
+          {
+            "group": "Provider Tools",
+            "pages": [
+              "kb/add-tool-to-provider",
+              "kb/list-provider-tools-api",
+              "kb/get-provider-tool-details",
+              "kb/update-provider-tool",
+              "kb/delete-provider-tool"
             ]
           }
         ]
