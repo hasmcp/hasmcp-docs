@@ -1,0 +1,23 @@
+---
+title: Can I manage multiple providers for my MCP servers?
+description: Explaining HasMCP's multi-tenant architecture and how it effectively centralizes access to multiple API providers.
+---
+
+# Managing Multiple API Providers
+
+## Using HasMCP UI
+
+![Providers List Page](../images/kb/providers-list.png)
+
+Yes! At its core, the HasMCP system is built not just to abstract a *single* REST API connection, but to act as a universal, centralized catalog unifying dozens of distinct internal and external APIs.
+
+## How HasMCP Integrates Multiple Providers
+
+Rather than forcing AI clients to individually grasp the disparate logic, authentication requirements, and rate limits spanning Google, Stripe, Slack, and your internal Microservices, HasMCP aggregates them in one place.
+
+### The "N:M" Attachment Model
+
+- **Multiple Providers:** You can register as many distinct `Providers` as your application portfolio requires (via `/providers`).
+- **Granular Attachments:** You decouple these capabilities from single servers. When you build a new `Server` configured for a niche agent (e.g., An "HR Onboarding Assistant"), you merely **attach** the specific, individual tools from your catalog of providers to that server map securely.
+
+This many-to-many architecture drastically simplifies operations. Update a base URL for a Provider *once*, and all 50 Agent implementations traversing MCP natively adopt the new endpoint without individual recompilation.

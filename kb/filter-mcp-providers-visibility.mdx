@@ -1,0 +1,33 @@
+---
+title: Is it possible to filter providers by visibility?
+description: Learn how to filter your HasMCP API providers list based on their PUBLIC or INTERNAL visibility configurations.
+---
+
+# Filtering Providers by Visibility
+
+Yes, HasMCP provides a native query parameter that allows you to cleanly filter the list of returned API providers based on their configured `visibilityType`. 
+
+## Using HasMCP UI
+
+![Providers List Page](../images/kb/providers-list.png)
+
+While the dashboard search bar is primarily used for finding providers by name, API consumers dynamically loading integrations can easily segment the data by visibility.
+
+## Using REST API
+
+To retrieve a subset of providers filtered down to a specific visibility classification (`INTERNAL` or `PUBLIC`), you pass the `visibility` query string parameter to the list endpoint.
+
+### The Request
+
+Make a `GET` request to the `/providers` endpoint:
+
+```bash
+curl -X GET 'https://app.hasmcp.com/api/v1/providers?visibility=INTERNAL' \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Purpose of Visibility Filtering
+
+This filtering capability is especially useful when:
+1. You want to retrieve only `PUBLIC` APIs that third-party agent systems are permitted to access safely.
+2. You want to audit all your `INTERNAL` specific data-source integrations securely isolated from general access.
