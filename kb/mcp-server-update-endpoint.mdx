@@ -21,5 +21,5 @@ The exact API endpoint used to modify the configuration of an existing MCP serve
 
 - **Method**: `PATCH` (The API generally treats this as an incremental or full update depending on the payload passed).
 - **URL Parameter**: `{id}` represents the target server's 11-character alphanumeric ID.
-- **Request Body**: A JSON object matching the `UpdateServerRequest` containing the `server` object with modified fields.
-- **Response**: Upon successful modification, it returns a `200 OK` status equipped with the deeply populated `UpdateServerResponse` object.
+- **Request Body**: A JSON object matching the [`UpdateServerRequest`](/api-reference/servers/update-mcp-server) containing the `server` object with modified fields.
+- **Response**: Upon successful modification, it returns a `200 OK` status equipped with the deeply populated [`UpdateServerResponse`](/api-reference/servers/update-mcp-server) object.

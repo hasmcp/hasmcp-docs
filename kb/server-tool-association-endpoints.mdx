@@ -17,7 +17,7 @@ To authorize new tool access for a specific server, use the highly specific `POS
 
 ### Structuring the Association
 
-Because tools belong to specific API integrations, the `CreateServerToolRequest` mandates passing an object defining the entire triangular relationship. You cannot simply pass the tool ID; you must also declare `providerID` and `serverID` inside the payload object.
+Because tools belong to specific API integrations, the [`CreateServerToolRequest`](/api-reference/servers/tools/create-mcp-server-tool-association) mandates passing an object defining the entire triangular relationship. You cannot simply pass the tool ID; you must also declare `providerID` and `serverID` inside the payload object.
 
 ```json
 {
@@ -31,4 +31,4 @@ Because tools belong to specific API integrations, the `CreateServerToolRequest`
 
 ### Successful Response
 
-The command yields `200 OK` upon success, replying with the mapped `CreateServerToolResponse` object. The server immediately begins reporting this new tool structure in its `ListTools` protocol handler to downstream LLM inferences.
+The command yields `200 OK` upon success, replying with the mapped [`CreateServerToolResponse`](/api-reference/servers/tools/create-mcp-server-tool-association) object. The server immediately begins reporting this new tool structure in its `ListTools` protocol handler to downstream LLM inferences.

@@ -21,6 +21,6 @@ The specific API route to fetch the full details of an individual MCP server is:
 
 - **Method**: `GET`
 - **Path Parameter**: `id` (string, required) - The exact 11-character identifier of the server you wish to inspect.
-- **Response**: Returns a `200 OK` status with a JSON body conforming to the `GetServerResponse` schema.
+- **Response**: Returns a `200 OK` status with a JSON body conforming to the [`GetServerResponse`](/api-reference/servers/get-mcp-server) schema.
 
 This route exposes the complete structure of the specific server, which is essential when auditing a server's provider setup, inspecting its prompt attachments, or verifying its updated configuration version.

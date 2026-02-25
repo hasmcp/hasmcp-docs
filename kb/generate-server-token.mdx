@@ -47,4 +47,4 @@ curl -X POST https://app.hasmcp.com/api/v1/servers/sE8vKd2qLp9/tokens \
  }'
 ```
 
-If successful, the manager responds with a `CreateServerTokenResponse` payload that contains the unencrypted, raw bearer token string in the `value` property that you must immediately securely inject into your deployment pipeline.
+If successful, the manager responds with a [`CreateServerTokenResponse`](/api-reference/servers/tokens/create-mcp-server-token) payload that contains the unencrypted, raw bearer token string in the `value` property that you must immediately securely inject into your deployment pipeline.

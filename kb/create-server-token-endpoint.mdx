@@ -15,7 +15,7 @@ The target orchestration node is inferred inherently from the `{serverId}` deplo
 
 ### Request Body Formatting
 
-Using the mapped `CreateServerTokenRequest` structure, submit a JSON object housing a `token` map mapping the constraints explicitly to `ServerTokenCreate`.
+Using the mapped [`CreateServerTokenRequest`](/api-reference/servers/tokens/create-mcp-server-token) structure, submit a JSON object housing a `token` map mapping the constraints explicitly to `ServerTokenCreate`.
 
 ```json
 {
@@ -31,7 +31,7 @@ Using the mapped `CreateServerTokenRequest` structure, submit a JSON object hous
 
 ### Important: Handling the Response
 
-The `201 Created` return delivers the `CreateServerTokenResponse` mapping object explicitly containing the newly generated schema. 
+The `201 Created` return delivers the [`CreateServerTokenResponse`](/api-reference/servers/tokens/create-mcp-server-token) mapping object explicitly containing the newly generated schema. 
 
 ```json
 {

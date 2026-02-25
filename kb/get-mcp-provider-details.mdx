@@ -31,7 +31,7 @@ curl -X GET https://app.hasmcp.com/api/v1/providers/kSuB9Gf6aD4 \
 
 ### The Response payload
 
-The endpoint returns a `200 OK` status and provides a `GetProviderResponse` object. The response features a fully populated `Provider` schema containing:
+The endpoint returns a `200 OK` status and provides a [`GetProviderResponse`](/api-reference/providers/get-provider) object. The response features a fully populated `Provider` schema containing:
 - The base routing URL and Name.
 - Bound resource mappings and prompts.
 - All mapped `tools` natively associated with the provider, which can subsequently be attached to servers.

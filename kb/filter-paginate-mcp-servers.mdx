@@ -19,4 +19,4 @@ Currently, according to the standard OpenAPI specification for the HasMCP Manage
 
 Unlike the `/providers` endpoint (which accepts queries like `limit`, `token`, and `nameContains`), the `/servers` endpoint does not define built-in pagination limits (`limit` or `nextToken`) or filtering query parameters in its schema.
 
-**Note:** The system is designed to return the full array in the `servers` property of the `ListServersResponse`. If you build automation or UI components on top of this API, it is recommended to implement client-side filtering and pagination of the returned JSON array.
+**Note:** The system is designed to return the full array in the `servers` property of the [`ListServersResponse`](/api-reference/servers/list-mcp-servers). If you build automation or UI components on top of this API, it is recommended to implement client-side filtering and pagination of the returned JSON array.
