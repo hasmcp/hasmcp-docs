@@ -7,9 +7,14 @@ description: Creating programmable mutations inside HasMCP natively dynamically.
 
 To inject a custom Goja interceptor onto any specific Provider API Route, you utilize the **Data Transformation** UI block securely nested within the Provider Tool configuration page.
 
+![Data Transformation UI](../images/kb/data-transformation.png)
+
 ### The Interceptor Interface
 
-All JavaScript logic inside HasMCP must structurally adhere to a strict interface. You must implement a single global function exactly named `intercept(response)`.
+All JavaScript logic inside HasMCP must structurally adhere to a strict interface. You must implement a single global function exactly named `intercept(response)` for Response Interceptors, or `intercept(request)` for Request Interceptors.
+
+> [!NOTE]
+> **Interceptor Availability**: Request Interceptors can strictly be attached to `POST`, `PUT`, and `PATCH` methods to modify outgoing bodies or arguments. Response Interceptors are universally available to all HTTP methods uniformly.
 
 ```javascript
 // The HasMCP Proxy will inherently pass the Provider's raw REST Response as the 'input' object.
