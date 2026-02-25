@@ -111,6 +111,7 @@
             "pages": [
               "kb/servers",
               "kb/create-mcp-server",
+              "kb/advantages-of-hasmcp-mcp-servers",
               "kb/list-mcp-servers",
               "kb/get-mcp-server-details",
               "kb/mcp-server-creation-endpoint",
