@@ -1,0 +1,40 @@
+---
+title: When should you use the HasMCP Server to create new MCP Servers?
+description: Understanding the strategic use cases for allowing your LLM to self-provision entirely new MCP servers via the HasMCP MCP Server directly using HasMCP API.
+---
+
+# When to Self-Provision Using the HasMCP Server
+
+By [installing the official HasMCP Server](/kb/install-official-hasmcp-server), you give your LLM (like Claude Desktop or Cursor) the ability to dynamically orchestrate the HasMCP API itself. This means the AI can build, configure, and manage other integrations natively.
+
+But when is this "meta-orchestration" actually useful?
+
+### 1. Rapid Prototyping and Discovery
+
+If you are a developer exploring an unfamiliar API, building an MCP server manually can be tedious. Instead, you can give your LLM the official HasMCP tools, pass it a link to the third-party API documentation (or an OpenAPI spec), and say:
+
+*"Read the Stripe API docs and build me a HasMCP server that exposes the `create_invoice` and `list_customers` endpoints."*
+
+The LLM will automatically extract the JSON schemas, `POST` them to the `/providers` and `/tools` endpoints, and instantiate the server for you in seconds.
+
+### 2. Autonomous Multi-Agent Systems
+If you are building complex, multi-agent frameworks, agents often need to delegate tasks. 
+
+Instead of pre-configuring hundreds of distinct MCP servers for every possible edge case, a central "Orchestrator Agent" equipped with the HasMCP tools can **spin up distinct, single-purpose MCP servers on demand** for its sub-agents. 
+- Example: An Orchestrator realizes it needs to audit a Jenkins server. It dynamically creates a "Jenkins Auditor MCP Server" in HasMCP, generates a scoped access token, and passes that token to a specialized sub-agent. Once the job finishes, the Orchestrator deletes the server.
+
+### 3. Dynamic Tool Updates
+APIs change constantly. When a vendor updates their endpoint (e.g., adding a new required `query` parameter), static MCP implementations break until a human developer rewrites the connector code.
+
+An AI agent equipped with the HasMCP Server tools can detect the API failure, read the vendor's updated changelog, and execute an `UPDATE` request to the HasMCP `/tools` endpoint modifying the `inputSchema` natively—fixing its own broken tools without human intervention.
+
+### 4. Client Onboarding Automation
+If you manage a SaaS platform that provisions individual LLM agents for each of your customers, you can automate their setup.
+
+You can write a script or prompt an administrative agent to:
+1. Create a segregated Provider for the new customer.
+2. Ingest their specific REST API schema.
+3. Generate a dedicated MCP Server mapping to their internal REST API.
+4. Output the final Server Token.
+ 
+Using the HasMCP Server allows you to treat your AI agent layer as purely configurable infrastructure.
