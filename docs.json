@@ -330,6 +330,7 @@
           {
             "group": "Advanced Architecture",
             "pages": [
+              "kb/install-official-hasmcp-server",
               "kb/what-is-mcp-composition",
               "kb/modular-ai-systems",
               "kb/chaining-multiple-mcp-servers",
