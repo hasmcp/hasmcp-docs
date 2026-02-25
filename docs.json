@@ -350,13 +350,15 @@
             ]
           },
           {
-            "group": "Analytics & Observability",
+            "group": "MCP Telemetry",
             "pages": [
+              "kb/telemetry",
               "kb/ai-agent-data-flow-visibility",
               "kb/view-tool-call-analytics",
               "kb/per-user-tool-usage-tracking",
               "kb/monitor-token-economics-savings",
-              "kb/streaming-debug-console"
+              "kb/streaming-debug-console",
+              "kb/payload-inspector-data-transformations"
             ]
           },
           {
