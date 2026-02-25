@@ -12,10 +12,10 @@ Understanding which infrastructure endpoints your AI Agents rely on most heavily
 ### Analyzing Usage Trends
 Navigate to the "Analytics" tab in your Workspace. Here, you can segment tool execution metrics by default timeframes (24 Hours, 7 Days, 30 Days) or query any custom time window you desire.
 
-1. **Execution Volume**: The dashboard ranks Provider Tools by sheer execution count. This allows you to identify if your LLMs are constantly polling Jira, but rarely touching Salesforce.
-2. **Success/Error Rates**: Each tool displays its execution success percentage. If a specific internal database tool drops to an 85% success rate, it typically indicates network timeouts or faulty authentication downstream that requires immediate engineering intervention.
-3. **Latency Profiling**: Analytics natively track the round-trip execution time (p50 latency metrics) for specific tools. If a semantic vector database tool takes 12 seconds to return context, developers can spot the bottleneck and optimize the underlying index.
-4. **Token & Payload Savings**: The analytics engine inherently calculates the total volume of data eliminated via Context Optimization, displaying precise Payload Savings (e.g., MBs blocked) and Token Savings for each targeted tool.
+1. **High-Level Usage Metrics**: Quickly view the total number of connected Clients, active Users, individual Sessions, and raw Tool Calls processed during that window.
+2. **Performance Metrics**: HasMCP splits performance between external API requests and internal Tool executions. For both, it displays the total **Tokens** consumed, the raw **Payload Size** transferred (e.g., 1.5 MB), and the **Median Latency** (p50) in milliseconds. This allows developers to instantly spot sluggish database queries or massive hidden payloads.
+3. **Savings with Interceptors**: This section explicitly visualizes exactly how much context payload optimization occurred *before* the data reached the LLM. It tracks your total **Token savings** and **Payload savings** percentages resulting from your JMESPath or Goja (JS) interceptors.
+4. **Top Tools**: A ranked usage distribution list showing your most frequently executed tools alongside their exact call counts. This instantly highlights if your agents are polling Jira ten times more often than Salesforce.
 
 ### Cost Attribution
 By identifying the most frequently utilized endpoints, management can accurately allocate API costs to specific Provider targets. For example, if a specific Serper API tool consumes 80% of daily executions, engineering can decide to aggressively prune those payloads natively using **JMESPath** or **Goja (JS) Interceptors**. This context payload optimization happens *before* the data reaches the LLM. HasMCP automatically tracks the byte difference before and after interception, counting this reduction as compounding **Payload Savings** and **Token Savings** over time, directly driving down your corporate SaaS LLM costs.
