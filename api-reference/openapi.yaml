@@ -10,6 +10,9 @@ paths:
     get:
       summary: List Variables
       operationId: listVariables
+      security:
+        - oauth2:
+            - "variable:list"
       responses:
         "200":
           description: A list of variables
@@ -20,6 +23,9 @@ paths:
     post:
       summary: Create Variable
       operationId: createVariable
+      security:
+        - oauth2:
+            - "variable:create"
       requestBody:
         required: true
         content:
@@ -37,6 +43,9 @@ paths:
     patch:
       summary: Update Variable
       operationId: updateVariable
+      security:
+        - oauth2:
+            - "variable:update"
       parameters:
         - name: id
           in: path
@@ -60,6 +69,9 @@ paths:
     delete:
       summary: Delete Variable
       operationId: deleteVariable
+      security:
+        - oauth2:
+            - "variable:delete"
       parameters:
         - name: id
           in: path
@@ -74,6 +86,9 @@ paths:
     get:
       summary: List Providers
       operationId: listProviders
+      security:
+        - oauth2:
+            - "provider:list"
       parameters:
         - name: nameContains
           in: query
@@ -109,6 +124,9 @@ paths:
     post:
       summary: Create Provider
       operationId: createProvider
+      security:
+        - oauth2:
+            - "provider:create"
       requestBody:
         required: true
         content:
@@ -126,6 +144,9 @@ paths:
     get:
       summary: Get Provider
       operationId: getProvider
+      security:
+        - oauth2:
+            - "provider:read"
       parameters:
         - name: id
           in: path
@@ -143,6 +164,9 @@ paths:
     patch:
       summary: Update Provider
       operationId: updateProvider
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -166,6 +190,9 @@ paths:
     delete:
       summary: Delete Provider
       operationId: deleteProvider
+      security:
+        - oauth2:
+            - "provider:delete"
       parameters:
         - name: id
           in: path
@@ -180,6 +207,9 @@ paths:
     get:
       summary: List Provider Tools
       operationId: listProviderTools
+      security:
+        - oauth2:
+            - "provider:list"
       parameters:
         - name: id
           in: path
@@ -197,6 +227,9 @@ paths:
     post:
       summary: Create Provider Tool
       operationId: createProviderTool
+      security:
+        - oauth2:
+            - "provider:create"
       parameters:
         - name: id
           in: path
@@ -221,6 +254,9 @@ paths:
     get:
       summary: Get Provider Tool
       operationId: getProviderTool
+      security:
+        - oauth2:
+            - "provider:read"
       parameters:
         - name: id
           in: path
@@ -244,6 +280,9 @@ paths:
     patch:
       summary: Update Provider Tool
       operationId: updateProviderTool
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -273,6 +312,9 @@ paths:
     delete:
       summary: Delete Provider Tool
       operationId: deleteProviderTool
+      security:
+        - oauth2:
+            - "provider:delete"
       parameters:
         - name: id
           in: path
@@ -293,6 +335,9 @@ paths:
     get:
       summary: List MCP Servers
       operationId: listServers
+      security:
+        - oauth2:
+            - "server:list"
       responses:
         "200":
           description: A list of MCP servers
@@ -303,6 +348,9 @@ paths:
     post:
       summary: Create MCP Server
       operationId: createServer
+      security:
+        - oauth2:
+            - "server:create"
       requestBody:
         required: true
         content:
@@ -316,10 +364,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateServerResponse"
+  /servers/import:
+    post:
+      summary: Import MCP Server
+      operationId: importServer
+      security:
+        - oauth2:
+            - "server:update"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: ExportServer JSON schema spec
+      responses:
+        "201":
+          description: MCP Server imported successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetServerResponse"
   /servers/{id}:
     get:
       summary: Get MCP Server
       operationId: getServer
+      security:
+        - oauth2:
+            - "server:read"
       parameters:
         - name: id
           in: path
@@ -337,6 +409,9 @@ paths:
     patch:
       summary: Update MCP Server
       operationId: updateServer
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -360,6 +435,27 @@ paths:
     delete:
       summary: Delete MCP Server
       operationId: deleteServer
+      security:
+        - oauth2:
+            - "server:delete"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: MCP Server ID
+          schema:
+            type: string
+            description: Git Connection ID
+      responses:
+        "204":
+          description: MCP Server deleted
+  /servers/{id}/export:
+    get:
+      summary: Export MCP Server
+      operationId: exportServer
+      security:
+        - oauth2:
+            - "server:read"
       parameters:
         - name: id
           in: path
@@ -368,12 +464,20 @@ paths:
             type: string
             description: MCP Server ID
       responses:
-        "204":
-          description: MCP Server deleted
+        "200":
+          description: MCP Server exported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                description: ExportServer JSON schema spec
   /servers/{id}/tokens:
     post:
       summary: Create MCP Server Token
       operationId: createServerToken
+      security:
+        - oauth2:
+            - "server:create_token"
       parameters:
         - name: id
           in: path
@@ -398,6 +502,9 @@ paths:
     get:
       summary: List MCP Server Tools
       operationId: listServerTools
+      security:
+        - oauth2:
+            - "server:read"
       parameters:
         - name: id
           in: path
@@ -415,6 +522,9 @@ paths:
     post:
       summary: Create MCP Server Tool Association
       operationId: createServerTool
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -439,6 +549,9 @@ paths:
     delete:
       summary: Delete MCP Server Tool Association
       operationId: deleteServerTool
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -458,6 +571,9 @@ paths:
     get:
       summary: List Provider Resources
       operationId: listProviderResources
+      security:
+        - oauth2:
+            - "provider:list"
       parameters:
         - name: id
           in: path
@@ -475,6 +591,9 @@ paths:
     post:
       summary: Create Provider Resource
       operationId: createProviderResource
+      security:
+        - oauth2:
+            - "provider:create"
       parameters:
         - name: id
           in: path
@@ -499,6 +618,9 @@ paths:
     get:
       summary: Get Provider Resource
       operationId: getProviderResource
+      security:
+        - oauth2:
+            - "provider:read"
       parameters:
         - name: id
           in: path
@@ -522,6 +644,9 @@ paths:
     patch:
       summary: Update Provider Resource
       operationId: updateProviderResource
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -551,6 +676,9 @@ paths:
     delete:
       summary: Delete Provider Resource
       operationId: deleteProviderResource
+      security:
+        - oauth2:
+            - "provider:delete"
       parameters:
         - name: id
           in: path
@@ -571,6 +699,9 @@ paths:
     get:
       summary: List Provider Prompts
       operationId: listProviderPrompts
+      security:
+        - oauth2:
+            - "provider:read"
       parameters:
         - name: id
           in: path
@@ -588,6 +719,9 @@ paths:
     post:
       summary: Create Provider Prompt
       operationId: createProviderPrompt
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -612,6 +746,9 @@ paths:
     get:
       summary: Get Provider Prompt
       operationId: getProviderPrompt
+      security:
+        - oauth2:
+            - "provider:read"
       parameters:
         - name: id
           in: path
@@ -635,6 +772,9 @@ paths:
     patch:
       summary: Update Provider Prompt
       operationId: updateProviderPrompt
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -660,6 +800,9 @@ paths:
     delete:
       summary: Delete Provider Prompt
       operationId: deleteProviderPrompt
+      security:
+        - oauth2:
+            - "provider:update"
       parameters:
         - name: id
           in: path
@@ -680,6 +823,9 @@ paths:
     get:
       summary: List MCP Server Resource Associations
       operationId: listServerResources
+      security:
+        - oauth2:
+            - "server:list"
       parameters:
         - name: id
           in: path
@@ -697,6 +843,9 @@ paths:
     post:
       summary: Create MCP Server Resource Association
       operationId: createServerResource
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -721,6 +870,9 @@ paths:
     delete:
       summary: Delete MCP Server Resource Association
       operationId: deleteServerResource
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -741,6 +893,9 @@ paths:
     get:
       summary: List MCP Server Prompt Associations
       operationId: listServerPrompts
+      security:
+        - oauth2:
+            - "server:read"
       parameters:
         - name: id
           in: path
@@ -758,6 +913,9 @@ paths:
     post:
       summary: Create MCP Server Prompt Association
       operationId: createServerPrompt
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -782,6 +940,9 @@ paths:
     delete:
       summary: Delete MCP Server Prompt Association
       operationId: deleteServerPrompt
+      security:
+        - oauth2:
+            - "server:update"
       parameters:
         - name: id
           in: path
@@ -804,6 +965,30 @@ components:
       type: http
       scheme: bearer
       description: "Enter 'Bearer' followed by a space and your token (e.g., 'Bearer ${HASMCP_ACCESS_TOKEN}')."
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.hasmcp.com/oauth2/auth
+          tokenUrl: https://accounts.hasmcp.com/oauth2/token
+          scopes:
+            "gitconnection:list": List Git connections
+            "gitconnection:delete": Delete Git connection
+            "variable:list": List variables
+            "variable:create": Create variable
+            "variable:update": Update variable
+            "variable:delete": Delete variable
+            "provider:list": List providers
+            "provider:create": Create provider
+            "provider:read": Get provider
+            "provider:update": Update provider
+            "provider:delete": Delete provider
+            "server:list": List MCP servers
+            "server:create": Create MCP server
+            "server:read": Get MCP server
+            "server:update": Update MCP server
+            "server:delete": Delete MCP server
+            "server:create_token": Create MCP server token
   schemas:
     Variable:
       type: object
@@ -1154,9 +1339,15 @@ components:
           type: string
         requestHeadersProxyEnabled:
           type: boolean
+        dynamicToolDiscoveryEnabled:
+          type: boolean
         version:
           type: integer
           format: int32
+        gitProvider:
+          type: string
+        gitRepoFullName:
+          type: string
         providers:
           type: array
           items:
@@ -1293,13 +1484,6 @@ components:
       properties:
         token:
           $ref: "#/components/schemas/ServerToken"
-    ListServerTokensResponse:
-      type: object
-      properties:
-        tokens:
-          type: array
-          items:
-            $ref: "#/components/schemas/ServerToken"
     ServerTool:
       type: object
       properties:
