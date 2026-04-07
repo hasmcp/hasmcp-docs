@@ -1,25 +1,101 @@
 ---
 title: Native MCP Elicitation Auth | HasMCP Features
-description: Discover how HasMCP's Native MCP Elicitation Auth securely handles authentication with protocols like OAuth2 when an LLM needs to use an API on your behalf.
+description: Learn how HasMCP's Native MCP Elicitation Auth pauses LLM tool execution to authenticate users via OAuth2 when a token is missing or expired, then resumes automatically.
 ---
 
-This feature is about solving the complex problem of authentication when an LLM needs to use an API on your behalf. Here's a deeper dive:
+# Native MCP Elicitation Auth
 
-- **What it is:** "Elicitation" is a fancy word for "asking for." In the context of MCP, it's a secure way for the system to pause and ask the user for information. "Native MCP Elicitation Auth" means that HasMCP has built-in support for using this "asking" mechanism to handle authentication, specifically with OAuth2.
-- **Why it's important:** You can't just give an LLM your username and password. That would be a huge security risk. Instead, modern applications use protocols like OAuth2, where you are redirected to a trusted website (like Google or your corporate login page) to sign in. HasMCP's Elicitation Auth manages this process.
-- **How it works:**
-  1.  The LLM decides it needs to use a tool that requires you to be logged in.
-  2.  HasMCP, acting as the MCP server, detects this and initiates the OAuth2 flow.
-  3.  It then "elicits" your permission by providing a secure URL. You, the user, would then click this link, which takes you to the standard login page.
-  4.  After you successfully log in, the authentication service sends a secure token back to HasMCP.
-  5.  HasMCP can then use this token to make API calls on your behalf.
-- **Key benefits:**
-  - **Security:** Your credentials are never exposed to the LLM or stored in an insecure way. The process follows industry-standard security protocols.
-  - **User Experience:** You get the familiar "Log in with..." experience you're used to in other applications.
-  - **Automation:** The process is handled automatically by HasMCP, so developers don't have to build this complex authentication logic themselves.
+When an LLM calls a tool that requires an OAuth2-protected API, HasMCP needs to obtain a valid access token on behalf of the user — without ever exposing credentials to the model. **Native MCP Elicitation Auth** handles this automatically. If a token is missing or has expired, HasMCP pauses execution, sends an OAuth2 authorization URL to the MCP client, waits for the user to authenticate, then resumes the tool call with the fresh token.
 
-In short, Native MCP Elicitation Auth is a secure and user-friendly way to handle API authentication in an LLM-powered world, and HasMCP has this capability built-in from the ground up.
+This is built on the MCP protocol's `elicitation/create` mechanism — a standard way for MCP servers to request additional input from a user mid-session.
+
+## The Problem
+
+LLMs cannot log in to services. OAuth2 flows require a human to click a link, authenticate with a trusted provider, and grant permissions. At the same time, the LLM session must not be abandoned while waiting — it needs to resume from exactly where it left off once authentication completes.
+
+## How It Works
+
+### Step 1 — Tool call is intercepted
+
+When the LLM issues a `tools/call` request, HasMCP checks for a valid OAuth2 access token in the current session. Elicitation is triggered in two cases:
+
+| Condition | Trigger |
+|---|---|
+| Token is missing | No access token found for this provider in the session |
+| Token is expired | Access token exists but its expiry time has passed |
+| Token lacks required scopes | Token exists but doesn't cover the scopes the tool needs |
+| API returns 401 | The upstream API rejected the token mid-call |
+
+### Step 2 — Elicitation request is sent
+
+HasMCP returns a JSON-RPC error with code `-32042` to the MCP client. The error payload contains an elicitations array with a URL-mode entry:
+
+```json
+{
+  "code": -32042,
+  "data": {
+    "elicitations": [
+      {
+        "mode": "url",
+        "elicitationId": "<unique-id>",
+        "url": "https://hasmcp.com/oauth2/authorize?state=...",
+        "message": "Authorization is required to call tool: get-emails"
+      }
+    ]
+  }
+}
+```
+
+The MCP client is expected to surface this URL to the user and pause further tool execution.
+
+### Step 3 — User authenticates
+
+The authorization URL redirects the user to the external OAuth2 provider (e.g. Google, GitHub, Salesforce). The `state` parameter in the URL is a short-lived token (3-minute TTL) that encodes the session context — user ID, organization ID, provider ID, server ID, and required scopes. HasMCP uses this to match the callback to the correct in-progress tool call.
+
+### Step 4 — Callback and token storage
+
+After the user grants permission, the OAuth2 provider redirects to HasMCP's callback endpoint. HasMCP:
+
+1. Validates the `state` token and extracts session context
+2. Exchanges the authorization code for an access token and optional refresh token
+3. Encrypts and stores the tokens in the session (and optionally in organization-level variables for reuse)
+4. Displays a confirmation page that auto-closes after 3 seconds
+
+### Step 5 — Tool call resumes
+
+Once the callback completes, the MCP client retries the original tool call. HasMCP finds the freshly stored token and proceeds with the API request — no manual retry needed from the LLM.
+
+## URL Elicitation and the MCP Protocol
+
+The `elicitation/create` method is a standard part of the MCP specification. HasMCP uses the `"mode": "url"` variant, which instructs the client to present a URL for the user to visit rather than prompting for typed input. This keeps credentials fully out of the LLM context — the model only sees that a tool call was made; it never sees tokens, passwords, or auth codes.
+
+The client responds to the elicitation with one of three actions:
+
+| Action | Meaning |
+|---|---|
+| `accept` | User completed authentication |
+| `decline` | User chose not to authenticate |
+| `cancel` | Auth was abandoned |
+
+## Token Lifetime and Re-authentication
+
+After the initial auth, tokens are cached in the session with their expiry time. On each subsequent tool call, HasMCP checks:
+
+- Is a token present?
+- Has it expired?
+- Does it cover the required scopes?
+
+If any check fails, elicitation is triggered again transparently. The user experience is identical to the first login.
+
+## Security Properties
+
+- **Credentials never reach the LLM.** The model only sees an opaque URL; all token exchange happens server-side.
+- **State tokens are short-lived.** The OAuth2 state parameter expires after 3 minutes to prevent replay attacks.
+- **State is single-use.** After a successful callback, the state is deleted from cache immediately.
+- **Tokens are encrypted at rest.** Access and refresh tokens are stored using AES encryption before being written to session or organization variables.
+- **Scopes are enforced per tool.** Each tool declares the OAuth2 scopes it needs. HasMCP will trigger re-authentication if the current token doesn't cover those scopes.
 
 ## Related Reading
 
-* [Why should you use HasMCP instead of building MCP Servers manually?](/kb/advantages-of-hasmcp-mcp-servers)
+- [Secure Secret & Proxy Management](/features/secure-secret-proxy-management)
+- [Why should you use HasMCP instead of building MCP Servers manually?](/kb/advantages-of-hasmcp-mcp-servers)
