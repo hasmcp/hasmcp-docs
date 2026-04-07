@@ -1,0 +1,59 @@
+---
+title: Dynamic Tool Discovery | HasMCP Features
+description: Learn how HasMCP's Dynamic Tool Discovery reduces context window usage by up to 95% for large toolsets, exposing only the tools an LLM needs — exactly when it needs them.
+---
+
+# Dynamic Tool Discovery
+
+When an MCP server exposes many tools, the standard `tools/list` call returns the full JSON schema for every single tool upfront. For servers with 50 or more tools, this alone can cost **10,000–25,000 tokens** before the LLM has done any real work. **Dynamic Tool Discovery** solves this by replacing that upfront dump with an on-demand discovery pattern, cutting token usage by up to **95%**.
+
+## The Problem
+
+Each tool schema averages 200–500 tokens. A server with 100 tools therefore consumes up to 50,000 tokens just to initialize — a significant portion of most models' context windows. This overhead:
+
+- Increases inference cost on every conversation turn
+- Leaves less room for actual task context and conversation history
+- Slows down responses due to larger prompt sizes
+
+## How It Works
+
+When Dynamic Tool Discovery is enabled, HasMCP wraps the full toolset behind three standardized discovery tools that the LLM interacts with instead:
+
+| Tool | Purpose |
+|---|---|
+| `searchTools` | Search for relevant tools by keyword or regex pattern |
+| `getToolDefinition` | Retrieve the full schema for a specific tool, on demand |
+| `useTool` | Execute any tool by name and arguments |
+
+The LLM only ever loads the schemas it actually needs, keeping the context lean throughout the session.
+
+### Hybrid Search Engine
+
+`searchTools` is backed by a hybrid search engine combining two algorithms:
+
+- **BM25 ranking** — probabilistic relevance matching with smart tokenization that treats `getUser`, `get_user`, and `get-user` as equivalent. Handles camelCase, snake_case, and kebab-case conventions automatically.
+- **Regex matching** — enables precise pattern searches like `^stripe.*(charge|refund)$` with case-insensitive enforcement.
+
+BM25 matches are ranked first; regex matches follow. This gives the LLM both fuzzy relevance search and exact pattern targeting in a single call.
+
+## Key Benefits
+
+- **Up to 95% token reduction** for large toolsets
+- Tools can be added or removed with zero client-side reloads
+- Full schema detail is available on demand — nothing is lost, just deferred
+- Enables "Mega-Servers" with hundreds of tools that would otherwise be impractical
+
+## Comparison with Similar Approaches
+
+Dynamic Tool Discovery operates at the **MCP protocol level**, within a single server. This is different from:
+
+- **Claude's `tool-search-tool`** — client-specific, not portable across MCP clients
+- **Docker's `dynamic-mcp`** — server discovery (finding servers), not tool discovery within a server
+
+HasMCP's approach is client-agnostic and works with any MCP-compatible AI tool.
+
+## Related Reading
+
+- [Context Window Optimization](/features/context-window-optimization)
+- [Real-time Dynamic Tooling](/features/real-time-dynamic-tooling)
+- [Why should you use HasMCP instead of building MCP Servers manually?](/kb/advantages-of-hasmcp-mcp-servers)

@@ -70,7 +70,8 @@
               "features/secure-secret-proxy-management",
               "features/groups-users-permissions",
               "features/audit-logs",
-              "features/git-connections"
+              "features/git-connections",
+              "features/dynamic-tool-discovery"
             ]
           }
         ]
