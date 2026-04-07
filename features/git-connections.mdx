@@ -1,0 +1,80 @@
+---
+title: Git Connections | HasMCP Features
+description: Learn how HasMCP's Git Connections feature automatically pushes MCP server configuration changes to GitHub or GitLab repositories, enabling infrastructure-as-code for your AI tooling.
+---
+
+# Git Connections
+
+**Git Connections** lets you link your HasMCP organization to a GitHub or GitLab account, so that any configuration change to an MCP server is automatically committed and pushed to a repository of your choice. This gives you a full infrastructure-as-code workflow for your AI tooling — every change is versioned, auditable, and shareable.
+
+## How It Works
+
+When a Git Connection is configured for a server, saving any change to that server's configuration triggers a background push to the assigned repository. HasMCP generates a structured directory layout representing the full server configuration and commits it in one operation.
+
+The generated layout looks like this:
+
+```
+server-name/
+├── config.json          # Server metadata (name, instructions, version, flags)
+├── export.json          # Full server export (can be reimported into HasMCP)
+├── schema.json          # Schema for the export format
+├── README.md            # Server overview with links to each provider
+└── provider-name/
+    ├── config.json      # Provider metadata (OAuth2 config is masked)
+    ├── README.md        # Provider summary listing tools, resources, and prompts
+    ├── tools/
+    │   ├── tool-name.json
+    │   └── tool-name.md
+    ├── resources/
+    │   └── resource-name.json
+    └── prompts/
+        └── prompt-name.json
+```
+
+The push happens in the background and does not block the save operation. Both GitHub and GitLab are supported.
+
+## Setting Up a Git Connection
+
+### Step 1: Connect Your Account
+
+1. Navigate to **Git Connections** in your organization settings.
+2. Click **Add Connection** and select either **GitHub** or **GitLab**.
+3. You will be redirected to the provider to authorize HasMCP. After authorization, you are returned to HasMCP and your account appears in the connections list with a **Connected** status.
+
+HasMCP supports the **GitHub App** installation flow (recommended) as well as standard OAuth2 for both GitHub and GitLab. Tokens are encrypted at rest and never stored in plaintext.
+
+### Step 2: Assign a Repository to a Server
+
+1. Open the server you want to sync.
+2. Go to the **General** settings tab.
+3. Under **Git Push Sync**, choose a repository from the **Assigned Repository** dropdown. The dropdown lists all repositories accessible through your connected accounts.
+4. Save the server. From this point on, every configuration save will trigger an automatic push.
+
+To disable auto-push, set the dropdown back to **None (Disable Auto-Push)**.
+
+## Managing Connections
+
+From the **Git Connections** page you can:
+
+- **View** all connected accounts, their provider, avatar, and current status.
+- **Reconnect** an account (re-runs the OAuth flow) if the status shows **Disconnected** or **Error**.
+- **Delete** a connection to revoke HasMCP's access. Any servers that reference the deleted connection will stop syncing.
+
+### Connection Statuses
+
+| Status | Meaning |
+|---|---|
+| Connected | Token is valid and pushes will succeed. |
+| Disconnected | The connection was manually disconnected or the token expired. |
+| Error | An error occurred during authorization. Reconnect to resolve. |
+
+## Security
+
+- Access tokens are encrypted using AES encryption before storage. The encryption nonce is stored separately.
+- For GitHub App connections, a short-lived installation token (1-hour expiry) is generated on each push — the long-term credential stored is only the installation ID, not an OAuth token.
+- OAuth2 client secrets are never persisted; they are only used transiently during the callback flow.
+- Each Git Connection is scoped to a specific user and organization. A server can only be assigned to a repository that belongs to a connection within the same organization.
+
+## Related Reading
+
+- [Why should you use HasMCP instead of building MCP Servers manually?](/kb/advantages-of-hasmcp-mcp-servers)
