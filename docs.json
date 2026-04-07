@@ -69,7 +69,8 @@
               "features/real-time-dynamic-tooling",
               "features/secure-secret-proxy-management",
               "features/groups-users-permissions",
-              "features/audit-logs"
+              "features/audit-logs",
+              "features/git-connections"
             ]
           }
         ]
