@@ -32,10 +32,27 @@ Antigravity manages connections through its built-in **MCP Store**.
     your `mcp_config.json` file.
   </Step>
   <Step title="Add Server">
-    Add your HasMCP server to the `mcpServers` object. For remote servers, it is
-    recommended to use the `@hasmcp/remote-mcp` bridge:
+    Add your HasMCP server to the `mcpServers` object. You can use the `@hasmcp/remote-mcp` bridge for enhanced security, or a direct URL connection:
   </Step>
 </Steps>
+
+#### Option A: Direct URL Connection
+
+This is the simplest way to connect if your server supports token-based URL authentication.
+
+```json
+{
+  "mcpServers": {
+    "hasmcp-server": {
+      "serverUrl": "https://<PROJECT_ID>.mcp.hasmcp.com/mcp?token=<YOUR_TOKEN>"
+    }
+  }
+}
+```
+
+#### Option B: Remote Bridge (Recommended for Security)
+
+Uses the `@hasmcp/remote-mcp` bridge to keep your token in environment variables.
 
 ```json
 {
@@ -56,9 +73,8 @@ Antigravity manages connections through its built-in **MCP Store**.
 }
 ```
 
-SERVER_ID: Your unique server identifier from the HasMCP dashboard.
-
-ACCESS_TOKEN: The secure token generated for your server.
+- **PROJECT_ID / SERVER_ID**: Your unique project or server identifier from the HasMCP dashboard.
+- **YOUR_TOKEN / YOUR_TOKEN_VALUE**: The secure token generated for your server.
 
 ### 3. Save and Verify
 
