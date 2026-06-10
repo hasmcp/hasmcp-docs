@@ -8,6 +8,16 @@
     "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
+  "font": {
+    "headings": {
+      "family": "JetBrains Mono",
+      "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    },
+    "body": {
+      "family": "JetBrains Mono",
+      "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    }
+  },
   "navigation": {
     "tabs": [
       {
