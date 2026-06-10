@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "HasMCP Docs",
   "colors": {
-    "primary": "#00D4FF",
-    "light": "#00D4FF",
-    "dark": "#00b8e0"
+    "primary": "#2563EB",
+    "light": "#3B82F6",
+    "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
   "navigation": {
