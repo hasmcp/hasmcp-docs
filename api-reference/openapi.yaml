@@ -1,19 +1,82 @@
 openapi: 3.0.4
 info:
-  title: HasMCP Manager API
+  title: HasMCP API
   version: "1.0.0"
-  description: API for managing HasMCP components like Variables, Providers, MCP Servers, Resources, and Prompts.
+  description: >-
+    API for managing HasMCP: variables, providers and their tools, resources and
+    prompts, MCP servers, Git connections and the setup page settings. The
+    organization is taken from the access token, so the paths carry no
+    organization ID. The MCP endpoints that clients connect to, the public hub
+    and the OAuth2 redirects are listed too.
+servers:
+  - url: https://app.hasmcp.com/api/v1
+    description: Manager API (the other APIs override this per path)
 security:
   - bearerAuth: []
+tags:
+  - name: Variables
+  - name: Providers
+  - name: Provider Tools
+  - name: Provider Resources
+  - name: Provider Prompts
+  - name: Servers
+  - name: Server Associations
+  - name: Git Connections
+  - name: Users
+  - name: Hub
+  - name: Configurations
+  - name: Setup
+  - name: MCP
+  - name: OAuth2
 paths:
+  /git-connections:
+    get:
+      summary: List Git Connections
+      operationId: listGitConnections
+      tags: ["Git Connections"]
+      security:
+        - oauth2:
+          - "gitconnection:list"
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: A list of Git connections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListGitConnectionsResponse"
+  /git-connections/{id}:
+    delete:
+      summary: Delete Git Connection
+      operationId: deleteGitConnection
+      tags: ["Git Connections"]
+      security:
+        - oauth2:
+          - "gitconnection:delete"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Git Connection ID
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "204":
+          description: Git Connection deleted
   /variables:
     get:
       summary: List Variables
       operationId: listVariables
+      tags: ["Variables"]
       security:
         - oauth2:
-            - "variable:list"
+          - "variable:list"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of variables
           content:
@@ -23,9 +86,10 @@ paths:
     post:
       summary: Create Variable
       operationId: createVariable
+      tags: ["Variables"]
       security:
         - oauth2:
-            - "variable:create"
+          - "variable:create"
       requestBody:
         required: true
         content:
@@ -33,6 +97,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateVariableRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Variable created
           content:
@@ -43,9 +109,10 @@ paths:
     patch:
       summary: Update Variable
       operationId: updateVariable
+      tags: ["Variables"]
       security:
         - oauth2:
-            - "variable:update"
+          - "variable:update"
       parameters:
         - name: id
           in: path
@@ -60,18 +127,17 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateVariableRequest"
       responses:
-        "200":
+        default:
+          $ref: "#/components/responses/Error"
+        "204":
           description: Variable updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UpdateVariableResponse"
     delete:
       summary: Delete Variable
       operationId: deleteVariable
+      tags: ["Variables"]
       security:
         - oauth2:
-            - "variable:delete"
+          - "variable:delete"
       parameters:
         - name: id
           in: path
@@ -80,41 +146,29 @@ paths:
             type: string
             description: Variable ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Variable deleted
   /providers:
     get:
       summary: List Providers
       operationId: listProviders
+      tags: ["Providers"]
       security:
         - oauth2:
-            - "provider:list"
+          - "provider:list"
       parameters:
-        - name: nameContains
-          in: query
-          schema:
-            type: string
-        - name: baseURLContains
-          in: query
-          schema:
-            type: string
-        - name: apiType
-          in: query
-          schema:
-            type: string
-        - name: visibility
-          in: query
-          schema:
-            type: string
-        - name: limit
-          in: query
-          schema:
-            type: integer
-        - name: token
-          in: query
-          schema:
-            type: string
+        - $ref: "#/components/parameters/ProviderNameContains"
+        - $ref: "#/components/parameters/ProviderBaseURLContains"
+        - $ref: "#/components/parameters/ProviderApiType"
+        - $ref: "#/components/parameters/ProviderVisibilityType"
+        - $ref: "#/components/parameters/ProviderVerificationStatus"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/PageToken"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of providers
           content:
@@ -124,9 +178,10 @@ paths:
     post:
       summary: Create Provider
       operationId: createProvider
+      tags: ["Providers"]
       security:
         - oauth2:
-            - "provider:create"
+          - "provider:create"
       requestBody:
         required: true
         content:
@@ -134,6 +189,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateProviderRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Provider created
           content:
@@ -144,9 +201,10 @@ paths:
     get:
       summary: Get Provider
       operationId: getProvider
+      tags: ["Providers"]
       security:
         - oauth2:
-            - "provider:read"
+          - "provider:read"
       parameters:
         - name: id
           in: path
@@ -155,6 +213,8 @@ paths:
             type: string
             description: Provider ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Provider details
           content:
@@ -164,9 +224,10 @@ paths:
     patch:
       summary: Update Provider
       operationId: updateProvider
+      tags: ["Providers"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider:update"
       parameters:
         - name: id
           in: path
@@ -181,6 +242,8 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateProviderRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Provider updated
           content:
@@ -190,9 +253,10 @@ paths:
     delete:
       summary: Delete Provider
       operationId: deleteProvider
+      tags: ["Providers"]
       security:
         - oauth2:
-            - "provider:delete"
+          - "provider:delete"
       parameters:
         - name: id
           in: path
@@ -201,15 +265,96 @@ paths:
             type: string
             description: Provider ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Provider deleted
+  /providers/{id}/sync:
+    post:
+      summary: Sync Remote MCP Provider
+      description: >-
+        Lists the tools, resources and prompts of the remote MCP server of an
+        MCP provider with the user's credentials and mirrors them into the
+        provider, along with its instructions and icon. Existing items are
+        matched by name; new ones are created, changed ones updated and the
+        removed ones deleted.
+      operationId: syncProviderTools
+      tags: ["Providers"]
+      security:
+        - oauth2:
+          - "provider:update"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Provider ID
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: Provider tools synced
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncProviderResponse"
+        "422":
+          description: >-
+            The remote MCP server requires authorization, connect the account
+            with the authorize endpoint (error.data.authorizationRequired is true)
+        "502":
+          description: The remote MCP server failed
+  /providers/{id}/authorize:
+    post:
+      summary: Connect Provider Account
+      description: >-
+        Starts the oauth2 authorization of the current user with the provider.
+        For remote MCP providers the authorization server is discovered and an
+        oauth2 client is registered dynamically when the provider has none. The
+        tokens are stored as the provider's ACCESS_TOKEN and REFRESH_TOKEN
+        secret variables and renewed automatically.
+      operationId: authorizeProvider
+      tags: ["Providers"]
+      security:
+        - oauth2:
+          - "provider:update"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Provider ID
+        - name: serverID
+          in: query
+          required: false
+          description: >-
+            Connects the account for this MCP server only; its tokens are saved
+            as variables of the server. Without it the account is shared by
+            every server.
+          schema:
+            type: string
+            pattern: "^[A-Za-z0-9]{11}$"
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: The url to send the user to
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorizeProviderResponse"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
   /providers/{id}/tools:
     get:
       summary: List Provider Tools
       operationId: listProviderTools
+      tags: ["Provider Tools"]
       security:
         - oauth2:
-            - "provider:list"
+          - "provider_tool:list"
       parameters:
         - name: id
           in: path
@@ -218,6 +363,8 @@ paths:
             type: string
             description: Provider ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of provider tools
           content:
@@ -227,9 +374,10 @@ paths:
     post:
       summary: Create Provider Tool
       operationId: createProviderTool
+      tags: ["Provider Tools"]
       security:
         - oauth2:
-            - "provider:create"
+          - "provider_tool:create"
       parameters:
         - name: id
           in: path
@@ -244,6 +392,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateProviderToolRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Tool created
           content:
@@ -254,9 +404,10 @@ paths:
     get:
       summary: Get Provider Tool
       operationId: getProviderTool
+      tags: ["Provider Tools"]
       security:
         - oauth2:
-            - "provider:read"
+          - "provider_tool:read"
       parameters:
         - name: id
           in: path
@@ -271,6 +422,8 @@ paths:
             type: string
             description: Tool ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Tool details
           content:
@@ -280,9 +433,10 @@ paths:
     patch:
       summary: Update Provider Tool
       operationId: updateProviderTool
+      tags: ["Provider Tools"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider_tool:update"
       parameters:
         - name: id
           in: path
@@ -303,6 +457,8 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateProviderToolRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Tool updated
           content:
@@ -312,9 +468,10 @@ paths:
     delete:
       summary: Delete Provider Tool
       operationId: deleteProviderTool
+      tags: ["Provider Tools"]
       security:
         - oauth2:
-            - "provider:delete"
+          - "provider_tool:delete"
       parameters:
         - name: id
           in: path
@@ -329,16 +486,82 @@ paths:
             type: string
             description: Tool ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Tool deleted
+  /providers/{id}/tools/{toolID}/interceptors:
+    get:
+      summary: List Provider Tool Interceptors
+      operationId: listProviderToolInterceptors
+      tags: ["Provider Tools"]
+      security:
+        - oauth2:
+          - "provider_tool_interceptor:list"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Provider ID
+        - name: toolID
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Tool ID
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: A list of provider tool interceptors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProviderToolInterceptorsResponse"
+    put:
+      summary: Save Provider Tool Interceptors
+      operationId: saveProviderToolInterceptors
+      tags: ["Provider Tools"]
+      security:
+        - oauth2:
+          - "provider_tool_interceptor:save"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Provider ID
+        - name: toolID
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Tool ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveProviderToolInterceptorsRequest"
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "204":
+          description: Interceptors saved successfully
   /servers:
     get:
       summary: List MCP Servers
       operationId: listServers
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:list"
+          - "server:list"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of MCP servers
           content:
@@ -348,9 +571,10 @@ paths:
     post:
       summary: Create MCP Server
       operationId: createServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:create"
+          - "server:create"
       requestBody:
         required: true
         content:
@@ -358,6 +582,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateServerRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: MCP Server created
           content:
@@ -368,17 +594,19 @@ paths:
     post:
       summary: Import MCP Server
       operationId: importServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:update"
+          - "server:import"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              description: ExportServer JSON schema spec
+              $ref: "#/components/schemas/ExportServer"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: MCP Server imported successfully
           content:
@@ -389,9 +617,10 @@ paths:
     get:
       summary: Get MCP Server
       operationId: getServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:read"
+          - "server:read"
       parameters:
         - name: id
           in: path
@@ -400,6 +629,8 @@ paths:
             type: string
             description: MCP Server ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: MCP Server details
           content:
@@ -409,9 +640,10 @@ paths:
     patch:
       summary: Update MCP Server
       operationId: updateServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:update"
+          - "server:update"
       parameters:
         - name: id
           in: path
@@ -426,6 +658,8 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateServerRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: MCP Server updated
           content:
@@ -435,9 +669,10 @@ paths:
     delete:
       summary: Delete MCP Server
       operationId: deleteServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:delete"
+          - "server:delete"
       parameters:
         - name: id
           in: path
@@ -447,15 +682,18 @@ paths:
             type: string
             description: Git Connection ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: MCP Server deleted
   /servers/{id}/export:
     get:
       summary: Export MCP Server
       operationId: exportServer
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:read"
+          - "server:export"
       parameters:
         - name: id
           in: path
@@ -464,20 +702,22 @@ paths:
             type: string
             description: MCP Server ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: MCP Server exported successfully
           content:
             application/json:
               schema:
-                type: object
-                description: ExportServer JSON schema spec
+                $ref: "#/components/schemas/ExportServer"
   /servers/{id}/tokens:
     post:
       summary: Create MCP Server Token
       operationId: createServerToken
+      tags: ["Servers"]
       security:
         - oauth2:
-            - "server:create_token"
+          - "server_token:create"
       parameters:
         - name: id
           in: path
@@ -492,6 +732,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateServerTokenRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: MCP Server Token created
           content:
@@ -502,9 +744,10 @@ paths:
     get:
       summary: List MCP Server Tools
       operationId: listServerTools
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:read"
+          - "server_tool:list"
       parameters:
         - name: id
           in: path
@@ -513,6 +756,8 @@ paths:
             type: string
             description: MCP Server ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of associated tools
           content:
@@ -522,9 +767,10 @@ paths:
     post:
       summary: Create MCP Server Tool Association
       operationId: createServerTool
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_tool:create"
       parameters:
         - name: id
           in: path
@@ -539,6 +785,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateServerToolRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Tool associated
           content:
@@ -549,9 +797,10 @@ paths:
     delete:
       summary: Delete MCP Server Tool Association
       operationId: deleteServerTool
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_tool:delete"
       parameters:
         - name: id
           in: path
@@ -565,15 +814,18 @@ paths:
           schema:
             type: string
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Tool association deleted
   /providers/{id}/resources:
     get:
       summary: List Provider Resources
       operationId: listProviderResources
+      tags: ["Provider Resources"]
       security:
         - oauth2:
-            - "provider:list"
+          - "provider_resource:list"
       parameters:
         - name: id
           in: path
@@ -582,6 +834,8 @@ paths:
             type: string
             description: Provider ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of provider resources
           content:
@@ -591,9 +845,10 @@ paths:
     post:
       summary: Create Provider Resource
       operationId: createProviderResource
+      tags: ["Provider Resources"]
       security:
         - oauth2:
-            - "provider:create"
+          - "provider_resource:create"
       parameters:
         - name: id
           in: path
@@ -608,6 +863,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateProviderResourceRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Provider Resource created
           content:
@@ -618,9 +875,10 @@ paths:
     get:
       summary: Get Provider Resource
       operationId: getProviderResource
+      tags: ["Provider Resources"]
       security:
         - oauth2:
-            - "provider:read"
+          - "provider_resource:read"
       parameters:
         - name: id
           in: path
@@ -635,6 +893,8 @@ paths:
             type: string
             description: Resource ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Provider Resource details
           content:
@@ -644,9 +904,10 @@ paths:
     patch:
       summary: Update Provider Resource
       operationId: updateProviderResource
+      tags: ["Provider Resources"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider_resource:update"
       parameters:
         - name: id
           in: path
@@ -667,18 +928,17 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateProviderResourceRequest"
       responses:
-        "200":
+        default:
+          $ref: "#/components/responses/Error"
+        "204":
           description: Provider Resource updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UpdateProviderResourceResponse"
     delete:
       summary: Delete Provider Resource
       operationId: deleteProviderResource
+      tags: ["Provider Resources"]
       security:
         - oauth2:
-            - "provider:delete"
+          - "provider_resource:delete"
       parameters:
         - name: id
           in: path
@@ -693,15 +953,18 @@ paths:
             type: string
             description: Resource ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Provider Resource deleted
   /providers/{id}/prompts:
     get:
       summary: List Provider Prompts
       operationId: listProviderPrompts
+      tags: ["Provider Prompts"]
       security:
         - oauth2:
-            - "provider:read"
+          - "provider_prompt:list"
       parameters:
         - name: id
           in: path
@@ -710,6 +973,8 @@ paths:
             type: string
             description: Provider ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of provider prompts
           content:
@@ -719,9 +984,10 @@ paths:
     post:
       summary: Create Provider Prompt
       operationId: createProviderPrompt
+      tags: ["Provider Prompts"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider_prompt:create"
       parameters:
         - name: id
           in: path
@@ -736,6 +1002,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateProviderPromptRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Provider Prompt created
           content:
@@ -746,9 +1014,10 @@ paths:
     get:
       summary: Get Provider Prompt
       operationId: getProviderPrompt
+      tags: ["Provider Prompts"]
       security:
         - oauth2:
-            - "provider:read"
+          - "provider_prompt:read"
       parameters:
         - name: id
           in: path
@@ -763,6 +1032,8 @@ paths:
             type: string
             description: Prompt ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: Provider Prompt details
           content:
@@ -772,9 +1043,10 @@ paths:
     patch:
       summary: Update Provider Prompt
       operationId: updateProviderPrompt
+      tags: ["Provider Prompts"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider_prompt:update"
       parameters:
         - name: id
           in: path
@@ -795,14 +1067,17 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateProviderPromptRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Provider Prompt updated
     delete:
       summary: Delete Provider Prompt
       operationId: deleteProviderPrompt
+      tags: ["Provider Prompts"]
       security:
         - oauth2:
-            - "provider:update"
+          - "provider_prompt:delete"
       parameters:
         - name: id
           in: path
@@ -817,15 +1092,18 @@ paths:
             type: string
             description: Prompt ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Provider Prompt deleted
   /servers/{id}/resources:
     get:
       summary: List MCP Server Resource Associations
       operationId: listServerResources
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:list"
+          - "server_resource:list"
       parameters:
         - name: id
           in: path
@@ -834,6 +1112,8 @@ paths:
             type: string
             description: MCP Server ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of associated resources
           content:
@@ -843,9 +1123,10 @@ paths:
     post:
       summary: Create MCP Server Resource Association
       operationId: createServerResource
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_resource:create"
       parameters:
         - name: id
           in: path
@@ -860,6 +1141,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateServerResourceRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Resource associated
           content:
@@ -870,9 +1153,10 @@ paths:
     delete:
       summary: Delete MCP Server Resource Association
       operationId: deleteServerResource
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_resource:delete"
       parameters:
         - name: id
           in: path
@@ -887,15 +1171,18 @@ paths:
             type: string
             description: Resource ID to disassociate
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Resource association deleted
   /servers/{id}/prompts:
     get:
       summary: List MCP Server Prompt Associations
       operationId: listServerPrompts
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:read"
+          - "server_prompt:list"
       parameters:
         - name: id
           in: path
@@ -904,6 +1191,8 @@ paths:
             type: string
             description: MCP Server ID
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "200":
           description: A list of associated prompts
           content:
@@ -913,9 +1202,10 @@ paths:
     post:
       summary: Create MCP Server Prompt Association
       operationId: createServerPrompt
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_prompt:create"
       parameters:
         - name: id
           in: path
@@ -930,6 +1220,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateServerPromptRequest"
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "201":
           description: Prompt associated
           content:
@@ -940,9 +1232,10 @@ paths:
     delete:
       summary: Delete MCP Server Prompt Association
       operationId: deleteServerPrompt
+      tags: ["Server Associations"]
       security:
         - oauth2:
-            - "server:update"
+          - "server_prompt:delete"
       parameters:
         - name: id
           in: path
@@ -957,14 +1250,484 @@ paths:
             type: string
             description: Prompt ID to disassociate
       responses:
+        default:
+          $ref: "#/components/responses/Error"
         "204":
           description: Prompt association deleted
+  /servers/{id}/analytics:
+    get:
+      summary: Get MCP Server Analytics
+      operationId: getServerAnalytics
+      tags: ["Servers"]
+      security:
+        - oauth2:
+          - "server_analytics:read"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MCP Server ID
+        - name: period_from
+          in: query
+          description: Start of the period, unix seconds
+          schema:
+            type: integer
+            format: int64
+        - name: period_to
+          in: query
+          description: End of the period, unix seconds
+          schema:
+            type: integer
+            format: int64
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: Usage of the server in the period
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerAnalyticsResponse"
+  /users/me:
+    get:
+      summary: Get Current User
+      description: >-
+        Needs only a valid access token. Proxied to the account service when it
+        is enabled, otherwise the built-in user is returned.
+      operationId: getCurrentUser
+      tags: ["Users"]
+      responses:
+        "200":
+          description: The current user
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /users/me/organizations:
+    get:
+      summary: List Current User Organizations
+      description: >-
+        Needs only a valid access token. Proxied to the account service when it
+        is enabled, otherwise the built-in organization is returned.
+      operationId: listCurrentUserOrganizations
+      tags: ["Users"]
+      responses:
+        "200":
+          description: The organizations of the current user
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /hub/v1/providers:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: List Public Providers
+      description: Lists the providers whose visibility is PUBLIC.
+      operationId: listHubProviders
+      tags: ["Hub"]
+      parameters:
+        - $ref: "#/components/parameters/ProviderNameContains"
+        - $ref: "#/components/parameters/ProviderBaseURLContains"
+        - $ref: "#/components/parameters/ProviderApiType"
+        - $ref: "#/components/parameters/ProviderVerificationStatus"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: A list of public providers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProvidersResponse"
+  /hub/v1/servers:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: List Public MCP Servers
+      operationId: listHubServers
+      tags: ["Hub"]
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: A list of public MCP servers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListServersResponse"
+  /hub/v1/servers/{id}:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Get Public MCP Server
+      operationId: getHubServer
+      tags: ["Hub"]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MCP Server ID
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: The public MCP server
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetServerResponse"
+  /configurations:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: List Public Configurations
+      description: Settings the web app needs before sign in, e.g. the MCP base URL. No token needed.
+      operationId: listConfigurations
+      tags: ["Configurations"]
+      security: []
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+        "200":
+          description: The public configurations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configurations:
+                    type: object
+                    additionalProperties: true
+  /setup/v1/status:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Get Setup Status
+      description: Tells whether the settings were saved on the setup page. No token needed.
+      operationId: getSetupStatus
+      tags: ["Setup"]
+      security: []
+      responses:
+        "200":
+          description: The setup status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configured:
+                    type: boolean
+  /setup/v1/settings:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Get Settings
+      description: >-
+        Returns the settings without their secrets; secretsSet tells which
+        secrets have a value. Needs the root access token
+        (HASMCP_APP_API_ACCESS_TOKEN) as the bearer token. Limited to 30
+        requests a minute per IP.
+      operationId: getSettings
+      tags: ["Setup"]
+      security:
+        - rootToken: []
+      responses:
+        "200":
+          description: The settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SettingsResponse"
+        "401":
+          $ref: "#/components/responses/SetupError"
+        "429":
+          description: Too many requests
+    put:
+      summary: Save Settings
+      description: >-
+        Saves every setting except the root access token and the encryption
+        key, which stay in the environment. An empty secret keeps the saved
+        one. Most settings take effect after a restart, see restartRequired.
+        Needs the root access token as the bearer token.
+      operationId: saveSettings
+      tags: ["Setup"]
+      security:
+        - rootToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settings:
+                  $ref: "#/components/schemas/Settings"
+      responses:
+        "200":
+          description: The saved settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SettingsResponse"
+        "400":
+          $ref: "#/components/responses/SetupError"
+        "401":
+          $ref: "#/components/responses/SetupError"
+        "422":
+          $ref: "#/components/responses/SetupError"
+        "429":
+          description: Too many requests
+        "500":
+          $ref: "#/components/responses/SetupError"
+  /mcp/{id}:
+    servers:
+      - url: https://app.hasmcp.com
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: MCP Server ID
+    post:
+      summary: MCP JSON-RPC Request
+      description: >-
+        The Streamable HTTP endpoint of an MCP server. Takes a JSON-RPC 2.0
+        request and answers with JSON or an event stream. Authenticate with a
+        server token in the x-hasmcp-key header ("Bearer <token>") or the token
+        query parameter. An Authorization header, or the authorization query
+        parameter, is passed to the upstream APIs.
+      operationId: mcpCall
+      tags: ["MCP"]
+      security:
+        - mcpKey: []
+        - mcpKeyQuery: []
+      parameters:
+        - $ref: "#/components/parameters/McpSessionID"
+        - $ref: "#/components/parameters/McpProtocolVersion"
+        - name: authorization
+          in: query
+          required: false
+          description: Token sent upstream as "Bearer <value>" when there is no Authorization header.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JSONRPCRequest"
+      responses:
+        "200":
+          description: The JSON-RPC response, or an event stream of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+            text/event-stream:
+              schema:
+                type: string
+        "202":
+          description: A notification or response was accepted
+        "400":
+          description: Not a JSON-RPC 2.0 request
+        "401":
+          description: The server token is missing, invalid or expired
+        "402":
+          description: The organization has no quota left
+    get:
+      summary: MCP Server Event Stream
+      description: Opens the event stream of a session for messages from the server.
+      operationId: mcpStream
+      tags: ["MCP"]
+      security:
+        - mcpKey: []
+        - mcpKeyQuery: []
+      parameters:
+        - $ref: "#/components/parameters/McpSessionID"
+        - name: last-event-id
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The event stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "401":
+          description: The server token is missing, invalid or expired
+    delete:
+      summary: End MCP Session
+      operationId: mcpDeleteSession
+      tags: ["MCP"]
+      security:
+        - mcpKey: []
+        - mcpKeyQuery: []
+      parameters:
+        - $ref: "#/components/parameters/McpSessionID"
+      responses:
+        "204":
+          description: The session ended
+        "401":
+          description: The server token is missing, invalid or expired
+  /mcp/{id}/logs:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: MCP Server Debug Stream
+      description: >-
+        Streams what the server does as server-sent events: client requests
+        («), their responses (»), upstream API calls (ⓘ .api.call) and
+        warnings (⚠). Needs a server token with the "server:tail" scope.
+      operationId: mcpTail
+      tags: ["MCP"]
+      security:
+        - mcpKey: []
+        - mcpKeyQuery: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MCP Server ID
+      responses:
+        "200":
+          description: The debug event stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "401":
+          description: The server token is missing, invalid, expired or lacks the server:tail scope
+  /oauth2/authorize:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Start Provider Authorization
+      description: >-
+        Redirects the user to the provider's authorization page. The web app
+        gets this URL from the authorize provider endpoint.
+      operationId: oauth2Authorize
+      tags: ["OAuth2"]
+      parameters:
+        - name: provider_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: server_id
+          in: query
+          required: false
+          description: Connects the account for this MCP server only
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect to the provider's authorization page
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+  /oauth2/callback:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Provider Authorization Callback
+      description: Saves the provider's tokens as variables and redirects back to the web app.
+      operationId: oauth2Callback
+      tags: ["OAuth2"]
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/OAuth2State"
+        - $ref: "#/components/parameters/OAuth2Code"
+      responses:
+        "307":
+          description: Redirect back to the web app
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+  /git-oauth2/authorize:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Start Git Connection
+      description: Redirects the user to GitHub or GitLab to connect a Git account.
+      operationId: gitOAuth2Authorize
+      tags: ["OAuth2"]
+      parameters:
+        - name: provider
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: ["github", "gitlab"]
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect to the Git provider
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+  /git-oauth2/callback:
+    servers:
+      - url: https://app.hasmcp.com
+    get:
+      summary: Git Connection Callback
+      description: Saves the Git connection and redirects back to the web app.
+      operationId: gitOAuth2Callback
+      tags: ["OAuth2"]
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/OAuth2State"
+        - $ref: "#/components/parameters/OAuth2Code"
+        - name: installation_id
+          in: query
+          required: false
+          description: The GitHub App installation
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect back to the web app
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       description: "Enter 'Bearer' followed by a space and your token (e.g., 'Bearer ${HASMCP_ACCESS_TOKEN}')."
+    rootToken:
+      type: http
+      scheme: bearer
+      description: The root access token, HASMCP_APP_API_ACCESS_TOKEN.
+    mcpKey:
+      type: apiKey
+      in: header
+      name: x-hasmcp-key
+      description: "A server token as 'Bearer <token>'."
+    mcpKeyQuery:
+      type: apiKey
+      in: query
+      name: token
+      description: A server token, for clients that cannot set headers.
     oauth2:
       type: oauth2
       flows:
@@ -989,7 +1752,174 @@ components:
             "server:update": Update MCP server
             "server:delete": Delete MCP server
             "server:create_token": Create MCP server token
+            "server:tail": Read the debug stream of an MCP server
+            "provider_tool:list": List provider tools
+            "provider_tool:create": Create provider tool
+            "provider_tool:read": Get provider tool
+            "provider_tool:update": Update provider tool
+            "provider_tool:delete": Delete provider tool
+            "provider_tool_interceptor:list": List provider tool interceptors
+            "provider_tool_interceptor:save": Save provider tool interceptors
+            "provider_resource:list": List provider resources
+            "provider_resource:create": Create provider resource
+            "provider_resource:read": Get provider resource
+            "provider_resource:update": Update provider resource
+            "provider_resource:delete": Delete provider resource
+            "provider_prompt:list": List provider prompts
+            "provider_prompt:create": Create provider prompt
+            "provider_prompt:read": Get provider prompt
+            "provider_prompt:update": Update provider prompt
+            "provider_prompt:delete": Delete provider prompt
+            "server:import": Import MCP server
+            "server:export": Export MCP server
+            "server_analytics:read": Get MCP server analytics
+            "server_token:create": Create MCP server token
+            "server_tool:list": List MCP server tools
+            "server_tool:create": Add a tool to an MCP server
+            "server_tool:delete": Remove a tool from an MCP server
+            "server_resource:list": List MCP server resources
+            "server_resource:create": Add a resource to an MCP server
+            "server_resource:delete": Remove a resource from an MCP server
+            "server_prompt:list": List MCP server prompts
+            "server_prompt:create": Add a prompt to an MCP server
+            "server_prompt:delete": Remove a prompt from an MCP server
+  parameters:
+    ProviderNameContains:
+      name: name_contains
+      in: query
+      schema:
+        type: string
+    ProviderBaseURLContains:
+      name: base_url_contains
+      in: query
+      schema:
+        type: string
+    ProviderApiType:
+      name: api_type
+      in: query
+      schema:
+        type: string
+        enum: ["REST", "MCP"]
+    ProviderVisibilityType:
+      name: visibility_type
+      in: query
+      schema:
+        type: string
+        enum: ["INTERNAL", "PUBLIC"]
+    ProviderVerificationStatus:
+      name: verification_status
+      in: query
+      schema:
+        type: string
+        enum: ["UNVERIFIED", "VERIFIED"]
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        format: int32
+    PageToken:
+      name: token
+      in: query
+      description: The nextToken of the previous page
+      schema:
+        type: string
+    McpSessionID:
+      name: mcp-session-id
+      in: header
+      required: false
+      schema:
+        type: string
+    McpProtocolVersion:
+      name: mcp-protocol-version
+      in: header
+      required: false
+      schema:
+        type: string
+        example: "2025-11-25"
+    OAuth2State:
+      name: state
+      in: query
+      required: true
+      schema:
+        type: string
+    OAuth2Code:
+      name: code
+      in: query
+      required: true
+      schema:
+        type: string
+  responses:
+    Error:
+      description: >-
+        An error; the HTTP status is error.code, e.g. 401 for a missing or
+        invalid token, 404 when not found or 422 for an invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    UnprocessableEntity:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    SetupError:
+      description: An error of the setup API
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
+    ListGitConnectionsResponse:
+      type: object
+      properties:
+        gitConnections:
+          type: array
+          items:
+            $ref: "#/components/schemas/GitConnection"
+    GitConnection:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
+          example: "kSuB9Gf6aD4"
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        provider:
+          type: string
+          example: "github"
+        accountName:
+          type: string
+          example: "octocat"
+        avatarURL:
+          type: string
+        status:
+          type: string
+          example: "CONNECTED"
+        repositories:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              fullName:
+                type: string
+              private:
+                type: boolean
+              url:
+                type: string
+              cloneURL:
+                type: string
     Variable:
       type: object
       properties:
@@ -1015,6 +1945,10 @@ components:
           description: The variable's value. Will be '***' if type is SECRET on retrieval.
         name:
           type: string
+        serverID:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
+          description: The MCP server the variable belongs to; empty means it applies to every server.
     VariableCreate:
       type: object
       properties:
@@ -1027,12 +1961,24 @@ components:
           description: The variable's value.
         name:
           type: string
+        serverID:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
+          description: Scopes the variable to an MCP server; leave empty to apply it to every server.
     VariableUpdate:
       type: object
       properties:
+        type:
+          type: string
+          description: "0: INVALID, 1: ENV, 2: SECRET"
+        name:
+          type: string
         value:
           type: string
           description: The variable's value.
+        serverID:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
     CreateVariableRequest:
       type: object
       properties:
@@ -1048,11 +1994,6 @@ components:
       properties:
         variable:
           $ref: "#/components/schemas/VariableUpdate"
-    UpdateVariableResponse:
-      type: object
-      properties:
-        variable:
-          $ref: "#/components/schemas/Variable"
     ListVariablesResponse:
       type: object
       properties:
@@ -1095,12 +2036,18 @@ components:
           readOnly: true
         apiType:
           type: string
-          description: "0: INVALID, 1: REST"
+          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint)"
+          enum: ["REST", "MCP"]
           example: "REST"
         visibilityType:
           type: string
           description: "0: INVALID, 1: INTERNAL, 2: PUBLIC"
           example: "PUBLIC"
+        verificationStatus:
+          type: string
+          description: "0: INVALID, 1: UNVERIFIED, 2: VERIFIED"
+          readOnly: true
+          example: "UNVERIFIED"
         baseURL:
           type: string
           format: uri
@@ -1113,15 +2060,29 @@ components:
         secretPrefix:
           type: string
           readOnly: true
+          description: Prefix of the provider's variables, e.g. its ACCESS_TOKEN secret.
         name:
           type: string
         description:
           type: string
+        instructions:
+          type: string
+          description: Instructions of the remote MCP server, filled by sync.
         tools:
           type: array
           readOnly: true
           items:
             $ref: "#/components/schemas/ProviderTool"
+        resources:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/ProviderResource"
+        prompts:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/ProviderPrompt"
         oauth2Config:
           $ref: "#/components/schemas/ProviderOAuth2Config"
     ProviderCreate:
@@ -1129,7 +2090,8 @@ components:
       properties:
         apiType:
           type: string
-          description: "0: INVALID, 1: REST"
+          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint)"
+          enum: ["REST", "MCP"]
           example: "REST"
         visibilityType:
           type: string
@@ -1144,10 +2106,19 @@ components:
         iconURL:
           type: string
           format: uri
+        iconBase64:
+          type: string
+          description: Base64-encoded PNG image for the provider icon.
         name:
           type: string
         description:
           type: string
+        instructions:
+          type: string
+        version:
+          type: integer
+          format: int32
+          description: Optimistic concurrency version. Must match the current provider version on update.
         oauth2Config:
           $ref: "#/components/schemas/ProviderOAuth2Config"
     CreateProviderRequest:
@@ -1186,6 +2157,37 @@ components:
       properties:
         provider:
           $ref: "#/components/schemas/Provider"
+    SyncProviderResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderTool"
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderResource"
+        prompts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderPrompt"
+        instructionsUpdated:
+          type: boolean
+        iconUpdated:
+          type: boolean
+        created:
+          type: integer
+          description: How many tools, resources and prompts were created
+        updated:
+          type: integer
+        deleted:
+          type: integer
+    AuthorizeProviderResponse:
+      type: object
+      properties:
+        authorizationURL:
+          type: string
     ProviderTool:
       type: object
       properties:
@@ -1206,7 +2208,9 @@ components:
           example: "/users/{id}"
         name:
           type: string
-          description: MCP tool name (camelCase up to 20chars)
+          description: MCP tool name (camelCase up to 36 chars)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
           example: makePayment
         title:
           type: string
@@ -1234,6 +2238,11 @@ components:
           type: array
           items:
             type: string
+        hints:
+          type: array
+          description: MCP tool annotations that are set, e.g. readOnlyHint, destructiveHint, idempotentHint, openWorldHint.
+          items:
+            type: string
     ProviderToolCreate:
       type: object
       properties:
@@ -1250,7 +2259,9 @@ components:
           example: "/users/{id}"
         name:
           type: string
-          description: MCP tool name (camelCase up to 20chars)
+          description: MCP tool name (camelCase up to 36 chars)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
           example: makePayment
         title:
           type: string
@@ -1276,6 +2287,11 @@ components:
             $ref: "#/components/schemas/ToolHeader"
         oauth2Scopes:
           type: array
+          items:
+            type: string
+        hints:
+          type: array
+          description: MCP tool annotations that are set, e.g. readOnlyHint, destructiveHint, idempotentHint, openWorldHint.
           items:
             type: string
     ToolHeader:
@@ -1317,6 +2333,41 @@ components:
       properties:
         tool:
           $ref: "#/components/schemas/ProviderTool"
+    Interceptor:
+      type: object
+      properties:
+        purpose:
+          type: string
+          enum: ["mutation"]
+          example: "mutation"
+        engine:
+          type: string
+          enum: ["jmespath", "js"]
+          example: "jmespath"
+        ioType:
+          type: string
+          enum: ["request", "response"]
+          example: "request"
+        name:
+          type: string
+          example: "myInterceptor"
+        code:
+          type: string
+          example: "..."
+    ListProviderToolInterceptorsResponse:
+      type: object
+      properties:
+        interceptors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interceptor"
+    SaveProviderToolInterceptorsRequest:
+      type: object
+      properties:
+        interceptors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interceptor"
     Server:
       type: object
       properties:
@@ -1335,44 +2386,92 @@ components:
           readOnly: true
         name:
           type: string
-        description:
+        instructions:
+          type: string
+          description: System instructions for the MCP server that guide its behavior and responses. Max 8000 characters.
+        iconURL:
+          type: string
+          format: uri
+        iconBase64:
           type: string
         requestHeadersProxyEnabled:
           type: boolean
+          description: When enabled, passes incoming MCP client request headers through to the upstream provider API calls.
         dynamicToolDiscoveryEnabled:
           type: boolean
+          description: Activates dynamic tool discovery with searchTool, getToolDefinition, and useTool meta-tools. Requires at least 3 total tools across all providers.
+        stateless:
+          type: boolean
+          description: Enables the stateless MCP transport (SEP-2575). When true, the server accepts self-contained requests without the initialize handshake or an Mcp-Session-Id and exposes the server/discover RPC. The MCP client must also support the stateless spec. Defaults to false.
+        visibilityType:
+          type: string
+          description: "0: INVALID, 1: INTERNAL, 2: PUBLIC"
+          example: "PUBLIC"
         version:
           type: integer
           format: int32
         gitProvider:
           type: string
+          description: The Git hosting provider used for syncing server configuration.
+          enum:
+            - github
+          example: github
         gitRepoFullName:
           type: string
+          description: Full repository path in owner/repo format.
+          example: hasmcp/remote-mcps
         providers:
           type: array
+          description: The providers of the server with the tools, resources and prompts it exposes.
           items:
             $ref: "#/components/schemas/Provider"
-        resources:
-          type: array
-          items:
-            $ref: "#/components/schemas/ProviderResource"
-        prompts:
-          type: array
-          items:
-            $ref: "#/components/schemas/ProviderPrompt"
     ServerCreate:
       type: object
       properties:
         name:
           type: string
+          description: Alphanumeric server name.
+          pattern: "^[a-zA-Z0-9]{1,16}$"
+          maxLength: 16
+          example: MyServer01
         instructions:
           type: string
+          description: System instructions for the MCP server that guide its behavior and responses. Max 8000 characters.
+          maxLength: 8000
+        iconBase64:
+          type: string
+          description: Base64-encoded PNG image for the server icon. Will be resized to 128x128.
+        requestHeadersProxyEnabled:
+          type: boolean
+          description: When enabled, passes incoming MCP client request headers through to the upstream provider API calls.
+        dynamicToolDiscoveryEnabled:
+          type: boolean
+          description: Activates dynamic tool discovery with searchTool, getToolDefinition, and useTool meta-tools. Requires at least 3 total tools across all providers.
+        stateless:
+          type: boolean
+          description: Enables the stateless MCP transport (SEP-2575). When true, the server accepts self-contained requests without the initialize handshake or an Mcp-Session-Id and exposes the server/discover RPC. The MCP client must also support the stateless spec. Defaults to false.
+        visibilityType:
+          type: string
+          description: "0: INVALID, 1: INTERNAL, 2: PUBLIC"
+          example: "PUBLIC"
+        gitProvider:
+          type: string
+          description: The Git hosting provider used for syncing server configuration.
+          enum:
+            - github
+          example: github
+        gitRepoFullName:
+          type: string
+          description: Full repository path in owner/repo format.
+          example: hasmcp/remote-mcps
         version:
           type: integer
           format: int32
+          description: Optimistic concurrency version. Must match the current server version on update.
         providers:
           type: array
           description: Array of providers to associate, only ID and nested Tool IDs are used.
+          maxItems: 50
           items:
             type: object
             properties:
@@ -1389,26 +2488,22 @@ components:
                       type: string
                       pattern: "^[A-Za-z0-9]{11}$"
                       example: "kSuB9Gf6aD4"
-        resources:
-          type: array
-          description: Array of resources to associate, only ID is used.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                pattern: "^[A-Za-z0-9]{11}$"
-                example: "kSuB9Gf6aD4"
-        prompts:
-          type: array
-          description: Array of prompts to associate, only ID is used.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                pattern: "^[A-Za-z0-9]{11}$"
-                example: "kSuB9Gf6aD4"
+              resources:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      pattern: "^[A-Za-z0-9]{11}$"
+              prompts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      pattern: "^[A-Za-z0-9]{11}$"
     CreateServerRequest:
       type: object
       properties:
@@ -1460,8 +2555,9 @@ components:
         expiresAt:
           type: string
           format: date-time
-        name:
+        scope:
           type: string
+          description: Empty for MCP access, "server:tail" for the debug stream.
         value:
           type: string
           description: Token value, only present on creation.
@@ -1472,8 +2568,10 @@ components:
         expiresAt:
           type: string
           format: date-time
-        name:
+        scope:
           type: string
+          description: Empty for MCP access, "server:tail" for the debug stream of the server.
+          enum: ["", "server:tail"]
     CreateServerTokenRequest:
       type: object
       properties:
@@ -1524,6 +2622,10 @@ components:
           pattern: "^[A-Za-z0-9]{11}$"
           example: "kSuB9Gf6aD4"
           readOnly: true
+        providerID:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
+          readOnly: true
         createdAt:
           type: string
           format: date-time
@@ -1534,6 +2636,10 @@ components:
           readOnly: true
         name:
           type: string
+          description: MCP resource name (camelCase up to 36 chars)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
+          example: userProfile
         description:
           type: string
         uri:
@@ -1554,6 +2660,10 @@ components:
       properties:
         name:
           type: string
+          description: MCP resource name (camelCase up to 36 characters)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
+          example: userProfile
         description:
           type: string
         uri:
@@ -1596,11 +2706,6 @@ components:
       properties:
         resource:
           $ref: "#/components/schemas/ProviderResourceCreate"
-    UpdateProviderResourceResponse:
-      type: object
-      properties:
-        resource:
-          $ref: "#/components/schemas/ProviderResource"
     ProviderPrompt:
       type: object
       properties:
@@ -1608,6 +2713,10 @@ components:
           type: string
           pattern: "^[A-Za-z0-9]{11}$"
           example: "kSuB9Gf6aD4"
+          readOnly: true
+        providerID:
+          type: string
+          pattern: "^[A-Za-z0-9]{11}$"
           readOnly: true
         createdAt:
           type: string
@@ -1619,31 +2728,45 @@ components:
           readOnly: true
         name:
           type: string
+          description: MCP prompt name (camelCase up to 36 characters)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
+          example: summarizeText
         description:
           type: string
         arguments:
-          type: object
-          description: A raw JSON message for arguments (e.g., []PromptArgument).
-          additionalProperties: true
+          type: array
+          description: MCP prompt arguments.
+          items:
+            $ref: "#/components/schemas/PromptArgument"
         messages:
-          type: object
-          description: A raw JSON message for messages (e.g., []PromptMessage).
-          additionalProperties: true
+          type: array
+          description: MCP prompt messages.
+          items:
+            type: object
+            additionalProperties: true
     ProviderPromptCreate:
       type: object
       properties:
         name:
           type: string
+          description: MCP prompt name (camelCase up to 36 characters)
+          pattern: "^[a-z][a-zA-Z0-9]{0,35}$"
+          maxLength: 36
+          example: summarizeText
         description:
           type: string
         arguments:
-          type: object
-          description: A raw JSON message for arguments (e.g., []PromptArgument).
-          additionalProperties: true
+          type: array
+          description: MCP prompt arguments.
+          items:
+            $ref: "#/components/schemas/PromptArgument"
         messages:
-          type: object
-          description: A raw JSON message for messages (e.g., []PromptMessage).
-          additionalProperties: true
+          type: array
+          description: MCP prompt messages.
+          items:
+            type: object
+            additionalProperties: true
     CreateProviderPromptRequest:
       type: object
       properties:
@@ -1723,7 +2846,353 @@ components:
     ListServerPromptsResponse:
       type: object
       properties:
-        prompts:
+        prompt:
+          description: The prompts of the server (the key is singular).
           type: array
           items:
             $ref: "#/components/schemas/ServerPrompt"
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 422
+            message:
+              type: string
+            data:
+              type: object
+              additionalProperties: true
+              description: Details, e.g. authorizationRequired on sync
+    PromptArgument:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        required:
+          type: boolean
+    ServerAnalyticsResponse:
+      type: object
+      properties:
+        aggregatedEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              val:
+                type: number
+        topTools:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              val:
+                type: integer
+                format: int64
+    ExportServer:
+      type: object
+      description: A server with its providers, tools, resources and prompts, without IDs.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        instructions:
+          type: string
+        requestHeadersProxyEnabled:
+          type: boolean
+        dynamicToolDiscoveryEnabled:
+          type: boolean
+        stateless:
+          type: boolean
+        version:
+          type: integer
+          format: int32
+        gitProvider:
+          type: string
+        gitRepoFullName:
+          type: string
+        providers:
+          type: array
+          items:
+            type: object
+            properties:
+              apiType:
+                type: string
+              visibilityType:
+                type: string
+              baseURL:
+                type: string
+              documentURL:
+                type: string
+              iconURL:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+              oauth2Config:
+                $ref: "#/components/schemas/ProviderOAuth2Config"
+              tools:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    method:
+                      type: string
+                    path:
+                      type: string
+                    name:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    pathArgsJSONSchema:
+                      type: object
+                      additionalProperties: true
+                    queryArgsJSONSchema:
+                      type: object
+                      additionalProperties: true
+                    reqBodyJSONSchema:
+                      type: object
+                      additionalProperties: true
+                    headers:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/ToolHeader"
+                    oauth2Scopes:
+                      type: array
+                      items:
+                        type: string
+                    hints:
+                      type: array
+                      items:
+                        type: string
+                    interceptors:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Interceptor"
+              resources:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProviderResourceCreate"
+              prompts:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProviderPromptCreate"
+    JSONRPCRequest:
+      type: object
+      required: ["jsonrpc", "method"]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: integer
+        method:
+          type: string
+          example: tools/call
+        params:
+          type: object
+          additionalProperties: true
+    Settings:
+      type: object
+      description: Secrets are never returned; send an empty secret to keep the saved one.
+      properties:
+        domain:
+          type: object
+          properties:
+            domainName:
+              type: string
+            mcpBaseURL:
+              type: string
+            mcpProxyURL:
+              type: string
+            oauth2HTTPScheme:
+              type: string
+        server:
+          type: object
+          properties:
+            port:
+              type: integer
+            maxBodySizeInBytes:
+              type: integer
+            trustedProxies:
+              type: array
+              items:
+                type: string
+            idNode:
+              type: integer
+        tls:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            port:
+              type: integer
+            email:
+              type: string
+        database:
+          type: object
+          properties:
+            driver:
+              type: string
+              enum: ["sqlite", "postgres"]
+            sqliteDSN:
+              type: string
+            postgresDSN:
+              type: string
+              writeOnly: true
+        storage:
+          type: object
+          properties:
+            s3:
+              type: object
+              properties:
+                endpoint:
+                  type: string
+                region:
+                  type: string
+                bucket:
+                  type: string
+                accessKey:
+                  type: string
+                secretAccessKey:
+                  type: string
+                  writeOnly: true
+                publicBucketURL:
+                  type: string
+        accounts:
+          type: object
+          properties:
+            serviceEnabled:
+              type: boolean
+            baseURL:
+              type: string
+            adminBaseURL:
+              type: string
+        git:
+          type: object
+          properties:
+            httpScheme:
+              type: string
+            github:
+              type: object
+              properties:
+                appName:
+                  type: string
+                appID:
+                  type: string
+                clientID:
+                  type: string
+                clientSecret:
+                  type: string
+                  writeOnly: true
+                privateKey:
+                  type: string
+                  writeOnly: true
+                privateKeyPath:
+                  type: string
+            gitlab:
+              type: object
+              properties:
+                clientID:
+                  type: string
+                clientSecret:
+                  type: string
+                  writeOnly: true
+        apis:
+          type: object
+          properties:
+            api:
+              $ref: "#/components/schemas/APISettings"
+            hub:
+              $ref: "#/components/schemas/APISettings"
+            mcp:
+              $ref: "#/components/schemas/APISettings"
+            oauth2:
+              $ref: "#/components/schemas/APISettings"
+            configurationAPI:
+              $ref: "#/components/schemas/APISettings"
+        secrets:
+          type: object
+          properties:
+            hashSalt:
+              type: string
+              writeOnly: true
+            authenticationSecret:
+              type: string
+              writeOnly: true
+            mcpJWTSecret:
+              type: string
+              writeOnly: true
+            oauth2JWTSecret:
+              type: string
+              writeOnly: true
+    APISettings:
+      type: object
+      properties:
+        corsHostnames:
+          type: array
+          items:
+            type: string
+        loggerEnabled:
+          type: boolean
+        authenticationEnabled:
+          type: boolean
+        authorizationEnabled:
+          type: boolean
+        rateLimit:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            maxPerIP:
+              type: integer
+            window:
+              type: string
+              example: "1m"
+    SettingsResponse:
+      type: object
+      properties:
+        settings:
+          $ref: "#/components/schemas/Settings"
+        secretsSet:
+          type: object
+          description: Which secrets have a saved value
+          properties:
+            postgresDSN:
+              type: boolean
+            s3SecretAccessKey:
+              type: boolean
+            githubClientSecret:
+              type: boolean
+            githubPrivateKey:
+              type: boolean
+            gitlabClientSecret:
+              type: boolean
+            hashSalt:
+              type: boolean
+            authenticationSecret:
+              type: boolean
+            mcpJWTSecret:
+              type: boolean
+            oauth2JWTSecret:
+              type: boolean
+        restartRequired:
+          type: boolean
+          description: The saved settings differ from the ones the server started with
+        insecureRootToken:
+          type: boolean
+          description: The root access token is a well known default

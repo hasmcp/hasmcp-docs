@@ -41,7 +41,7 @@ For production environments, complex workflows, or when you need granular contro
 
 ### Selecting Providers & Tools
 
-HasMCP currently enforces a **Single Provider Rule**: An MCP Server can currently bundle tools from only **one** Provider. This design decision encourages a "microservices" approach to your agents, keeping them focused and modular and using less tokens when interacting with LLMSs.
+An MCP Server can bundle tools from **up to 50 Providers**, mixing REST API providers and [remote MCP servers](/features/remote-mcp-gateway). Keeping each server focused on one job still pays off: fewer tools mean fewer tokens and better tool selection by the LLM.
 
 1. In the **Select Providers** section, you will see a list of all your configured Providers.
 2. Locate your desired provider and click the arrow or the row itself to expand the accordion view.
@@ -51,18 +51,44 @@ HasMCP currently enforces a **Single Provider Rule**: An MCP Server can currentl
 
 > **Validation Rule**: To ensure the server is functional, HasMCP requires you to enable **at least one endpoint** before you can save the server configuration. A server with no tools is effectively useless to an LLM.
 
+## Variables & Credentials
+
+The **Configuration** tab of a server shows everything the server needs to run.
+
+### Variables
+
+The **Variables** table lists every variable the enabled tools need, the value the server will use, and its **Scope**:
+
+- **This server**: a value used by this server only.
+- **All servers**: a value shared by all of your servers.
+
+A server uses its own value first and falls back to the shared one. Missing variables are listed for you to fill in. **This server only** is on by default. To give this server a different value for a shared variable, click **Override**. See [Per-Server Variables & Credentials](/features/per-server-variables).
+
+### Remote MCP Credentials
+
+If the server uses [remote MCP providers](/features/remote-mcp-gateway), the **Remote MCP Credentials** section shows which account each provider uses: **This server's account**, **Shared account** or **Not connected**. From here you can:
+
+- **Connect Account**: sign in on the remote server for this server only.
+- **Add Token**: save an access token for this server only.
+- **Remove**: go back to the shared account.
+
 ## Authorization & OAuth2
 
-If the Provider used in your MCP Server has **OAuth2 Configuration** enabled (e.g., GitHub, Google, or Spotify), you will see an **Authorize** button in the header of the Server Details page.
+If a provider in your server has **OAuth2 Configuration** enabled (e.g., GitHub, Google, or Spotify), or is a remote MCP server that requires authorization, users connect their accounts in one of two ways:
 
-This feature simplifies the complex process of obtaining access tokens:
+1. **Ahead of time**, with **Connect Account** on the provider page (shared by all servers), or under **Remote MCP Credentials** on the server's Configuration tab (this server only).
+2. **On first use.** When a tool call needs a token that's missing, HasMCP asks the MCP client to show the user a sign-in link. See [Native MCP Elicitation Auth](/features/native-mcp-elicitation-auth).
 
-1. **Click Authorize**: This initiates the OAuth2 flow, redirecting you to the external service's login page (based on the `authURL` you configured in the Provider).
-2. **Grant Permissions**: You log in and approve the requested scopes. HasMCP automatically calculates the _union_ of all scopes required by the enabled endpoints in your server.
-3. **Automatic Token Management**: Upon successful redirect back to HasMCP:
-   - The system captures the `access_token` and (if available) `refresh_token`.
-   - It automatically creates or updates the corresponding **Environment Variables** (e.g., `API_GITHUB_COM_ACCESS_TOKEN`, `API_GITHUB_COM_REFRESH_TOKEN`).
-   - These variables are immediately available for use in your endpoint headers (e.g., `Authorization: Bearer ${API_GITHUB_COM_ACCESS_TOKEN}`), ensuring your server works instantly without manual copy-pasting of secrets.
+HasMCP requests the _union_ of the scopes the enabled tools need. Upon successful redirect back to HasMCP:
+
+- The system captures the `access_token` and (if available) `refresh_token`.
+- It creates or updates the corresponding encrypted variables (e.g., `API_GITHUB_COM_ACCESS_TOKEN`, `API_GITHUB_COM_REFRESH_TOKEN`), for the server or for all servers.
+- These variables are immediately available in your endpoint headers (e.g., `Authorization: Bearer ${API_GITHUB_COM_ACCESS_TOKEN}`).
+- The access token is [renewed automatically](/features/automatic-token-refresh) before it expires, so the server keeps working without anyone signing in again.
+
+## Skills
+
+The **Skills** tab chooses which [Agent Skills](/features/agent-skills) of the server's providers are offered to agents. Click **Edit Skills**, tick the skills under each provider, and click **Save Changes**. Agents that support the MCP skills extension discover them with `skills/list`.
 
 ## Configuration Options
 

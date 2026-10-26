@@ -20,6 +20,28 @@ When creating a new entry in the vault, you must categorize the data based on it
 
 > **Security Note**: Never store a credential as an `ENV` type. Even if you are working locally, building the habit of using `SECRET` for credentials prevents accidental leaks if you later share your configuration or screen.
 
+## Variable Scope: All Servers or One Server
+
+A variable applies either to **all of your MCP servers** (the default) or to **a single server**. When a server needs a variable, it uses its own value first and falls back to the value for all servers.
+
+This lets two servers built on the same provider use different credentials. For example, a `stripe-test` server can use a test key while every other server uses the live key. You can have one variable with a given name for all servers, plus one per server.
+
+| Where you create it | Default scope |
+| :--- | :--- |
+| A server's **Configuration** tab | This server only (the **This server only** switch is on). Use **Override** to replace a shared value on one server. |
+| The **Variables** page, or `POST /variables` without `serverID` | All servers |
+
+The **Scope** column on the Variables page shows **All servers** or the server a variable belongs to. Deleting a server deletes its variables. See [Per-Server Variables & Credentials](/features/per-server-variables) for the full guide.
+
+## OAuth Token Variables
+
+When you connect an OAuth2 account, HasMCP stores the tokens as `SECRET` variables named after the provider's Secret Prefix:
+
+- `<SECRET_PREFIX>_ACCESS_TOKEN`: the access token, with its expiry time.
+- `<SECRET_PREFIX>_REFRESH_TOKEN`: the refresh token.
+
+HasMCP [renews the access token automatically](/features/automatic-token-refresh) before it expires and updates the variable in place. If you edit the access token by hand, its expiry is cleared, and HasMCP renews it only when the API rejects it.
+
 ## Naming Conventions & Sanitization
 
 To ensure compatibility across various operating systems, deployment environments (like Docker or Linux), and the internal token generation logic, HasMCP enforces strict naming rules.

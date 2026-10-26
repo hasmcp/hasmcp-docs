@@ -81,7 +81,11 @@
               "features/groups-users-permissions",
               "features/audit-logs",
               "features/git-connections",
-              "features/dynamic-tool-discovery"
+              "features/dynamic-tool-discovery",
+              "features/remote-mcp-gateway",
+              "features/automatic-token-refresh",
+              "features/per-server-variables",
+              "features/agent-skills"
             ]
           }
         ]
@@ -415,6 +419,8 @@
                   "api-reference/providers/get-provider",
                   "api-reference/providers/update-provider",
                   "api-reference/providers/delete-provider",
+                  "api-reference/providers/sync-provider",
+                  "api-reference/providers/authorize-provider",
                   {
                     "group": "Provider Tools",
                     "pages": [

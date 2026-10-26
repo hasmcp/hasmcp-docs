@@ -1,0 +1,102 @@
+---
+title: "Per-Server Variables & Credentials | HasMCP Features"
+description: "Scope variables, secrets and OAuth accounts to a single MCP server, so servers built on the same provider can use different credentials. Shared values remain available as a fallback."
+---
+
+# Per-Server Variables & Credentials
+
+By default a [variable](/essentials/variables) applies to **every MCP server** you own. With per-server variables, you can also give a variable a value for **one server only**. A server uses its own value first and falls back to the shared one.
+
+This lets several servers built on the same provider use different credentials:
+
+- A `github-personal` server and a `github-work` server, both on the GitHub provider, each connected to a different GitHub account.
+- A `stripe-test` server that uses a test-mode key while `stripe-live` uses the live key.
+- One customer's server using that customer's API key, while every other server keeps the shared default.
+
+## How Resolution Works
+
+A variable has an optional **scope**:
+
+| Scope | Shown as | Used by |
+| :--- | :--- | :--- |
+| No server (default) | **All servers** | Every server that needs the variable, unless the server has its own value |
+| A specific server | **This server** | That server only |
+
+When a server needs `${API_GITHUB_COM_ACCESS_TOKEN}`, HasMCP looks for:
+
+1. The variable with that name **for this server**, then
+2. The variable with that name **for all servers**.
+
+A name can therefore exist once for all servers and once more for each server. Two variables with the same name in the same scope are not allowed.
+
+Variables still belong to the user who created them, as before. Scoping narrows which of your servers uses a value; it doesn't share values with other users.
+
+## Managing Variables on a Server
+
+Open an MCP server and go to the **Configuration** tab. The **Variables** table lists every variable the server's enabled tools need, with the value the server will use and its **Scope**.
+
+- **Add a missing variable.** Variables the server needs but doesn't have are listed for you to fill in. The **This server only** switch is on by default. Turn it off to create the variable for all servers.
+- **Override a shared value.** Next to a variable whose scope is **All servers**, click **Override** to set a different value for this server only. The other servers keep using the shared value.
+- **Edit.** Editing a variable with the **All servers** scope changes it for every server. The form warns you about this and points you to **Override**.
+- **Delete.** Deleting a server's own variable makes the server fall back to the shared value, if one exists. Deleting a shared variable removes it from every server.
+
+The **Variables** page lists all of your variables. Its **Scope** column shows **All servers** or links to the server a variable belongs to.
+
+<Note>
+Deleting an MCP server also deletes the variables scoped to it.
+</Note>
+
+## Per-Server Remote MCP Accounts
+
+For servers that use [remote MCP providers](/features/remote-mcp-gateway), the **Configuration** tab has a **Remote MCP Credentials** section. It lists each remote MCP provider of the server and the account the server uses:
+
+| Badge | Meaning |
+| :--- | :--- |
+| **This server's account** | The server has its own token |
+| **Shared account** | The server uses the account connected on the provider page |
+| **Not connected** | No token yet; the remote is called without credentials, and a tool call that needs one asks the user to sign in |
+
+For each provider you can:
+
+- **Connect Account** (or **Reconnect**): sign in on the remote MCP server for this server only. The access and refresh tokens are saved for this server and [renewed automatically](/features/automatic-token-refresh) there.
+- **Add Token**: paste an access token, such as an API key or personal access token, and click **Save for this server**. It is sent as a `Bearer` token.
+- **Remove**: delete this server's access and refresh tokens. The server goes back to the shared account.
+
+Accounts connected during a tool call, through the [elicitation](/features/native-mcp-elicitation-auth) prompt, are also saved for the server the call came through.
+
+## API
+
+Set `serverID` when creating a variable to scope it to a server. Leave it out (or empty) for all servers.
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/variables \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "variable": {
+      "type": "SECRET",
+      "name": "API_STRIPE_COM_KEY",
+      "value": "sk_test_...",
+      "serverID": "<MCP server ID>"
+    }
+  }'
+```
+
+[List Variables](/api-reference/variables/list-variables) returns `serverID` on every server-scoped variable.
+
+To connect a provider account for a single server, pass the `serverID` query parameter to [Connect Provider Account](/api-reference/providers/authorize-provider):
+
+```bash
+curl -X POST "https://app.hasmcp.com/api/v1/providers/{providerID}/authorize?serverID=<MCP server ID>" \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN"
+```
+
+The response's `authorizationURL` is where the user signs in.
+
+## Related Reading
+
+- [Environment Variables & Secrets](/essentials/variables)
+- [Automatic Token Refresh](/features/automatic-token-refresh)
+- [Remote MCP Gateway](/features/remote-mcp-gateway)
+- [How to create a server variable](/kb/create-server-variable)
+- [Duplicate variable names](/kb/duplicate-variable-names)

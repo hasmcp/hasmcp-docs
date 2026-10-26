@@ -1,0 +1,145 @@
+---
+title: "Remote MCP Gateway | HasMCP Features"
+description: "Use HasMCP as a gateway in front of remote MCP servers: sync their tools, resources and prompts, connect accounts with OAuth discovery and dynamic client registration, and proxy every call with each user's credentials."
+---
+
+# Remote MCP Gateway
+
+HasMCP can sit in front of **remote MCP servers**, not just REST APIs. Register a remote MCP server as a provider and HasMCP mirrors its tools, resources, prompts and instructions. You then compose them into your own MCP servers like any other capability. Every call is forwarded to the remote with the calling user's credentials, so you keep HasMCP's curation, interceptors, analytics and access tokens in front of third-party MCP servers.
+
+Common uses:
+
+- **Curate a large remote server.** Expose only the 5 tools your agent needs from a remote server that offers 80.
+- **Mix sources.** Combine remote MCP tools with tools generated from your own REST APIs in one server.
+- **Centralize credentials.** Users connect their remote accounts once on HasMCP, and their MCP clients only ever see a HasMCP token.
+- **Apply your own logic.** Run [JMESPath pruning](/features/jmespath-pruning) and [Goja (JS) interceptors](/features/goja-js-logic) on remote tool arguments and results.
+
+## How It Works
+
+```
+MCP client ──► HasMCP server ──► remote MCP server (Streamable HTTP)
+   │              │  ├─ request interceptors
+   │              │  ├─ user's access token (renewed automatically)
+   │              │  └─ response interceptors + analytics
+   └── HasMCP token only; remote credentials never reach the client or the LLM
+```
+
+1. **Provider of type MCP.** The provider's URL is the Streamable HTTP endpoint of the remote MCP server (for example `https://mcp.example.com/mcp`).
+2. **Sync.** HasMCP connects to the remote, lists everything it offers and stores it on the provider.
+3. **Compose.** You enable the synced tools, resources and prompts on one or more HasMCP MCP servers.
+4. **Proxy.** When a client calls a remote tool through HasMCP, the arguments are forwarded as they are. The remote's result is returned unchanged, including content blocks, structured content and tool errors. `prompts/get` and `resources/read` are forwarded the same way.
+
+## Setup
+
+<Steps>
+  <Step title="Create the provider">
+    Go to **Providers**, click **+**, and set the **Type** toggle to **MCP** (new providers start on **REST**). Enter the **Remote MCP Server URL**, which is the Streamable HTTP endpoint of the remote server.
+
+    The type, the URL and the generated **Secret Prefix** can't be changed after the provider is created.
+  </Step>
+  <Step title="Connect your account (if the remote requires it)">
+    Click **Connect Account** in the provider header. HasMCP discovers the remote's authorization server and registers an OAuth2 client automatically, then sends you to the remote's login page. See [Connecting Accounts](#connecting-accounts) below.
+
+    Skip this step for public remote servers. Requests are sent without credentials when no token is stored.
+  </Step>
+  <Step title="Sync">
+    Click **Sync** in the provider header. HasMCP pulls the remote's tools, resources, prompts, skills, instructions and icon. If the remote only lists its tools to signed-in users, Sync starts the account connection first and syncs automatically when you return.
+  </Step>
+  <Step title="Add the tools to a server">
+    Open an MCP server (or use **Convert to MCP Server** on the provider) and enable the remote tools, resources and prompts you want to expose.
+  </Step>
+</Steps>
+
+## Syncing a Remote Server
+
+**Sync** mirrors the remote server into the provider. Run it again whenever the remote changes.
+
+| What | How it's synced |
+| :--- | :--- |
+| **Tools** | Matched by the remote tool name. New tools are created, changed ones updated, and tools the remote no longer offers are deleted. |
+| **Resources & prompts** | Mirrored the same way. If the remote doesn't offer resources or prompts, the ones you added by hand are kept. |
+| **Skills** | If the remote offers [Agent Skills](/features/agent-skills) through the skills extension, they're listed as read-only **Remote** skills. A local skill with the same name takes precedence. |
+| **Instructions** | The remote's `instructions` are passed on to clients of every HasMCP server that uses the provider, after the server's own instructions. |
+| **Icon** | Taken from the remote's server info, or the remote site's favicon. It's only set when the provider has no icon, so an uploaded icon is never replaced. |
+
+Servers that use the provider are refreshed after a sync, so connected clients get a `list_changed` notification. See [Real-time Dynamic Tooling](/features/real-time-dynamic-tooling).
+
+### Tool names and schemas
+
+HasMCP tool names must match `^[a-z][a-zA-Z0-9]{0,48}$`, so remote names are converted to camelCase. For example, `get_issue` becomes `getIssue`. The original name is kept and used when calling the remote. Other synced details:
+
+- **Title** comes from the tool's `title`, or from its `annotations.title`.
+- **Hints** (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) are kept.
+- **Input schemas** are kept. Local `$defs` / `definitions` references are inlined so every client sees a self-contained schema.
+
+### Sync API
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/providers/{providerID}/sync \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN"
+```
+
+The response lists the synced `tools`, `resources`, `prompts` and `skills`, whether `instructionsUpdated` / `iconUpdated`, and the `created`, `updated` and `deleted` counts. If the remote requires authorization, the endpoint returns `422` with `error.data.authorizationRequired: true`. Connect the account and retry. A failing remote returns `502`.
+
+## Connecting Accounts
+
+Remote MCP servers that require authorization are supported through the [MCP authorization](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) flow. You don't need to register an OAuth app by hand.
+
+1. **Discovery.** HasMCP reads the remote's protected resource metadata (`/.well-known/oauth-protected-resource`, or the `resource_metadata` in its `WWW-Authenticate` challenge). It then reads the authorization server's metadata (`/.well-known/oauth-authorization-server` or `/.well-known/openid-configuration`).
+2. **Dynamic client registration.** If the provider has no OAuth2 client yet, HasMCP registers one at the authorization server's registration endpoint as a public client and saves it on the provider. The registration happens once and is reused by every user.
+3. **Authorization with PKCE.** You sign in on the remote and approve the requested scopes.
+4. **Token storage.** The access and refresh tokens are encrypted and saved as `SECRET` variables named `<SECRET_PREFIX>_ACCESS_TOKEN` and `<SECRET_PREFIX>_REFRESH_TOKEN`, together with the access token's expiry.
+
+From then on, HasMCP [renews the access token automatically](/features/automatic-token-refresh) with the refresh token.
+
+<Note>
+If the remote's authorization server doesn't support dynamic client registration, turn on **Enable OAuth2 Configuration** on the provider and enter the client ID, auth URL and token URL of an OAuth app you registered yourself. The **Client Secret** is optional for MCP providers.
+</Note>
+
+### Using a static token instead
+
+If the remote takes an API key or personal access token instead of OAuth, create a `SECRET` [variable](/essentials/variables) named `<SECRET_PREFIX>_ACCESS_TOKEN`. HasMCP sends it as `Authorization: Bearer <token>`.
+
+### One account per server
+
+By default the connected account is shared by every MCP server that uses the provider. To have a server use a different account, connect it from the server's **Configuration** tab under **Remote MCP Credentials**. See [Per-Server Variables & Credentials](/features/per-server-variables).
+
+## Authorization During a Tool Call
+
+If the remote rejects a call, HasMCP renews the access token and retries once. If there is no usable token, or the renewal fails, HasMCP doesn't return a bare error. It asks the MCP client to let the user connect the account, using a URL [elicitation](/features/native-mcp-elicitation-auth) (JSON-RPC error `-32042`):
+
+```json
+{
+  "code": -32042,
+  "message": "This request requires more information.",
+  "data": {
+    "elicitations": [
+      {
+        "mode": "url",
+        "elicitationId": "<id>",
+        "url": "https://app.hasmcp.com/oauth2/authorize?state=...",
+        "message": "Authorization is required to call tool: getIssue"
+      }
+    ]
+  }
+}
+```
+
+After the user signs in, the tokens are saved as that user's credentials for the server the call came through, and the client can retry the call. The error message also tells the user they can set the `<SECRET_PREFIX>_ACCESS_TOKEN` variable instead.
+
+## Interceptors, Analytics and Debugging
+
+Remote tools work with the rest of HasMCP:
+
+- **Request interceptors** run on the tool arguments before they are sent to the remote.
+- **Response interceptors** run on the remote's tool result, so you can prune or redact it before it reaches the LLM.
+- **Analytics** record latency, payload size and token counts for every remote call.
+- The server's **Debug** tab shows every call made to the remote MCP server. Headers are never shown.
+
+## Related Reading
+
+- [Automatic Token Refresh](/features/automatic-token-refresh)
+- [Per-Server Variables & Credentials](/features/per-server-variables)
+- [Native MCP Elicitation Auth](/features/native-mcp-elicitation-auth)
+- [MCP Composition](/features/mcp-composition)
+- [How does HasMCP handle OAuth2 authentication?](/kb/oauth2-authentication-flow)

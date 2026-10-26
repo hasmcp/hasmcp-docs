@@ -1,0 +1,129 @@
+---
+title: "Agent Skills | HasMCP Features"
+description: "Write Agent Skills in HasMCP or sync them from remote MCP servers, and serve them to agents over MCP with the skills extension."
+---
+
+# Agent Skills
+
+[Agent Skills](https://agentskills.io) package instructions, scripts and reference files that an agent loads only when it needs them. A skill is a folder with a `SKILL.md` at its root. HasMCP lets you author skills on a provider, pick which ones each MCP server offers, and serve them to agents over MCP with the [skills extension](https://modelcontextprotocol.io/extensions/skills/overview), next to the server's tools, resources and prompts.
+
+Skills pair well with tools. A tool gives the agent an action, such as `createInvoice`. A skill teaches the agent when and how to use it: your billing rules, the order of calls, edge cases, and templates.
+
+## How It Works
+
+1. **Skills live on providers.** Each provider has a **Skills** tab. A skill is either written in HasMCP (*local*) or synced from a remote MCP server (*remote*).
+2. **Servers pick skills.** On an MCP server's **Skills** tab, you choose which of its providers' skills the server offers.
+3. **Agents discover and load them over MCP.** When a server has at least one skill, it advertises the skills extension during `initialize`. Agents list the skills and read only the files they need.
+
+## Writing a Skill
+
+<Steps>
+  <Step title="Open the provider's Skills tab">
+    Go to **Providers**, open a provider and select the **Skills** tab. Click **Add Skill**. The editor opens with a template `SKILL.md`.
+  </Step>
+  <Step title="Write SKILL.md">
+    `SKILL.md` must start with YAML frontmatter that has a `name` and a `description`:
+
+    ```markdown
+    ---
+    name: refund-policy
+    description: How to decide on and issue Stripe refunds. Use when a customer asks for a refund or disputes a charge.
+    ---
+
+    # Refund policy
+
+    1. Look up the charge with `getCharge` first.
+    2. Refunds over $500 need a human's approval...
+    ```
+
+    HasMCP reads the name and description from the frontmatter. You don't enter them separately.
+  </Step>
+  <Step title="Add more files (optional)">
+    Use **Add file**, **Upload files** or **Upload folder** to add reference documents, templates or scripts. Uploading a folder keeps its paths. Select a file to edit its path and content.
+  </Step>
+  <Step title="Save">
+    Click **Create Skill**. The skill is served to agents as `skill://<name>/…`.
+  </Step>
+</Steps>
+
+### Rules
+
+| | Limit |
+| :--- | :--- |
+| **Name** | Lowercase letters, digits and single hyphens (`^[a-z0-9]+(-[a-z0-9]+)*$`), at most 64 characters, unique per provider |
+| **Description** | Required, at most 1024 characters |
+| **Files** | At most 512 per skill, including `SKILL.md`, and 16 MiB in total. Text files only. |
+| **Paths** | Relative, `/`-separated, up to 512 characters. No `.` or `..` segments, and no `\`, `?` or `#`. |
+
+## Remote Skills
+
+When a [remote MCP provider](/features/remote-mcp-gateway) offers skills through the skills extension, **Sync** pulls them into the provider's Skills tab. These skills are marked **Remote** and can't be edited in HasMCP; their files are fetched from the remote server, with the user's credentials, when an agent reads them. If you write a local skill with the same name, it replaces the remote one.
+
+## Enabling Skills on a Server
+
+1. Open the MCP server and select the **Skills** tab.
+2. Click **Edit Skills**.
+3. Expand a provider to see its **Available Skills**, and tick the ones to offer. Use **Select All** / **Deselect All** for bulk changes.
+4. Click **Save Changes**.
+
+Connected clients are notified right away with `notifications/resources/list_changed`.
+
+## Served Over MCP
+
+When a server has at least one skill, its `initialize` result declares the extension:
+
+```json
+{
+  "capabilities": {
+    "extensions": {
+      "io.modelcontextprotocol/skills": { "directoryRead": true }
+    }
+  }
+}
+```
+
+Agents that support the extension use these methods:
+
+| Method | Purpose |
+| :--- | :--- |
+| `skills/list` | Lists the server's skills (`uri`, `frontmatter`, and a manifest of files with their `sha256` digests and sizes), 50 per page |
+| `skills/get` | Returns one skill by the URI of its `SKILL.md` |
+| `resources/directory/read` | Lists the files and folders directly inside a skill folder |
+| `resources/read` | Reads a file of a skill |
+
+Skill URIs look like `skill://refund-policy/SKILL.md` and `skill://refund-policy/templates/email.md`. Each skill's `SKILL.md` is also listed in `resources/list`, so clients without the skills extension can still find and read it.
+
+## API
+
+Skills are managed per provider:
+
+| Method | Path | Description |
+| :--- | :--- | :--- |
+| `GET` | `/providers/{id}/skills` | List the provider's skills |
+| `POST` | `/providers/{id}/skills` | Create a skill |
+| `GET` | `/providers/{id}/skills/{skillID}` | Get a skill with its files |
+| `PUT` | `/providers/{id}/skills/{skillID}` | Replace a skill's files |
+| `DELETE` | `/providers/{id}/skills/{skillID}` | Delete a skill |
+
+Create and update take the files only. The name and description come from `SKILL.md`:
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/providers/{providerID}/skills \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "skill": {
+      "files": [
+        { "path": "SKILL.md", "content": "---\nname: refund-policy\ndescription: How to issue refunds.\n---\n\n# Refund policy\n..." }
+      ]
+    }
+  }'
+```
+
+Creating, updating and deleting skills needs permission to update the provider. Listing and reading them needs permission to read it. To choose a server's skills, send `providers[].skills[].id` with [Update MCP Server](/api-reference/servers/update-mcp-server).
+
+## Related Reading
+
+- [Remote MCP Gateway](/features/remote-mcp-gateway)
+- [MCP Composition](/features/mcp-composition)
+- [Expose resources through a server](/kb/expose-resources-through-server)

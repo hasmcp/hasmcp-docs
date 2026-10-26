@@ -5,7 +5,14 @@ description: "Learn how to define external APIs, configure authentication strate
 
 ## Managing API Providers
 
-In HasMCP, a **Provider** is the blueprint for an external service. It defines _where_ the API lives (Base URL), _how_ to authenticate with it (Headers or OAuth), and _what_ capabilities (Endpoints) are available.
+In HasMCP, a **Provider** is the blueprint for an external service. It defines _where_ the service lives (Base URL), _how_ to authenticate with it (Headers or OAuth), and _what_ capabilities (Endpoints, Resources, Prompts and Skills) are available.
+
+A provider is one of two types:
+
+| Type | What it wraps | Where its tools come from |
+| :--- | :--- | :--- |
+| **REST** | A REST API | Imported from an OpenAPI/Swagger spec, or defined by hand |
+| **MCP** | A remote MCP server (Streamable HTTP) | Synced from the remote server. See [Remote MCP Gateway](/features/remote-mcp-gateway) |
 
 Think of a Provider as a library of potential tools. You might define 50 endpoints for the "GitHub API" provider, but later create a specific MCP Server that only exposes 3 of them (e.g., "Read Issues") to the LLM.
 
@@ -13,16 +20,16 @@ Think of a Provider as a library of potential tools. You might define 50 endpoin
 
 1. Navigate to the **Providers** tab.
 2. Click the **\+ (Plus)** button to open the creation form.
-3. **Basic Configuration**:
+3. **Type**: Use the **REST / MCP** toggle. New providers start on **REST**.
+4. **Basic Configuration**:
    - **Name**: A friendly name (e.g., `StripeApi`).
-   - **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`).
+   - **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`). For an **MCP** provider, this field is the **Remote MCP Server URL**, the Streamable HTTP endpoint of the remote server (e.g., `https://mcp.example.com/mcp`).
    - **Description**: Context for the LLM to understand what this service does.
    - **Visibility**:
      - `INTERNAL`: Only visible to you.
      - `PUBLIC`: (Future feature) Intended for sharing within an organization.
-4. **Provider Type**: Currently, only `REST` is supported.
 
-> **⚠️ Immutable Fields**: The **Base URL** and the auto-generated **Secret Prefix** cannot be changed once the provider is created. If you make a mistake here, you will need to delete and recreate the provider.
+> **⚠️ Immutable Fields**: The **Type**, the **Base URL** and the auto-generated **Secret Prefix** cannot be changed once the provider is created. If you make a mistake here, you will need to delete and recreate the provider.
 
 ## Authentication Configuration
 
@@ -45,11 +52,26 @@ If the API requires an OAuth2 flow (like "Log in with Google"), you configure th
   - **Auth URL**: The page where the user logs in (e.g., `https://github.com/login/oauth/authorize`).
   - **Token URL**: The endpoint used to exchange code for token (e.g., `https://github.com/login/oauth/access_token`).
 
-> **Note**: HasMCP handles the OAuth handshake (callback handling and token storage) automatically when you authorize an MCP Server later. You just need to provide the correct endpoints here.
+> **Note**: HasMCP handles the OAuth handshake (callback handling and token storage) automatically when a user connects an account. Access tokens are then [renewed automatically](/features/automatic-token-refresh) with the refresh token before they expire. You just need to provide the correct endpoints here.
+
+For **MCP** providers, OAuth2 configuration is optional. HasMCP discovers the remote server's authorization server and registers a client automatically when you click **Connect Account**. Configure it by hand only if the remote doesn't support dynamic client registration; the **Client Secret** is optional then.
+
+## Remote MCP Providers
+
+An **MCP** provider has two extra buttons in its header:
+
+- **Connect Account**: signs you in on the remote MCP server, if it requires authorization. The tokens are stored as `<SECRET_PREFIX>_ACCESS_TOKEN` and `<SECRET_PREFIX>_REFRESH_TOKEN` and are shared by every server that uses the provider. Individual servers can [use their own account](/features/per-server-variables#per-server-remote-mcp-accounts).
+- **Sync**: pulls the remote server's tools, resources, prompts, skills, instructions and icon into the provider. Run it again whenever the remote changes.
+
+You don't import specs or define endpoints for MCP providers; everything comes from Sync. See [Remote MCP Gateway](/features/remote-mcp-gateway) for details.
+
+## Skills
+
+Every provider has a **Skills** tab where you can write [Agent Skills](/features/agent-skills): a `SKILL.md` plus any reference files. MCP servers that use the provider can offer them to agents.
 
 ## Managing Endpoints
 
-Endpoints represent the specific actions (HTTP requests) that the LLM can perform. You can add them in two ways:
+Endpoints (REST providers only) represent the specific actions (HTTP requests) that the LLM can perform. You can add them in two ways:
 
 ### Option A: Importing OpenAPI / Swagger (Recommended)
 
