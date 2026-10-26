@@ -1,38 +1,44 @@
 ---
 title: How do I create a server variable?
-description: Step-by-step guide to generating global configuration variables inherently injected into operational Model Context Protocol servers natively.
+description: Step-by-step guide to creating variables for all of your MCP servers or for a single server.
 ---
 
 # Creating a Server Variable
 
-Because HasMCP connects generic Tools (like Github or Postgres) seamlessly into diverse Server pipelines , it utilizes a globalized variable architectural standard natively. 
+A variable is an `ENV` value or an encrypted `SECRET` that HasMCP injects into provider tool headers, for example `Authorization: Bearer ${API_GITHUB_COM_PRIVATE_TOKEN}`.
 
-A "Server Variable" represents a dynamic `ENV` string or encrypted `SECRET` securely inherently mapped globally inside your ecosystem. 
-
-When you bind a Provider Tool requiring an explicit API Key (e.g. `API_GITHUB_COM_PRIVATE_TOKEN`) to an MCP Server execution loop, HasMCP inherently parses its internal database for that variable `name` globally. If it exists iteratively, the manager silently securely injects the value downstream directly perfectly into the local agent execution pipe. 
+A variable applies either to **all servers** or to **a single MCP server**. When a server needs a variable, it uses its own value first and falls back to the value for all servers. See [Per-Server Variables & Credentials](/features/per-server-variables).
 
 ## Using HasMCP UI
 
+### From the server (recommended)
+
+1. Open the MCP server and go to the **Configuration** tab.
+2. The **Variables** section lists the variables the server's enabled tools need. Click a missing one to fill it in.
+3. Enter the **Value** and pick the type (`ENV` for plain text, `SECRET` for encrypted storage).
+4. Leave **This server only** on to scope the variable to this server, or turn it off to use it for all servers.
+5. Click **Add Variable**.
+
+To give one server a different value for a variable that's shared by all servers, click **Override** next to it.
+
+### From the Variables page
+
 ![Variables Interface](../images/kb/variables_page_check.png)
 
-1. Open the global **Variables** interface natively mapped on the main sidebar menu natively outside the rigid Server loop.
+1. Open **Variables** from the sidebar.
 2. Click **Create Variable**.
-3. Supply the strict string name expected by your underlying integration (e.g., `MOLTBOOK_COM_BEARERAUTH`).
-4. Enter the required **Value**.
-5. Select the **Type** (`ENV` for plaintext, `Secret` for irreversible cryptography storage natively).
-6. Click **Save**.
+3. Enter the name your provider expects (e.g., `API_MOLTBOOK_COM_BEARERAUTH`), the **Value** and the **Type**.
+4. Click **Save**.
 
-Once successfully instantiated natively—any Model Context Protocol Server globally currently associating tools demanding that designated string will immediately dynamically refresh its capability buffer.
+Variables created here apply to all servers. The **Scope** column shows which variables belong to a single server.
+
+Servers that use the variable are refreshed right away.
 
 ## Using REST API
-
-For pipeline automations configuring credentials dynamically natively upon cluster boot cleanly.
 
 ### The API Endpoint
 
 **`POST /variables`**
-
-Because HasMCP utilizes globalized mappings , you do not POST environmental overrides specifically uniquely to independent Server hashes intuitively. 
 
 ```bash
 curl -X POST https://app.hasmcp.com/api/v1/variables \
@@ -42,9 +48,10 @@ curl -X POST https://app.hasmcp.com/api/v1/variables \
  "variable": {
  "name": "API_MYSYSTEM_COM_API_KEY",
  "value": "sk-123abc456def",
- "type": "SECRET"
+ "type": "SECRET",
+ "serverID": "OPTIONAL_MCP_SERVER_ID"
  }
  }'
 ```
 
-If processed , the framework acknowledges with `201 Created` returning the `Variable` definition securely masking the explicit string return logically.
+Leave out `serverID` to create the variable for all servers. HasMCP responds with `201 Created` and the `Variable`. A `SECRET` value is masked in the response.

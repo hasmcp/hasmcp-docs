@@ -1,0 +1,64 @@
+---
+title: "Automatic Token Refresh | HasMCP Features"
+description: "HasMCP renews OAuth2 access tokens with refresh tokens before they expire and retries rejected calls, for both REST API providers and remote MCP servers."
+---
+
+# Automatic Token Refresh
+
+OAuth2 access tokens are short-lived, often only an hour. Without renewal, an agent that worked in the morning starts failing in the afternoon, and someone has to sign in again. HasMCP stores the **refresh token** next to the access token and renews the access token for you. Tool calls keep working without anyone signing in again.
+
+Automatic refresh applies to:
+
+- **REST API providers** with an [OAuth2 configuration](/essentials/providers#2-oauth2-configuration).
+- **Remote MCP providers** connected through the [Remote MCP Gateway](/features/remote-mcp-gateway).
+
+## How It Works
+
+When you connect an account, HasMCP saves three things as encrypted `SECRET` [variables](/essentials/variables):
+
+| Variable | Contents |
+| :--- | :--- |
+| `<SECRET_PREFIX>_ACCESS_TOKEN` | The access token, with its expiry time |
+| `<SECRET_PREFIX>_REFRESH_TOKEN` | The refresh token, if the authorization server issued one |
+
+If a tool's `Authorization` header reads a different variable (for example `Bearer ${API_GITHUB_COM_TOKEN}`), the access token is saved under that name instead.
+
+Then, on every tool call:
+
+<Steps>
+  <Step title="Renew before expiry">
+    If the access token expires within the next **5 minutes plus a random 30 to 60 seconds**, HasMCP renews it with the refresh token before making the call. The random part spreads out the renewals of many users so they don't all hit the authorization server at once.
+  </Step>
+  <Step title="Retry once on rejection">
+    If the API or remote MCP server still rejects the token with `401 Unauthorized` (for example, because it was revoked early), HasMCP renews the token once and retries the call.
+  </Step>
+  <Step title="Ask the user to reconnect">
+    If the token can't be renewed, the user is asked to connect the account again with a [URL elicitation](/features/native-mcp-elicitation-auth). This happens for remote MCP tools and for REST tools that declare OAuth2 scopes. The call fails cleanly instead of sending an expired token.
+  </Step>
+</Steps>
+
+## Details
+
+- **Refresh token rotation.** If the authorization server issues a new refresh token on renewal, HasMCP saves it and uses it next time.
+- **Rejected refresh tokens are dropped.** If the authorization server rejects the refresh token with `400` or `401`, HasMCP deletes it so it isn't tried again. The user is asked to connect the account again.
+- **One renewal at a time.** Renewals are serialized per user, server and provider. When many calls arrive at once, only one renews the token and the others use the result. This matters for authorization servers that revoke a refresh token once it has been used.
+- **Graceful failure.** If renewal fails while the current token hasn't expired yet, HasMCP keeps using the current token.
+- **Renewed in place.** A token stored for a single MCP server is renewed for that server. The shared token is renewed as the shared one. See [Per-Server Variables & Credentials](/features/per-server-variables).
+- **Manual edits.** If you edit an access token variable by hand, its stored expiry is cleared. HasMCP then renews it only when the API rejects it.
+- **No expiry given.** If the authorization server doesn't say when a token expires, HasMCP renews it only when the API rejects it.
+
+<Note>
+Tokens obtained through an elicitation during a REST tool call are kept in that MCP session only. Connect the account from HasMCP (the provider page, or a server's **Remote MCP Credentials**) to store tokens as variables that are renewed for every session.
+</Note>
+
+## Requirements
+
+- The provider needs an OAuth2 client (client ID and token URL). For remote MCP servers, it is registered automatically when you first connect an account.
+- The authorization server must issue a refresh token. Some providers only do so when you request a specific scope (for example `offline_access`) or a parameter like `access_type=offline`. Add the scope to the provider's tools if needed.
+
+## Related Reading
+
+- [How does HasMCP handle OAuth2 authentication?](/kb/oauth2-authentication-flow)
+- [Native MCP Elicitation Auth](/features/native-mcp-elicitation-auth)
+- [Remote MCP Gateway](/features/remote-mcp-gateway)
+- [Per-Server Variables & Credentials](/features/per-server-variables)

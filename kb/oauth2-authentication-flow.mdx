@@ -1,19 +1,32 @@
 ---
 title: How does HasMCP handle OAuth2 authentication when an LLM needs to use an API?
-description: Explaining the dynamic OAuth token interception layer.
+description: How HasMCP obtains, stores and renews OAuth2 tokens for REST APIs and remote MCP servers.
 ---
 
 # Handling OAuth2 Authentication
 
-When an LLM attempts to interact with an OAuth2-secured endpoint (like Google Workspace, Slack, or Salesforce), HasMCP natively intercepts the execution path to manage the complexity of token issuance. HasMCP manages the entire OAuth2 lifecycle invisibly on behalf of the developer.
+When an LLM uses an OAuth2-secured service (like Google Workspace, Slack, GitHub or a remote MCP server), HasMCP manages the whole OAuth2 lifecycle so that neither the LLM nor the MCP client ever handles a token.
 
-Unlike static API keys, OAuth requires redirecting the user to an authentication portal (like Google's login screen), retrieving a temporary code, trading it for an Access Token, and securely holding a Refresh Token. 
+## Connecting an Account
 
-1. **Authorization Request**: If a required token is missing when the LLM triggers a tool, HasMCP intercepts the API payload and pauses the request organically.
-2. **Elicitation Redirect**: The proxy sends a callback command to Claude Desktop, prompting the user with a securely scoped OAuth login URL.
-3. **Token Capture**: Once the user logs into the provider platform, HasMCP catches the OAuth redirect natively.
-4. **Token Trading**: The proxy exchanges the return code for an Access Token and Refresh Token. The paused LLM connection instantly resumes.
+There are two ways to connect:
 
-### Automated Refresh
+- **Ahead of time.** Click **Connect Account** on a remote MCP provider's page, or on a server's **Configuration** tab under **Remote MCP Credentials** to connect for that server only.
+- **When a tool needs it.** If a required token is missing or can't be renewed when the LLM calls a tool, HasMCP returns a URL [elicitation](/features/native-mcp-elicitation-auth). The MCP client shows the user a sign-in link.
 
-Because OAuth Access Tokens typically expire in one hour, HasMCP handles the Refresh generation silently. Backstage proxy rotation guarantees zero interruption to the user's conversational flow.
+Either way:
+
+1. **Authorization.** The user signs in on the provider and approves the scopes the server's tools need. For remote MCP servers, HasMCP discovers the authorization server and [registers its own OAuth2 client](/features/remote-mcp-gateway#connecting-accounts) automatically, and uses PKCE.
+2. **Token capture.** HasMCP receives the redirect and exchanges the code for an access token and a refresh token.
+3. **Storage.** The tokens are encrypted and saved as `SECRET` variables (`<SECRET_PREFIX>_ACCESS_TOKEN` and `<SECRET_PREFIX>_REFRESH_TOKEN`). Tokens connected for a server are saved for that server only. See [Per-Server Variables & Credentials](/features/per-server-variables).
+4. **Resume.** The client retries the tool call, which now finds the token.
+
+## Automated Refresh
+
+Access tokens typically expire after an hour. HasMCP [renews them automatically](/features/automatic-token-refresh):
+
+- about 5 minutes before they expire, with the refresh token;
+- once more, with a retry, if the API rejects a token with `401`;
+- saving rotated refresh tokens, and dropping refresh tokens the authorization server rejects.
+
+If a token can't be renewed, the user is asked to sign in again.

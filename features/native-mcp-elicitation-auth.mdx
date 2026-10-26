@@ -17,14 +17,14 @@ LLMs cannot log in to services. OAuth2 flows require a human to click a link, au
 
 ### Step 1 — Tool call is intercepted
 
-When the LLM issues a `tools/call` request, HasMCP checks for a valid OAuth2 access token in the current session. Elicitation is triggered in two cases:
+When the LLM issues a `tools/call` request, HasMCP looks for a valid OAuth2 access token in the session and in the user's variables (the server's own value first, then the one for all servers). A token that is about to expire, or that the API rejects, is first [renewed with the refresh token](/features/automatic-token-refresh). Elicitation is triggered only when no usable token can be found or renewed:
 
 | Condition | Trigger |
 |---|---|
 | Token is missing | No access token found for this provider in the session |
-| Token is expired | Access token exists but its expiry time has passed |
+| Token is expired | Access token has expired and couldn't be renewed |
 | Token lacks required scopes | Token exists but doesn't cover the scopes the tool needs |
-| API returns 401 | The upstream API rejected the token mid-call |
+| API returns 401 | The upstream API or remote MCP server rejected the token, and a renewal and retry didn't help |
 
 ### Step 2 — Elicitation request is sent
 
@@ -58,7 +58,7 @@ After the user grants permission, the OAuth2 provider redirects to HasMCP's call
 
 1. Validates the `state` token and extracts session context
 2. Exchanges the authorization code for an access token and optional refresh token
-3. Encrypts and stores the tokens in the session (and optionally in organization-level variables for reuse)
+3. Encrypts and stores the tokens. For REST providers, they are kept in the MCP session. For [remote MCP servers](/features/remote-mcp-gateway), they are saved as the user's `SECRET` variables for the server the call came through, so every later session reuses and renews them.
 4. Displays a confirmation page that auto-closes after 3 seconds
 
 ### Step 5 — Tool call resumes
@@ -79,13 +79,17 @@ The client responds to the elicitation with one of three actions:
 
 ## Token Lifetime and Re-authentication
 
-After the initial auth, tokens are cached in the session with their expiry time. On each subsequent tool call, HasMCP checks:
+Tokens are stored with their expiry time. On each tool call, HasMCP:
 
-- Is a token present?
-- Has it expired?
-- Does it cover the required scopes?
+- renews the access token with the refresh token when it expires within about 5 minutes;
+- renews it once more and retries if the API answers `401`;
+- triggers elicitation only if there is no token, it can't be renewed, or it doesn't cover the required scopes.
 
-If any check fails, elicitation is triggered again transparently. The user experience is identical to the first login.
+See [Automatic Token Refresh](/features/automatic-token-refresh). When elicitation is needed again, the user experience is the same as the first login.
+
+## Remote MCP Servers
+
+The same flow protects tools proxied from [remote MCP servers](/features/remote-mcp-gateway). For those, the authorization URL leads to the remote server's own authorization server. HasMCP discovers it and registers its own OAuth2 client automatically.
 
 ## Security Properties
 
@@ -97,5 +101,8 @@ If any check fails, elicitation is triggered again transparently. The user exper
 
 ## Related Reading
 
+- [Automatic Token Refresh](/features/automatic-token-refresh)
+- [Remote MCP Gateway](/features/remote-mcp-gateway)
+- [Per-Server Variables & Credentials](/features/per-server-variables)
 - [Secure Secret & Proxy Management](/features/secure-secret-proxy-management)
 - [Why should you use HasMCP instead of building MCP Servers manually?](/kb/advantages-of-hasmcp-mcp-servers)
