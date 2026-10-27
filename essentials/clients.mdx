@@ -54,29 +54,26 @@ The Cursor app supports MCP natively via a configuration file.
 }
 ```
 
-### 2. Gemini CLI (Google)
-
-For developers building with Google's generative AI tools.
+### 2. Antigravity CLI (Google)
 
 **Setup:**
 
-1. Select the **"gemini-cli"** tab in the HasMCP UI configuration section.
-2. Copy the JSON snippet. Note that Gemini uses `httpUrl` instead of `url`.
+1. Select the **"antigravity-cli"** tab in the HasMCP UI configuration section.
+2. Copy the JSON snippet. Note that Antigravity uses `serverUrl` instead of `url`, with the token in the URL.
 
 **Example Configuration:**
 
-```
+```json
 {
   "mcpServers": {
-    "stripe-agent": {
-      "httpUrl": "http://localhost:8887/mcp/<SERVER_ID>",
-      "headers": {
-        "x-hasmcp-key": "Bearer <YOUR_ACCESS_TOKEN>"
-      }
+    "stripeAgent": {
+      "serverUrl": "http://localhost:8887/mcp/<SERVER_ID>?token=<YOUR_ACCESS_TOKEN>"
     }
   }
 }
 ```
+
+To connect the Gemini CLI, which uses `httpUrl`, see [Gemini CLI](/ai-tools/gemini-cli).
 
 ### 3. Remote MCP (Bridge)
 

@@ -7,11 +7,12 @@ description: "Learn how to define external APIs, configure authentication strate
 
 In HasMCP, a **Provider** is the blueprint for an external service. It defines _where_ the service lives (Base URL), _how_ to authenticate with it (Headers or OAuth), and _what_ capabilities (Endpoints, Resources, Prompts and Skills) are available.
 
-A provider is one of two types:
+A provider is one of three types:
 
 | Type | What it wraps | Where its tools come from |
 | :--- | :--- | :--- |
 | **REST** | A REST API | Imported from an OpenAPI/Swagger spec, or defined by hand |
+| **gRPC** | A gRPC server | Synced with server reflection or an uploaded descriptor set. See [gRPC Providers](/features/grpc) |
 | **MCP** | A remote MCP server (Streamable HTTP) | Synced from the remote server. See [Remote MCP Gateway](/features/remote-mcp-gateway) |
 
 Think of a Provider as a library of potential tools. You might define 50 endpoints for the "GitHub API" provider, but later create a specific MCP Server that only exposes 3 of them (e.g., "Read Issues") to the LLM.
@@ -20,10 +21,10 @@ Think of a Provider as a library of potential tools. You might define 50 endpoin
 
 1. Navigate to the **Providers** tab.
 2. Click the **\+ (Plus)** button to open the creation form.
-3. **Type**: Use the **REST / MCP** toggle. New providers start on **REST**.
+3. **Type**: Use the **REST / gRPC / MCP** toggle. New providers start on **REST**.
 4. **Basic Configuration**:
    - **Name**: A friendly name (e.g., `StripeApi`).
-   - **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`). For an **MCP** provider, this field is the **Remote MCP Server URL**, the Streamable HTTP endpoint of the remote server (e.g., `https://mcp.example.com/mcp`).
+   - **Base URL**: The root address for all requests (e.g., `https://api.stripe.com/v1`). For a **gRPC** provider, this field is the **gRPC Server URL**: `grpcs://host:port` for TLS or `grpc://host:port` for plaintext (e.g., `grpcs://api.example.com:443`). For an **MCP** provider, it is the **Remote MCP Server URL**, the Streamable HTTP endpoint of the remote server (e.g., `https://mcp.example.com/mcp`).
    - **Description**: Context for the LLM to understand what this service does.
    - **Visibility**:
      - `INTERNAL`: Only visible to you.
@@ -37,7 +38,7 @@ HasMCP supports two primary methods for authenticating with external APIs.
 
 ### 1. Header-Based Authentication (API Keys)
 
-This is the most common method. You define authentication headers at the **Endpoint level**, injecting secrets from your [Environment Variables](essentials/variables).
+This is the most common method. You define authentication headers at the **Endpoint level**, injecting secrets from your [Environment Variables](/essentials/variables).
 
 - **Usage**: See the [Managing Endpoints](#managing-endpoints) section below.
 
@@ -64,6 +65,15 @@ An **MCP** provider has two extra buttons in its header:
 - **Sync**: pulls the remote server's tools, resources, prompts, skills, instructions and icon into the provider. Run it again whenever the remote changes.
 
 You don't import specs or define endpoints for MCP providers; everything comes from Sync. See [Remote MCP Gateway](/features/remote-mcp-gateway) for details.
+
+## gRPC Providers
+
+A **gRPC** provider has two extra buttons in its header:
+
+- **Sync**: discovers the server's methods with its reflection service. It also runs once when you create the provider.
+- **Upload Descriptors**: syncs from a descriptor set file (`protoc --include_imports --descriptor_set_out=api.pb`) for servers without reflection.
+
+Each unary and server-streaming method becomes a tool. You can't add gRPC tools by hand, but you can edit their description, **gRPC Metadata** (the equivalent of HTTP headers), OAuth2 scopes and interceptors. See [gRPC Providers](/features/grpc) for details.
 
 ## Skills
 

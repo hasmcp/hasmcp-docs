@@ -55,6 +55,7 @@ Tokens obtained through an elicitation during a REST tool call are kept in that 
 
 - The provider needs an OAuth2 client (client ID and token URL). For remote MCP servers, it is registered automatically when you first connect an account.
 - The authorization server must issue a refresh token. Some providers only do so when you request a specific scope (for example `offline_access`) or a parameter like `access_type=offline`. Add the scope to the provider's tools if needed.
+- HasMCP asks for `access_type=offline` and `prompt=consent` on every sign-in, so the provider's consent screen is always shown. Providers like Google only issue a new refresh token after a consent.
 
 ## Related Reading
 

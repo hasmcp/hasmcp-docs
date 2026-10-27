@@ -3,7 +3,7 @@ title: "Self Hosted"
 description: "Run HasMCP Pro or HasMCP Enterprise on your own infrastructure with Docker and a license key."
 ---
 
-HasMCP Pro and HasMCP Enterprise run on your own machines as a single Docker container. The same `hasmcp/hasmcp` image serves both editions; your **license key** decides which one you get. Licenses are per machine, regardless of the number of cores.
+HasMCP Pro and HasMCP Enterprise run on your own machines as a single Docker container. HasMCP ships as a single binary with the web app and the default configuration built in, and the `hasmcp/hasmcp` image holds only that binary. The same image serves both editions; your **license key** decides which one you get. Licenses are per machine, regardless of the number of cores.
 
 <Note>
 To get a license key, or to move from the Community Edition (`hasmcp-ce`) to Pro or Enterprise, email [license@hasmcp.com](mailto:license@hasmcp.com).
@@ -18,7 +18,7 @@ To get a license key, or to move from the Community Edition (`hasmcp-ce`) to Pro
 
 ## 1. Get the Setup Kit
 
-The [hasmcp-pro-local-setup](https://github.com/hasmcp/hasmcp-pro-local-setup) repository has everything the container needs next to it: a `Makefile`, an example `.env`, and the `_mocks` folder.
+The [hasmcp-pro-local-setup](https://github.com/hasmcp/hasmcp-pro-local-setup) repository has a `Makefile` and an example `.env` to run the container with.
 
 ```bash
 git clone https://github.com/hasmcp/hasmcp-pro-local-setup.git hasmcp
@@ -27,14 +27,13 @@ mkdir -p _certs _license _storage
 chmod 0777 _certs _storage
 ```
 
-The container mounts these folders:
+HasMCP reads only your own files from disk. The container mounts these folders:
 
 | Folder | Contents |
 | :--- | :--- |
-| `_license/` | Your `license.key` |
+| `_license/` | Your `license.key`. Optional once the key is [set another way](#2-install-the-license-key). |
 | `_storage/` | Application data: the SQLite database (if used) and the settings saved on the [setup page](#4-finish-on-the-setup-page) |
 | `_certs/` | The Let's Encrypt certificate cache |
-| `_mocks/` | The root user and organization profile, used when the account service is disabled (the default for self-hosting) |
 
 <Warning>
 Back up `_storage/` and your `.env`. Without `HASMCP_APP_ENCRYPTION_KEY`, the stored secrets and saved settings can't be decrypted.
@@ -46,7 +45,7 @@ Back up `_storage/` and your `.env`. Without `HASMCP_APP_ENCRYPTION_KEY`, the st
 cp /path/to/your/license.key ./_license/license.key
 ```
 
-HasMCP reads `/_license/license.key` at startup and **won't start without a valid key**. Each license is issued for an environment (usually `production`). Set `ENV` in `.env` to the same value, or HasMCP stops with `invalid license environment`.
+HasMCP reads `/_license/license.key` at startup and **won't start without a valid key**. Instead of the file, you can set the key with `HASMCP_APP_LICENSE_KEY` in `.env`, or enter it later in the **License** section of the [setup page](#5-finish-on-the-setup-page). Both override the file. Each license is issued for an environment (usually `production`). Set `ENV` in `.env` to the same value, or HasMCP stops with `invalid license environment`.
 
 ## 3. Configure the Environment
 
@@ -119,7 +118,6 @@ docker run -d --name hasmcp --restart always \
   -v ./_certs:/_certs \
   -v ./_license:/_license \
   -v ./_storage:/_storage \
-  -v ./_mocks:/_mocks \
   hasmcp/hasmcp:latest
 ```
 
@@ -150,14 +148,16 @@ Open `/setup` and sign in with the root access token. The setup page can change 
 | **Accounts** | Account service and its URLs |
 | **Git** | GitHub App and GitLab OAuth app |
 | **APIs** | CORS hostnames, logging, rate limits and authentication for the API, Hub, MCP, OAuth2 and Configuration APIs |
+| **Tracking** | A tracker script (such as an analytics `<script>`) added to the end of the `<head>` of every page of the web app |
 | **Secrets** | Hash salt and the JWT secrets |
+| **License** | A new license key. It's checked before saving and must be for the server's `ENV`, so a wrong key can't stop the next start. |
 
 How saved settings behave:
 
 - They are encrypted with `HASMCP_APP_ENCRYPTION_KEY` and saved to `_storage/settings.json` (or to `HASMCP_APP_SETTINGS_FILE`).
 - They **override** the `.env` file and the built-in configuration. After you save a setting, changing it in `.env` has no effect.
 - They apply on the **next restart** (`make restart`).
-- Secrets are never shown again. Leave a secret blank to keep its current value. Changing a JWT secret or the hash salt can sign users and MCP clients out, or make stored hashes stop matching. Change them only when you need to.
+- Secrets and the license key are never shown again. Leave one blank to keep its current value. Changing a JWT secret or the hash salt can sign users and MCP clients out, or make stored hashes stop matching. Change them only when you need to.
 
 Only `HASMCP_APP_API_ACCESS_TOKEN`, `HASMCP_APP_ENCRYPTION_KEY` and `ENV` must stay in `.env`.
 
@@ -179,8 +179,8 @@ Database migrations run automatically on startup. Back up `_storage/` (and your 
 
 | Symptom | Fix |
 | :--- | :--- |
-| The container exits right after starting | Run `make logs`. Lines starting with `[license]` mean the key is missing, invalid, or for a different `ENV`. |
-| Can't sign in to the UI | Use the value of `HASMCP_APP_API_ACCESS_TOKEN`, and check that `HASMCP_APP_ACCOUNT_SERVICE_ENABLED=false` and `_mocks` is mounted |
+| The container exits right after starting | Run `make logs`. Lines starting with `[license]` mean the key is missing, invalid, or for a different `ENV`. A key set on the setup page or with `HASMCP_APP_LICENSE_KEY` takes precedence over `license.key`. |
+| Can't sign in to the UI | Use the value of `HASMCP_APP_API_ACCESS_TOKEN`, and check that `HASMCP_APP_ACCOUNT_SERVICE_ENABLED=false` |
 | No TLS certificate | The domain must resolve to the machine and port `80` must be reachable for the Let's Encrypt challenge. Let's Encrypt needs a public domain; it can't issue a certificate for an IP address or `localhost`. |
 | OAuth sign-in fails with a redirect error | Register `https://<your domain>/oauth2/callback` with the OAuth app, and set `HASMCP_APP_OAUTH2_PROVIDER_HTTP_SCHEME=https` |
 | A changed `.env` value has no effect | The setting was saved on the setup page, which takes precedence. Change it there and restart. |

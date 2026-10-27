@@ -84,6 +84,26 @@ The editor will automatically attempt to initialize the connection.
 
 Resources and tools from your HasMCP server will now be available to the AI agent for real-time context and action execution.
 
+## Antigravity CLI
+
+The **Connection string** section of a server's **Configuration** tab in HasMCP has an **Antigravity CLI** tab. Generate a token there and copy the snippet. It takes the server URL with the token as `serverUrl`:
+
+```json
+{
+  "mcpServers": {
+    "myServer": {
+      "serverUrl": "https://app.hasmcp.com/mcp/<SERVER_ID>?token=<YOUR_TOKEN>"
+    }
+  }
+}
+```
+
+Add it to the `mcpServers` object of your Antigravity CLI MCP configuration.
+
+<Note>
+The Antigravity CLI tab replaces the former **Gemini CLI** tab. To connect the Gemini CLI, see [Gemini CLI](/ai-tools/gemini-cli).
+</Note>
+
 ## Troubleshooting
 
 Authentication: Ensure your token is valid and the header is correctly prefixed with Bearer.
