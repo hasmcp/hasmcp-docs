@@ -86,7 +86,7 @@ The response lists the synced `tools`, `resources`, `prompts` and `skills`, whet
 Remote MCP servers that require authorization are supported through the [MCP authorization](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) flow. You don't need to register an OAuth app by hand.
 
 1. **Discovery.** HasMCP reads the remote's protected resource metadata (`/.well-known/oauth-protected-resource`, or the `resource_metadata` in its `WWW-Authenticate` challenge). It then reads the authorization server's metadata (`/.well-known/oauth-authorization-server` or `/.well-known/openid-configuration`).
-2. **Dynamic client registration.** If the provider has no OAuth2 client yet, HasMCP registers one at the authorization server's registration endpoint as a public client and saves it on the provider. The registration happens once and is reused by every user.
+2. **Dynamic client registration.** If the provider has no OAuth2 client yet, HasMCP registers one at the authorization server's registration endpoint as a public client and saves it on the provider. The registration happens once and is reused by every user. A clone of the provider never copies a registered client: it registers its own on its first **Connect Account**. An OAuth2 client you entered by hand is copied, unless the clone goes to another organization or uses a different server URL.
 3. **Authorization with PKCE.** You sign in on the remote and approve the requested scopes.
 4. **Token storage.** The access and refresh tokens are encrypted and saved as `SECRET` variables named `<SECRET_PREFIX>_ACCESS_TOKEN` and `<SECRET_PREFIX>_REFRESH_TOKEN`, together with the access token's expiry.
 

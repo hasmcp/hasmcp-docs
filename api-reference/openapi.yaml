@@ -271,13 +271,16 @@ paths:
           description: Provider deleted
   /providers/{id}/sync:
     post:
-      summary: Sync Remote MCP Provider
+      summary: Sync Remote MCP or gRPC Provider
       description: >-
-        Lists the tools, resources and prompts of the remote MCP server of an
-        MCP provider with the user's credentials and mirrors them into the
-        provider, along with its instructions and icon. Existing items are
-        matched by name; new ones are created, changed ones updated and the
-        removed ones deleted.
+        For an MCP provider, lists the tools, resources and prompts of the
+        remote MCP server with the user's credentials and mirrors them into the
+        provider, along with its instructions and icon. For a gRPC provider,
+        discovers the services of the gRPC server with its reflection service,
+        or reads them from the uploaded descriptor set, and makes a tool of each
+        unary and server streaming method. Existing items are matched by name
+        (by full method name for gRPC); new ones are created, changed ones
+        updated and the removed ones deleted.
       operationId: syncProviderTools
       tags: ["Providers"]
       security:
@@ -290,6 +293,12 @@ paths:
           schema:
             type: string
             description: Provider ID
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncProviderRequest"
       responses:
         default:
           $ref: "#/components/responses/Error"
@@ -303,8 +312,12 @@ paths:
           description: >-
             The remote MCP server requires authorization, connect the account
             with the authorize endpoint (error.data.authorizationRequired is true)
+        "400":
+          description: The gRPC services can't be read from the descriptor set
         "502":
-          description: The remote MCP server failed
+          description: >-
+            The remote MCP server failed, or the services of the gRPC server
+            couldn't be discovered (e.g. it has no reflection service)
   /providers/{id}/authorize:
     post:
       summary: Connect Provider Account
@@ -2036,8 +2049,8 @@ components:
           readOnly: true
         apiType:
           type: string
-          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint)"
-          enum: ["REST", "MCP"]
+          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint), 3: GRPC (gRPC server, baseURL is grpcs://host:port or grpc://host:port)"
+          enum: ["REST", "MCP", "GRPC"]
           example: "REST"
         visibilityType:
           type: string
@@ -2090,8 +2103,8 @@ components:
       properties:
         apiType:
           type: string
-          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint)"
-          enum: ["REST", "MCP"]
+          description: "0: INVALID, 1: REST, 2: MCP (remote MCP server, baseURL is the MCP endpoint), 3: GRPC (gRPC server, baseURL is grpcs://host:port or grpc://host:port)"
+          enum: ["REST", "MCP", "GRPC"]
           example: "REST"
         visibilityType:
           type: string
@@ -2157,6 +2170,18 @@ components:
       properties:
         provider:
           $ref: "#/components/schemas/Provider"
+    SyncProviderRequest:
+      type: object
+      description: >-
+        Optional body of a gRPC provider's sync, for the servers without
+        reflection
+      properties:
+        protoDescriptorSet:
+          type: string
+          format: byte
+          description: >-
+            The serialized FileDescriptorSet of the services in base64, made with
+            protoc --include_imports --descriptor_set_out
     SyncProviderResponse:
       type: object
       properties:

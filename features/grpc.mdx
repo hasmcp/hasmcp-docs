@@ -1,16 +1,173 @@
 ---
-title: gRPC | HasMCP Features
-description: Learn how HasMCP uses gRPC to build highly performant AI systems.
+title: "gRPC Providers | HasMCP Features"
+description: "Turn the methods of a gRPC server into MCP tools: HasMCP discovers them with server reflection or an uploaded descriptor set, and calls them with JSON arguments, metadata, OAuth2 tokens, interceptors and analytics."
 ---
 
-gRPC is a high-performance, open-source framework for communication between services. It's known for being very fast and efficient.
+# gRPC Providers
 
-- **Why it's important for HasMCP:**
-  - **Performance:** For real-time applications, the speed of communication between services is critical. gRPC is much faster than traditional REST APIs. HasMCP will soon use gRPC services as the underlying communication protocol for MCP, which will improve performance and efficiency.
-  - **Future-Proofing:** As AI systems become more complex, the ability to build high-performance systems will become increasingly important.
+HasMCP can turn a **gRPC server** into MCP tools, without generated code and without writing an OpenAPI spec. Register the server as a provider of type **gRPC** and HasMCP discovers its services with [server reflection](https://grpc.io/docs/guides/reflection/), or reads them from a descriptor set you upload. Every unary and server-streaming method becomes a tool. LLMs call it with JSON arguments, and HasMCP sends them as the protobuf request message and returns the response as JSON.
 
-- **How it works:**
-  - **gRPC as a transport:** HasMCP will use gRPC to communicate with your gRPC enabled services. For MCP still will use REST APIs, which will improve performance and efficiency.
+gRPC tools work like the tools of REST providers: you compose them into MCP servers, send credentials as metadata, renew OAuth2 tokens, run interceptors on them and see their calls in analytics and the Debug tab.
 
-- **Key benefits:**
-  - **High Performance:** Build AI systems that can respond in real-time.
+## How It Works
+
+```
+MCP client ──► HasMCP server ──► gRPC server (grpcs:// or grpc://)
+   │              │  ├─ JSON arguments → protobuf request message
+   │              │  ├─ tool headers sent as gRPC metadata
+   │              │  ├─ request / response interceptors
+   │              │  └─ protobuf response → JSON (+ analytics)
+   └── tool call with JSON arguments
+```
+
+1. **Provider of type gRPC.** The provider's URL is the address of the gRPC server, for example `grpcs://api.example.com:443`.
+2. **Sync.** HasMCP reads the server's services from its reflection service, or from an uploaded descriptor set, and makes a tool of each method. The descriptor set is stored on the provider.
+3. **Compose.** You enable the methods you want on one or more HasMCP MCP servers.
+4. **Call.** When a client calls a gRPC tool, HasMCP converts the JSON arguments into the request message with the stored descriptors, calls the method and returns the response as JSON.
+
+## Setup
+
+<Steps>
+  <Step title="Create the provider">
+    Go to **Providers**, click **+**, and set the **Type** toggle to **gRPC**. Enter the **gRPC Server URL**:
+
+    - `grpcs://host:port` connects with TLS (TLS 1.2 or later).
+    - `grpc://host:port` connects in plaintext, for servers on a private network.
+
+    The port defaults to `443` for `grpcs://` and `80` for `grpc://`. The URL can't have a path. The type, the URL and the generated **Secret Prefix** can't be changed after the provider is created.
+  </Step>
+  <Step title="Sync the methods">
+    When you save the provider, HasMCP syncs its methods with server reflection right away. If the server has no reflection service, you'll be asked to upload its descriptor set instead. See [Discovering Methods](#discovering-methods).
+  </Step>
+  <Step title="Add credentials (if the server requires them)">
+    Add the metadata your server expects, such as `authorization: Bearer ${API_EXAMPLE_COM_TOKEN}`, to the tools in the provider's **Tools** tab. See [Metadata and Authentication](#metadata-and-authentication).
+  </Step>
+  <Step title="Add the tools to a server">
+    Open an MCP server (or use **Convert to MCP Server** on the provider) and enable the gRPC methods you want to expose.
+  </Step>
+</Steps>
+
+## Discovering Methods
+
+A gRPC provider has two buttons in its header:
+
+| Button | What it does |
+| :--- | :--- |
+| **Sync** | Discovers the services with the server's reflection service. Both `grpc.reflection.v1` and the older `grpc.reflection.v1alpha` are supported. |
+| **Upload Descriptors** | Syncs from a descriptor set file you upload (`.pb`, `.desc`, `.protoset` or `.bin`), for servers without reflection. |
+
+Run either one again whenever the server's API changes. Methods are matched by their full name (`/package.Service/Method`). New methods are created, changed ones updated, and methods the server no longer offers are deleted. The headers, OAuth2 scopes and interceptors you added to existing tools are kept.
+
+<Note>
+Reflection requests are sent without the tools' metadata. If your server only answers reflection for authenticated callers, upload a descriptor set instead.
+</Note>
+
+### Creating a descriptor set
+
+Build the descriptor set from your `.proto` files with `protoc`. Include the imports so the file is self-contained:
+
+```bash
+protoc --include_imports \
+  --descriptor_set_out=api.pb \
+  -I proto \
+  proto/example/v1/*.proto
+```
+
+With [Buf](https://buf.build), `buf build -o api.pb` produces the same file.
+
+### What becomes a tool
+
+| Method kind | Tool behavior |
+| :--- | :--- |
+| **Unary** | The tool returns the response message as JSON. |
+| **Server streaming** | The tool returns a JSON array of the streamed messages, up to 100 per call. The tool description says so, so the LLM expects an array. |
+| **Client streaming / bidirectional** | Skipped. These can't be called as a single tool call. |
+
+Each tool gets:
+
+- **Name**: the service and method name in camelCase. For example, `example.v1.UserService/GetUser` becomes `userServiceGetUser`.
+- **Title**: `Service.Method`, such as `UserService.GetUser`.
+- **Description**: the method's leading comment in the `.proto` file, or `Calls Service.Method of the gRPC service.` when there is none. Write good comments in your protos: they are what the LLM reads.
+- **Hints**: `idempotency_level = NO_SIDE_EFFECTS` sets `readOnlyHint` and `idempotentHint`; `IDEMPOTENT` sets `idempotentHint`.
+- **Input schema**: generated from the request message. Field comments become descriptions, enums take their value names, 64-bit integers accept strings or numbers and `bytes` fields take base64, as in the [protobuf JSON mapping](https://protobuf.dev/programming-guides/json/). Well-known types like `google.protobuf.Timestamp`, `Duration`, `FieldMask` and the wrapper types get their JSON forms.
+
+You can edit the description, title, metadata, OAuth2 scopes and interceptors of a synced tool in the provider's **Tools** tab. The method and full method name can't be changed, and you can't add gRPC tools by hand.
+
+## Calling Methods
+
+When a client calls a gRPC tool, HasMCP:
+
+1. Converts the JSON arguments into the request message. Invalid arguments return an `INVALID_ARGUMENT` error to the LLM without calling the server.
+2. Sends the tool's headers as gRPC metadata.
+3. Calls the method with a 30 second deadline.
+4. Returns the response message (or the array of streamed messages) as JSON.
+
+A failed call returns the gRPC status to the LLM as JSON:
+
+```json
+{
+  "code": "NOT_FOUND",
+  "message": "user 42 not found"
+}
+```
+
+The status is also mapped to the HTTP status of the same meaning in analytics and logs:
+
+| gRPC status | HTTP status |
+| :--- | :--- |
+| `OK` | 200 |
+| `INVALID_ARGUMENT`, `FAILED_PRECONDITION`, `OUT_OF_RANGE` | 400 |
+| `UNAUTHENTICATED` | 401 |
+| `PERMISSION_DENIED` | 403 |
+| `NOT_FOUND` | 404 |
+| `ALREADY_EXISTS`, `ABORTED` | 409 |
+| `RESOURCE_EXHAUSTED` | 429 |
+| `CANCELLED` | 499 |
+| `UNIMPLEMENTED` | 501 |
+| `UNAVAILABLE` | 503 |
+| `DEADLINE_EXCEEDED` | 504 |
+| Others | 500 |
+
+## Metadata and Authentication
+
+The **gRPC Metadata** section of a tool works like the HTTP headers of a REST tool. Values can reference [variables](/essentials/variables) that start with the provider's **Secret Prefix**, and secrets are resolved at call time, so they never reach the LLM. Keys are sent in lowercase. Reserved keys such as `content-type`, `user-agent` and those starting with `grpc-` are not sent.
+
+```
+authorization: Bearer ${API_EXAMPLE_COM_TOKEN}
+x-tenant-id: ${API_EXAMPLE_COM_TENANT}
+```
+
+gRPC providers support [OAuth2](/features/native-mcp-elicitation-auth) like REST providers. Enable **OAuth2 Configuration** on the provider and reference the access token in the tool's metadata. An `UNAUTHENTICATED` response is treated like an HTTP 401: HasMCP [renews the access token](/features/automatic-token-refresh) with the refresh token and retries the call once.
+
+## Interceptors, Analytics and Debugging
+
+- **Request interceptors** run on the JSON arguments before they are converted into the request message.
+- **Response interceptors** run on the JSON response, so [JMESPath pruning](/features/jmespath-pruning) and [Goja (JS) logic](/features/goja-js-logic) can trim large messages before they reach the LLM.
+- **Analytics** record latency, payload size and token counts for every call. gRPC calls show `GRPC` as their method.
+- The server's **Debug** tab shows every call made to the gRPC server.
+
+## Sync API
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/providers/{providerID}/sync \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN"
+```
+
+Without a body, the methods are discovered with server reflection. To sync from a descriptor set, send it in base64:
+
+```bash
+curl -X POST https://app.hasmcp.com/api/v1/providers/{providerID}/sync \
+  -H "Authorization: Bearer $HASMCP_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"protoDescriptorSet\": \"$(base64 -w0 api.pb)\"}"
+```
+
+The response lists the synced `tools` and the `created`, `updated` and `deleted` counts. A server without reflection, or one that can't be reached, returns `502`. A descriptor set that can't be read returns `400`.
+
+## Related Reading
+
+- [API Providers](/essentials/providers)
+- [Remote MCP Gateway](/features/remote-mcp-gateway)
+- [Automatic Token Refresh](/features/automatic-token-refresh)
+- [Secure Secret & Proxy Management](/features/secure-secret-proxy-management)
+- [Context Window Optimization](/features/context-window-optimization)
